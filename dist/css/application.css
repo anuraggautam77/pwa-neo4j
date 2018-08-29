@@ -15,6 +15,45 @@ body {
     color: #F15F79;
     font-weight: bold; }
 
+.filter-container .panel-body {
+  padding: 0px; }
+
+.filter-container ul {
+  margin: 0;
+  padding: 0; }
+
+.filter-container li {
+  list-style: none;
+  margin: 10px;
+  cursor: pointer; }
+  .filter-container li span {
+    margin-left: 20px; }
+
+.filter-container .btn-circle {
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px; }
+  .filter-container .btn-circle .btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px; }
+
+.filter-container .green {
+  background-color: #b6ff6c; }
+
+.filter-container .yellow {
+  background-color: #ffff6c; }
+
+.filter-container .topmost {
+  background-color: #645533; }
+
 .graph-details li {
   cursor: pointer; }
 
@@ -35,7 +74,7 @@ body {
 
 .graph-details {
   margin: 15px 0px;
-  height: 490px;
+  height: 306px;
   overflow: auto; }
 
 .admin-proilecard {

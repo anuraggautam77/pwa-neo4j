@@ -65,7 +65,7 @@ UsersModel = {
 
         } else {
 
-            var query = `match cities =(n:MasterCity)-[:IS_PRIMARY_CITY]-(:CityType) unwind nodes(cities) as city optional match (user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=ID(city) with count(distinct user) as primaryCount,city optional match (user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=ID(city) with count(distinct user) as secondaryCount,primaryCount,city return city,secondaryCount+primaryCount as userCount`;
+            var query = `match cities =(n:MasterCity)-[:IS_PRIMARY_CITY]-(:CityType) unwind nodes(cities) as city optional match (user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=ID(city) with count(distinct user) as primaryCount,city optional match (user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=ID(city) with count(distinct user) as secondaryCount,primaryCount,city return city,secondaryCount+primaryCount as userCount order by userCount desc`;
             // query = 'match (c:MasterCity)-[:IS_PRIMARY_CITY]-(p:CityType) return c';
             console.log(query);
             driver.cypher({

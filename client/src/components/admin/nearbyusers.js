@@ -3,8 +3,10 @@
 import React, { Component } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import MarkerClusterer from "../../common/markerclusterer";
-const imageUrl = "https://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png";
+import NearByLocation from "./nearByListing";
+import Criteria from "./criteria";
+import Filters from "./filters"
+        import MarkerClusterer from "../../common/markerclusterer";
 import moment from "moment";
 const defaultradius = 16091;
 class NearbyUser extends Component {
@@ -17,8 +19,6 @@ class NearbyUser extends Component {
             clusterShow: false,
             primaryCity: false,
             cities: false,
-            colval: 12,
-            sidepanel: "dn",
             showdate: "dn",
             breadcrum: [
                 {val: "primary", label: 'Primary Cities', active: 1},
@@ -66,8 +66,8 @@ class NearbyUser extends Component {
                     {val: "zipcode", label: 'Zipcode ', active: 0}
                 ],
                 cities: true,
-                colval: 12,
-                sidepanel: "dn",
+                secondaryCities: [],
+                nearByLocations: [],
                 primaryCity: true,
                 clusterShow: false,
                 mruDetails: {
@@ -81,10 +81,9 @@ class NearbyUser extends Component {
             this.setState({
                 ...this.state,
                 cities: true,
+                nearByLocations: [],
                 primaryCity: false,
                 clusterShow: false,
-                colval: 12,
-                sidepanel: "dn",
                 breadcrum: [{val: "primary", label: 'Primary Cities', active: 0},
                     {val: "secondary", label: 'Secondary Cities', active: 1},
                     {val: "zipcode", label: 'Zipcode ', active: 0}
@@ -203,7 +202,11 @@ class NearbyUser extends Component {
                 .then(res => res.json())
                 .then(json => {
                     console.log("nearbyloc>>");
-                    console.log(json.mapdata);
+
+                    json.mapdata.map((obj) => {
+                        obj.show = true;
+                    })
+                    console.log(json.mapdata)
                     console.log("nearbyloc>>");
                     this.setState({
                         nearByLocations: json.mapdata,
@@ -212,8 +215,6 @@ class NearbyUser extends Component {
                             {val: "zipcode", label: 'Zipcode ', active: 1}
                         ],
                         clusterShow: true,
-                        colval: 9,
-                        sidepanel: "db",
                         mruDetails:
                                 {
                                     ...this.state.mruDetails,
@@ -370,81 +371,104 @@ class NearbyUser extends Component {
             strokeColor: '#a9d26d',
             strokeOpacity: 0.8,
             strokeWeight: 2,
-            fillColor: '#a9d26d',
-            fillOpacity: 0.35,
+            fillColor: '#fff',
+            fillOpacity: 0.5,
             map: map,
             center: latlng,
             radius: radius
         })
     }
-    markeCluster() {
+    filteredRecord(obj) {
         this.previousmarker(false);
         this.clusterMarkers = [];
+        
+         this.setState({
+                        nearByLocations: obj,
+                        breadcrum: [{val: "primary", label: 'Primary Cities', active: 0},
+                            {val: "secondary", label: 'Secondary Cities', active: 0},
+                            {val: "zipcode", label: 'Zipcode ', active: 1}
+                        ],
+                        clusterShow: true,
+                        mruDetails:
+                                {
+                                    ...this.state.mruDetails,
+                                         mruContainer: "dn",
+                                      criteriaContainer: "dn"
+                                }});
+        
+    }
+    markeCluster() {
+        this.previousmarker(false);
+        this.clearHandler();
+        this.clusterMarkers = [];
         for (var i = 0; i < this.state.nearByLocations.length; ++i) {
+
             var iconMarkerImg = "primarycity.png";
             var zipDetail = this.state.nearByLocations[i];
-            if (zipDetail.relation === 'IS_AT') {
-                iconMarkerImg = "green.png";
-            } else if (zipDetail.relation === 'IS_EXPECTED_AT') {
-                iconMarkerImg = "yellow.png";
-            } else {
-                if (i <= 30) {
-                    iconMarkerImg = "darkcolor.png";
-                }
-            }
 
-            var latLng = new google.maps.LatLng(
-                    zipDetail.latitude,
-                    zipDetail.longitude
-                    );
-            var zipmarker = new google.maps.Marker({
-                position: latLng,
-                draggable: false,
-                /* label: {
-                 text: `${zipDetail.userCount}`,
-                 color: "#000",
-                 fontSize: "20",
-                 fontWeight: "bold"
-                 }, */
-                icon: {
-                    url: `img/culsterimg/zip/${iconMarkerImg}`,
-                    scaledSize: new google.maps.Size(30, 30), // scaled size
-                    origin: new google.maps.Point(0, 0)
-                },
-                value: `${zipDetail.zip}`,
-                title: `${zipDetail.cityname}`,
-                relation: `${zipDetail.relation}`,
-                mruid: `${zipDetail.mruid}`,
-                animation: google.maps.Animation.DROP
-            })
-            /**
-             * bind events of handler
-             */
-            var self = this;
-            zipmarker.addListener("click", function (e) {
-
-                var mruRelateTo = this.relation === "null" ? "" : this.relation;
-                var mruID = this.mruid === "null" ? "" : this.mruid;
-                var alreadyText = "";
-                if (mruRelateTo === "IS_AT") {
-                    alreadyText = "Mru is already placed at this location. Click End Mru button to End Service!";
+            if (zipDetail.show) {
+                if (zipDetail.relation === 'IS_AT') {
+                    iconMarkerImg = "green.png";
+                } else if (zipDetail.relation === 'IS_EXPECTED_AT') {
+                    iconMarkerImg = "yellow.png";
+                } else {
+                    if (i <= 30) {
+                        iconMarkerImg = "darkcolor.png";
+                    }
                 }
 
-                self.setState({
-                    mruDetails: {
-                        ...self.state.mruDetails,
-                        zipcode: this.value,
-                        mruContainer: "db",
-                        alreadyTextmru: alreadyText,
-                        cityname: this.title,
-                        mruRelateTo: mruRelateTo,
-                        mruID: mruID
+                var latLng = new google.maps.LatLng(
+                        zipDetail.latitude,
+                        zipDetail.longitude
+                        );
+                var zipmarker = new google.maps.Marker({
+                    position: latLng,
+                    draggable: false,
+                    /* label: {
+                     text: `${zipDetail.userCount}`,
+                     color: "#000",
+                     fontSize: "20",
+                     fontWeight: "bold"
+                     }, */
+                    icon: {
+                        url: `img/culsterimg/zip/${iconMarkerImg}`,
+                        scaledSize: new google.maps.Size(30, 30), // scaled size
+                        origin: new google.maps.Point(0, 0)
                     },
-                    clusterShow: false,
-                    cities: false
+                    value: `${zipDetail.zip}`,
+                    title: `${zipDetail.cityname}`,
+                    relation: `${zipDetail.relation}`,
+                    mruid: `${zipDetail.mruid}`
                 })
-            })
-            this.clusterMarkers.push(zipmarker);
+                /**
+                 * bind events of handler
+                 */
+                var self = this;
+                zipmarker.addListener("click", function (e) {
+
+                    var mruRelateTo = this.relation === "null" ? "" : this.relation;
+                    var mruID = this.mruid === "null" ? "" : this.mruid;
+                    var alreadyText = "";
+                    if (mruRelateTo === "IS_AT") {
+                        alreadyText = "Mru is already placed at this location. Click End Mru button to End Service!";
+                    }
+
+                    self.setState({
+                        mruDetails: {
+                            ...self.state.mruDetails,
+                            zipcode: this.value,
+                            mruContainer: "db",
+                            alreadyTextmru: alreadyText,
+                            cityname: this.title,
+                            mruRelateTo: mruRelateTo,
+                            mruID: mruID
+                        },
+                        clusterShow: false,
+                        cities: false
+                    })
+                })
+                this.clusterMarkers.push(zipmarker);
+            }
         }
         this.markerClusterer = new MarkerClusterer(this.map, this.clusterMarkers, {});
     }
@@ -458,7 +482,7 @@ class NearbyUser extends Component {
                     } else {
                         if (flag != true) {
                             return(<li className="breadcrumb-item active" key={i}><a href="javascript:void(0)" 
-                                                                          onClick ={() => this.breadcrumbHandler(obj.val)}  >{obj.label}</a></li>)
+                                                                              onClick ={() => this.breadcrumbHandler(obj.val)}  >{obj.label}</a></li>)
                         }
 
                     }
@@ -468,19 +492,28 @@ class NearbyUser extends Component {
     listClickhandler(index) {
         google.maps.event.trigger(this.clusterMarkers[index], 'click');
     }
+    primaryClickhandler(index) {
+        google.maps.event.trigger(this.markers[index], 'click');
+    }
+    mouseOverhandler(index, flag) {
+        if (flag) {
+            this.markers[index].setAnimation(google.maps.Animation.BOUNCE);
+        } else {
+            this.markers[index].setAnimation(null);
+        }
+
+    }
     render() {
         return (
-                <div className="landing-page">
-                
-                
+                    <div className="landing-page">
                     <div className="col-md-3 col-sm-12  admin-proilecard">
                         <div className={`panel panel-default ${this.state.mruDetails.mruContainer}`} >
                             <div className="panel-heading">
                                 <h5><b>  MRU Place at: {this.state.mruDetails.cityname}({this.state.mruDetails.zipcode}) </b>
                                 </h5>
                                 {(() => {
-                                                if (this.state.mruDetails.alreadyTextmru !== "") {
-                                                    return <h6>{this.state.mruDetails.alreadyTextmru}</h6>;
+                                    if (this.state.mruDetails.alreadyTextmru !== "") {
+                                                        return <h6>{this.state.mruDetails.alreadyTextmru}</h6>;
                                 }
                                 })()}
                             </div>
@@ -488,17 +521,17 @@ class NearbyUser extends Component {
                             <div className="panel-body">
                                 <select
                                     onChange={
-                                    event => {
-                                        this.setState({
-                                            mruDetails: {
-                                                    ...this.state.mruDetails,
-                                                    placedat: event.target.value
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+                                        event => {
+                                            this.setState({
+                                                mruDetails: {
+                                                        ...this.state.mruDetails,
+                                                        placedat: event.target.value
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
                                     })
                                     if (event.target.value === "IS_AT") {
-                                                                        this.setState({showdate: "dn" });
+                                                        this.setState({showdate: "dn" });
                                     } else {
-                                                                                this.setState({showdate: "db" });
+                                                                this.setState({showdate: "db" });
                                     }
                                     }}
                                     >
@@ -507,7 +540,7 @@ class NearbyUser extends Component {
                                 </select>
                 
                                 <div className={
-                                                                `${this.state.showdate}`}>
+                                                                    `${this.state.showdate}`}>
                                     <label>Date :</label>
                                     <DatePicker
                                         selected={this.state.mruDetails.startDate}
@@ -522,15 +555,15 @@ class NearbyUser extends Component {
                                         type="text"
                                         id="mru-id"
                                         onChange={event => {
-                                                                    this.setState({
-                                                                        mruDetails: {
-                                                                            ...this.state.mruDetails,
-                                                                            mruID: event.target.value
-                                                                                            }
+                                                                        this.setState({
+                                                                            mruDetails: {
+                                                                                ...this.state.mruDetails,
+                                                                                mruID: event.target.value
+                                                                                                                                                                            }
                                         })
                                         }}
                                         value={
-                                                                            this.state.mruDetails.mruID || ""}
+                                                                                this.state.mruDetails.mruID || ""}
                                         name="mru-id"
                                         />
                                 </div>
@@ -547,22 +580,20 @@ class NearbyUser extends Component {
                                 </button>
                                 &nbsp;
                                 {(() => {
-                                                                                                if (this.state.mruDetails.mruRelateTo !== "") {
-                                                                                    return (
-                                                                                                    <button
-                                                                                                        className="btn btn-primary btn-xs"
-                                                                                                        ref="placemru"
-                                                                                                        onClick={this.endMruHandler}
-                                                                                                        type="button"
-                                                                                                        >
-                                                                                                        End Mru
-                                                                                                    </button>
-                                                                                            );
+                                                                                    if (this.state.mruDetails.mruRelateTo !== "") {
+                                                                                                        return (
+                                                                                                                        <button
+                                                                                                                            className="btn btn-primary btn-xs"
+                                                                                                                            ref="placemru"
+                                                                                                                            onClick={this.endMruHandler}
+                                                                                                                            type="button"
+                                                                                                                            >
+                                                                                                                            End Mru
+                                                                                                                        </button>
+                                                                                                );
                                 }
                                 })()}
                             </div>
-                
-                
                         </div>
                     </div>
                 
@@ -572,81 +603,50 @@ class NearbyUser extends Component {
                         <div className="panel panel-default">
                             <ol className="breadcrumb">
                                 {
-                                                                                    this.bredcrumRender(this.state)}
+                                                                                        this.bredcrumRender(this.state)}
                             </ol>
                 
+                            <Criteria 
+                                criteriaContainer={this.state.mruDetails.criteriaContainer}
+                                onRadioChange={ e => this.onRadioChange(e)}
+                                />
                 
-                            <div className= { `panel-heading alignheading ${ this.state.mruDetails.criteriaContainer }`}>
-                                <div className="panel-body">
-                                    <label className="input-group col-md-3 col-sm-3">
-                                        <span className="input-group-addon">
-                                            <input
-                                                type="radio"
-                                                name="location"
-                                                value="popularLocation"
-                                                onChange={ e => this.onRadioChange(e)}
-                                                />
-                                        </span> 
-                                        <div className="form-control form-control-static">
-                                            Popular Location
-                                        </div>
-                                    </label> 
-                                    <label className="input-group col-md-3 col-sm-3">
-                                        <span className="input-group-addon">
-                                            <input
-                                                type="radio"
-                                                name="location"
-                                                value="nearByLocation"
-                                                onChange={e => this.onRadioChange(e)}
-                                                />
-                                        </span>
-                                        <div className="form-control form-control-static">
-                                            Near by Location
-                                        </div>
-                                    </label> 
-                                </div> 
-                            </div>
                 
                             <div className="panel-body">
-                                <div className={`col-md-${this.state.colval} col-sm-12`}>
+                                <div className="col-md-9 col-sm-12">
                                     <div className="chart-wrapper">
                                         <div id="nearbyuser-maparea" style={{width: "100%", height: "520px"  }} >
                                             <div id="nearbyuser-map" className="nearby-map" />
                                         </div>
                                     </div>
                                 </div>
-                                <div className={`col-md-3 col-sm-12 pull-right graph-details ${this.state.sidepanel}`}>
-                                    <ul className="list-group">
+                                <div className="col-md-3 col-sm-12 pull-right">
+                                    { (() => {
+                                                                                                if (this.state.nearByLocations.length >= 1) {
+                                                                                                                        return(
+                                                                                                                                        <div>
+                                                                                                                                            <Filters 
+                                                                                                                                                allRecord={this.state.nearByLocations}
+                                                                                                                                                filterRecord={(ob) => this.filteredRecord(ob)}
+                                                                                                                                                /> 
+                                                                                                                                            <NearByLocation
+                                                                                                                                                nearbystate={this.state.nearByLocations}
+                                                                                                                                                onclickHandler={(e) => this.listClickhandler(e)}
+                                                                                                                                                />
+                                                                                                                                        </div>
+                                                                                                            )
+                                    }
+                                    })() 
+                                    }
                 
-                                        {
-
-                                                                                                                this.state.nearByLocations.map((obj, i) => {
-                                                                                                                    var listcolor = 'null';
-                                                                                                                    if (obj.relation === 'IS_AT') {
-                                                                                                        listcolor = "green";
-                                        } else if (obj.relation === 'IS_EXPECTED_AT') {
-                                                                                                                listcolor = "yellow";
-                                        } else {
-                                                                                                                                        if (i <= 30) {
-                                                                                                            listcolor = "topmost";
-                                        }
-                                        }
                 
-                                        return( <li className={
-                                                                                                                `list-group-item ${listcolor}`} onClick={() => this.listClickhandler(i)} key={i}> 
-                                            {obj.zip}
-                                            <span className="badge">{obj.userCount}</span>
-                                        </li>
-                                        )
-                                        })
-                                        }                    
-                                    </ul>
+                
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                                                                                                );
+                                                                                    );
                                         }
                                     }
                                     export default NearbyUser;
