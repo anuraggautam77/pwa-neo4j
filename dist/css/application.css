@@ -48,8 +48,8 @@ body {
 .filter-container .green {
   background-color: #b6ff6c; }
 
-.filter-container .yellow {
-  background-color: #ffff6c; }
+.filter-container .least {
+  background-color: #3f51b5; }
 
 .filter-container .topmost {
   background-color: #645533; }

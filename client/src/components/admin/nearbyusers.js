@@ -408,9 +408,9 @@ class NearbyUser extends Component {
 
             if (zipDetail.show) {
                 if (zipDetail.relation === 'IS_AT') {
-                    iconMarkerImg = "green.png";
+                    iconMarkerImg = "red.png";
                 } else if (zipDetail.relation === 'IS_EXPECTED_AT') {
-                    iconMarkerImg = "yellow.png";
+                    iconMarkerImg = "green.png";
                 } else {
                     if (i <= 30) {
                         iconMarkerImg = "darkcolor.png";
