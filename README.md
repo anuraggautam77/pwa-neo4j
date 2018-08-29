@@ -50,20 +50,3 @@ Development (Webpack dev server) mode:
 ```shell
 npm run start:dev
 ```
-
-
-## Demo Link
-
-- [Click here - Do Notify me](https://donotifyme.herokuapp.com)
-
- ## Credits
-
-Created by [@anuraggautam77](https://www.linkedin.com/in/anuraggautam77/)
- 
-
-Cheer me up with a coffee! [![React Router](https://www.buymeacoffee.com/assets/img/bmc-f-logo.svg)](https://www.buymeacoffee.com/fL0O9wW)
-
-
-
- 
-
