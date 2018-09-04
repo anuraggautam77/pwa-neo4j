@@ -1,23 +1,19 @@
 import React, { Component } from "react";
 import Map from "../components/admin/map";
-import NearbyUser from "../components/admin/nearbyusers";
-import moment from "moment";
+import '../style/css/admin.scss';
+import Adminpanel from "../components/admin/index";
 export default class Dashboard extends Component {
     constructor(props) {
         super(props);
     }
-   
-    
-  
-render() {
-    return (
-            <div>
-                <div className="main-landing row content" style={{'marginTop': '10px'}}>
-                    <NearbyUser />
+    render() {
+        return (
+                <div>
+                    <div className="adminpanel main-landing row content">
+                        <Adminpanel />
+                    </div>
+                
                 </div>
-
-            </div>
                             );
-                    }
-            
-                    }
+                }
+    }

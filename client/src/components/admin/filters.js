@@ -12,11 +12,11 @@ class Filters extends Component {
         this.setState({allRecord: props.allRecord})
     }
     changeFilter(flag) {
-         
+
         switch (flag) {
             case "IS_AT":
-               this.state.allRecord.map((obj, i) => {
-                 
+                this.state.allRecord.map((obj, i) => {
+
                     if (obj.relation === flag) {
                         obj.show = true;
                     } else {
@@ -26,78 +26,87 @@ class Filters extends Component {
                 break;
 
             case "IS_EXPECTED_AT":
-                 this.state.allRecord.map((obj, i) => {
+                this.state.allRecord.map((obj, i) => {
                     if (obj.relation === flag) {
                         obj.show = true;
                     } else {
                         obj.show = false;
                     }
                 });
-                 break;
+                break;
 
-              case "TOP_MOST":
+            case "TOP_MOST":
                 this.state.allRecord.map((obj, i) => {
-                      if (i <= 30 && obj.relation !== "IS_EXPECTED_AT" && obj.relation !== "IS_AT") {
+                    if (i <= 30 && obj.relation !== "IS_EXPECTED_AT" && obj.relation !== "IS_AT") {
                         obj.show = true;
                     } else {
                         obj.show = false;
                     }
                 });
-                 break;
-                 
+                break;
+
             case "LEAST_MOST":
-            this.state.allRecord.map((obj, i) => {
-                      if (i > 30 && obj.relation !== "IS_EXPECTED_AT" && obj.relation !== "IS_AT") {
+                this.state.allRecord.map((obj, i) => {
+                    if (i > 30 && obj.relation !== "IS_EXPECTED_AT" && obj.relation !== "IS_AT") {
                         obj.show = true;
                     } else {
                         obj.show = false;
                     }
                 });
-            break;
+                break;
             default:
                 this.state.allRecord.map((obj, i) => {
-                       obj.show = true;
+                    obj.show = true;
                 });
                 break;
         }
-        
+
         return this.state.allRecord;
- 
+
     }
     render() {
-        return (<div className="filter-container">
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h5><b>Filters</b> </h5>
-                </div> 
-                <div className="panel-body">
-                    <ul>
-                        <li onClick={() => this.props.filterRecord(this.changeFilter("IS_AT"))}>
-                            <button type="button" className="btn btn-danger btn-circle btn-lg"></button>
-                            <span>Current MRU Location</span>
-                        </li>
-                        <li  onClick={() =>this.props.filterRecord( this.changeFilter("IS_EXPECTED_AT"))}>
-                            <button type="button" className="btn btn-success btn-circle btn-lg"></button>
-                            <span>In future MRU Location </span>
-                        </li>
-                        <li  onClick={() =>this.props.filterRecord( this.changeFilter("TOP_MOST"))}>
-                            <button type="button" className="btn topmost btn-circle btn-lg"></button>
-                            <span>Recommended Location (Top 30)</span>
-                        </li>
-                        <li  onClick={() =>this.props.filterRecord( this.changeFilter("LEAST_MOST"))}>
-                            <button type="button" className="btn least btn-circle btn-lg"></button>
-                            <span>Least density Location (Below 30)</span>
-                        </li>
-        
-                    </ul>
+        return (
+                <div className="row zipcode-filter" >
+                    <div className="well panel-heading alignheading">
+                        <div className="widget-tile">
+                            <section>
+                                <h5>
+                                    <strong> Filter</strong>  
+                                </h5>
+                                <div className="progress progress-xs progress-white progress-over-tile"></div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <a href="javascript:void(0)" onClick={() => this.props.filterRecord(this.changeFilter("IS_AT"))}>
+                                            <h3>Current MRU Location </h3>
+                                            <div className="progress xs green"></div>
+                                        </a>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <a href="javascript:void(0)" onClick={() => this.props.filterRecord(this.changeFilter("IS_EXPECTED_AT"))}>
+                                            <h3> Future MRU Location  </h3>
+                                            <div className="progress xs ember"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <a href="javascript:void(0)" onClick={() => this.props.filterRecord(this.changeFilter("TOP_MOST"))}>
+                                            <h3>Recommended Location (Top 30) </h3>
+                                            <div className="progress xs topmost"></div>
+                                        </a>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <a href="javascript:void(0)" onClick={() => this.props.filterRecord(this.changeFilter("LEAST_MOST"))}>
+                                            <h3>  Least density Location (Below 30) </h3>
+                                            <div className="progress xs least"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </section>
+                            <strong> <button type="button" onClick={() => this.props.filterRecord(this.changeFilter(""))} className="btn btn-primary btn-xs"> Reset filter</button></strong>
+                        </div>
+                    </div>
                 </div>
-        
-                <div className="panel-footer">
-                    <button type="button" onClick={() =>this.props.filterRecord( this.changeFilter(""))} className="btn btn-primary btn-xs"> Reset filter</button>
-                </div>
-            </div>    
-        
-        </div>
                 );
     }
 }

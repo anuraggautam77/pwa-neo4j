@@ -2,6 +2,10 @@
 
 import React, { Component } from 'react';
 import PubSub from 'pubsub-js';
+
+import Registration from "../components/user/registration";
+import Mrufilter from "../components/user/mrufilter"
+        import '../style/css/user.scss';
 const hashKey = "sim8o7ysxvoun2uSKktR1afoSCd1";
 
 class MainPage extends Component {
@@ -9,12 +13,12 @@ class MainPage extends Component {
         super(props);
         this.state = {
             mapCenter: {
-                latitude: 37.3788789,
-                longitude: -93.9515576,
+                latitude: 37.4419,
+                longitude: -122.1419,
                 radius: 4,
-                zoom: 12
+                zoom: 13
             },
-            isnotify: 'dn',
+            regtype: '',
             deviceid: null,
             lng: '',
             lat: '',
@@ -37,60 +41,81 @@ class MainPage extends Component {
                 "Content-Type": "application/json"
             }
         }).then(res => res.json()).then(json => {
+            json.mapdata.map((obj, i) => {
+                obj.show = true;
+            });
+            console.log(json.mapdata)
+
             this.setState({mrudetails: json.mapdata, showflagmrus: true});
         });
     }
     componentDidUpdate(props) {
         if (this.state.showflagmrus) {
+            console.log(">>>>>>")
             this.plotmrus();
         }
     }
+    removePreviousmarker() {
+
+        for (var i = 0; i < this.markers.length; i++) {
+            this.markers[i].setMap(null);
+        }
+    }
     plotmrus() {
+        this.removePreviousmarker();
+        console.log(this.state.mrudetails.length)
+
         for (var i = 0; i < this.state.mrudetails.length; ++i) {
-            if (this.state.mrudetails[i].relation !== "WAS_AT") {
-                var latLng = new google.maps.LatLng(
-                        this.state.mrudetails[i].latitude,
-                        this.state.mrudetails[i].longitude
-                        );
+            var mrudetail = this.state.mrudetails[i];
+            if (mrudetail.show) {
 
-                var mapMarker = {
-                    position: latLng,
-                    draggable: false,
-                    icon: {
-                        url: `img/mru/${this.state.mrudetails[i].relation}/mru.png`,
-                        scaledSize: new google.maps.Size(70, 70), // scaled size
-                        origin: new google.maps.Point(0, 0)
-                    },
-                    map: this.map,
-                    title: this.state.mrudetails[i].mruid + " at " + this.state.mrudetails[i].zipcode,
-                    text: this.state.mrudetails[i].atdate,
-                    text2: this.state.mrudetails[i].relation,
-                    animation: google.maps.Animation.DROP
-                };
+                if (mrudetail.relation !== "WAS_AT") {
+                    var latLng = new google.maps.LatLng(
+                            mrudetail.latitude,
+                            mrudetail.longitude
+                            );
 
-                var marker = new google.maps.Marker(mapMarker);
-                var self = this;
-                marker.addListener("click", function () {
+                    var mapMarker = {
+                        position: latLng,
+                        draggable: false,
+                        icon: {
+                            url: `img/mru/${mrudetail.relation}/mru.png`,
+                            scaledSize: new google.maps.Size(70, 70), // scaled size
+                            origin: new google.maps.Point(0, 0)
+                        },
+                        map: this.map,
+                        title: mrudetail.mruid + " at " + mrudetail.zipcode,
+                        text: mrudetail.atdate,
+                        text2: mrudetail.relation
+                                // animation: google.maps.Animation.DROP
+                    };
 
-                    var infotext = ``;
-                    if (this.text2 === "IS_EXPECTED_AT") {
-                        infotext = `is expected to placed at same Location on <b>(${this.text})`;
-                    } else if (this.text2 === "WAS_AT") {
-                        infotext = `was at same Location <b>(${this.text}) </b>`;
-                    } else {
-                        infotext = `is currently at same Location <b>(${this.text}) </b>`;
-                    }
+                    var marker = new google.maps.Marker(mapMarker);
+                    var self = this;
+                    marker.addListener("click", function () {
 
-                    var infoHtml = `<div class="info">  MRU number :${ this.title} <br> ${infotext}</div>`;
-                    var latLng = new google.maps.LatLng(this.getPosition().lat(), this.getPosition().lng());
-                    self.infoWindow.setContent(infoHtml);
-                    self.infoWindow.setPosition(latLng);
-                    self.infoWindow.open(self.map);
+                        var infotext = ``;
+                        if (this.text2 === "IS_EXPECTED_AT") {
+                            infotext = `is expected to placed at same Location on <b>(${this.text})`;
+                        } else if (this.text2 === "WAS_AT") {
+                            infotext = `was at same Location <b>(${this.text}) </b>`;
+                        } else {
+                            infotext = `is currently at same Location <b>(${this.text}) </b>`;
+                        }
 
-                });
-                this.markers.push(marker);
-                this.map.setCenter(marker.getPosition());
+                        var infoHtml = `<div class="info">  MRU number :${ this.title} <br> ${infotext}</div>`;
+                        var latLng = new google.maps.LatLng(this.getPosition().lat(), this.getPosition().lng());
+                        self.infoWindow.setContent(infoHtml);
+                        self.infoWindow.setPosition(latLng);
+                        self.infoWindow.open(self.map);
+
+                    });
+
+                    this.markers.push(marker);
+                    this.map.setCenter(marker.getPosition());
+                }
             }
+
         }
     }
     componentDidMount() {
@@ -106,7 +131,8 @@ class MainPage extends Component {
         this.map = new google.maps.Map(document.getElementById("googleMap"), {
             zoom: 4,
             center: new google.maps.LatLng(latlng.lat, latlng.lng),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false
         });
         this.infoWindow = new google.maps.InfoWindow();
 
@@ -114,7 +140,8 @@ class MainPage extends Component {
     setAutoComplete() {
         var input = document.getElementById('id_address');
         var options = {
-            types: ['address']
+            types: ['address'],
+            componentRestrictions: {country: "us"}
         };
 
         var autocomplete = new google.maps.places.Autocomplete(input, options);
@@ -234,51 +261,43 @@ class MainPage extends Component {
         });
 
     }
+    filterRecord(sortdata) {
+        console.log(">>>>>>>>>>>", sortdata)
+        this.setState({mrudetails: sortdata, showflagmrus: true});
+    }
     render() {
         return (
-                <div className="main-landing row content" style={{'marginTop': '10px'}}>
-                    <div className={` ${this.state.isnotify} `}>
-                        <strong>{this.state.alertmessage}</strong>
-                    </div>
+                <div className="userpanel main-landing row content">
+                    <div id="header"></div>
                     <div className="landing-page">
-                        <div className="col-md-3 col-sm-6 proilecard">
+                        <div className="col-md-4 col-sm-12 proilecard">
+                            <Registration handleCurrentLocation={this.handleCurrentLocation} ondropdownchange={ (value) => {
+                        this.setState({"regtype": value});} }/>
+                        </div>
+                
+                        <div className="col-md-4 col-sm-12 filter-container">
+                            <Mrufilter filterRecord={
+                            (sortdata) => this.filterRecord(sortdata)}
+                                       allmru ={  this.state.mrudetails} />
+                        </div>
+                
+                        <div className="col-md-4 col-sm-12 proilecard">
                             <div className="panel panel-default">
                                 <div className="panel-heading">
-                                    <h5><b>Set Location</b> </h5>
+                                    <h5><b>Filters </b> </h5>
                                 </div>
-                
                                 <div className="panel-body">
-                                    <input ref='cityname' id="id_address" className="form-control input-first places-autocomplete" type="text"   placeholder="City Name,Country Name" /> 
-                                    <div>
-                                        <label> Type: &nbsp;  &nbsp;</label>
-                                        <select   onChange={(event) => {
-                                    this.setState({'regtype': event.target.value });
-                
-                                                  }} 
-                
-                                                  >
-                                            <option value="">Select one</option>
-                                            <option value="mru">Mobile Retail Unit</option>
-                                            <option value="promo">Promotion</option>
-                                            <option value="coup">Coupon</option>
-                                        </select>
-                                    </div>
                 
                                 </div>
-                
                                 <div className="panel-footer">
-                                    <button  className='btn btn-primary btn-xs crntlo' ref="crntloc" onClick={
-                                        this.handleCurrentLocation} type='button'>Set Location
-                                        &nbsp; <span className="glyphicon glyphicon-map-marker"> </span></button> 
+                
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-9 col-sm-6">
-                            <div className="panel panel-default">
-                                <div className="panel-heading">
-                                    <h5><b>Please share your location. Application will auto notify, when we have Mobile store nearby</b> </h5>
-                                </div>
                 
+                        <div className="col-md-12 col-sm-12">
+                            <div className="panel panel-default">
+                                <div className="">  </div>
                                 <div className="panel-body">
                                     <div id="googleMap" className="mapsize"></div>     
                                 </div>
@@ -287,8 +306,8 @@ class MainPage extends Component {
                         </div>
                     </div>
                 </div>
-                                    );
-                    }
-                }
+                        );
+        }
+    }
 
-                export default MainPage;
+    export default MainPage;

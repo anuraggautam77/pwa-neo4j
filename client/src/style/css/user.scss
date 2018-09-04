@@ -1,0 +1,33 @@
+.userpanel{
+    .landing-page{
+        margin-top: 10px;
+    }
+    .panel-body{
+        min-height: 93px;
+        padding: 5px;
+    }
+    .panel-footer{
+        min-height: 59px;
+    }
+    .input-group{
+        float:left !important;
+    }
+
+    .filter-container{
+        li{ float:left; padding-right:5px; cursor: pointer;}
+    }
+
+    .alignheading {
+        .panel-body {
+            padding: 5px;
+        }
+    }
+
+    .proilecard{
+        select{
+            height: 35px;
+            width: 60%;
+        }
+
+    }
+}

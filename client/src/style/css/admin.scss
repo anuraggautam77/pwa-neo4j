@@ -1,0 +1,244 @@
+.adminpanel{
+
+    .mapsize{
+        width:100%;
+        height: 500px;
+    }
+
+    .graph-details{
+
+        height: 169px;
+        overflow: auto;
+
+        li{
+            cursor: pointer;
+        }
+        .green{
+            background-color: #b6ff6c;
+            color:#000;
+            font-weight: bold;
+        }
+
+        .yellow{
+            background-color: #ffff6c;
+            color:#000;
+            font-weight: bold;
+        }
+        .topmost{
+            background-color: #645533;
+            color:#fff;
+            font-weight: bold;
+        }
+    }
+
+
+    .admin-proilecard{
+        .pointer{
+            cursor: pointer;
+        }
+        position: absolute;
+        z-index: 999;
+        .panel-heading,.panel-footer{
+            background-color: transparent;
+        }
+        .panel-default{
+            background: linear-gradient(to right, rgb(76, 161, 175), rgb(196, 224, 229));
+            border-color: rgb(233, 64, 87);
+            .form-inline{
+                margin: 20px;
+            }
+
+        }
+    }
+
+
+    .breadcrumb{
+        background-color: rgb(241, 243, 245);
+        border-radius: 0;
+        border: 0;
+        font-family: "Arial", sans-serif;
+        font-size: 15px;
+        padding: 8px 25px 10px;
+        .active{
+            color: #F15F79;
+            font-weight: bold;
+
+        }
+    }
+
+
+    .bg-info {
+        background-color: rgb(61, 185, 175) !important;
+        color: rgb(255, 255, 255) !important;
+    }
+    .bg-inverse {
+        background-color: rgb(98, 112, 125) !important;
+        color: rgb(255, 255, 255) !important;
+    }
+    .bg-theme {
+        background-color: rgb(243, 89, 88) !important;
+        color: rgb(255, 255, 255) !important;
+    }
+
+    .well {
+        border-radius: 0;
+        background-color: rgb(214, 221, 225);
+        border: 1px solid rgba(0, 0, 0, 0);
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+    .well {
+        min-height: 20px;
+        padding: 0px;
+        margin-bottom: 20px;
+        background-color: rgb(245, 245, 245);
+        border: 1px solid rgb(227, 227, 227);
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    }
+
+    .widget-tile {
+        position: relative;
+        overflow: hidden;
+        margin: 0;
+        padding: 15px;
+        h3{
+            padding-bottom: 10px;
+        }
+        h5{
+            margin-bottom: 8px;
+        }
+    }
+    .progress.progress-over-tile {
+        margin: auto -20px 5px;
+        width: auto !important;
+    }
+
+    .progress-xs {
+        height: 5px;
+    }
+
+    .zipcode-filter{
+        h3 {
+            font-size: 14px;
+            padding: 0;
+            margin: 0 0 10px 0;
+        }
+        .ember{
+            background-color: #ffc107;
+        }
+        .green{
+            background-color: #009688;
+        }
+
+        .least{
+            background-color: #3f51b5;
+
+        }
+        .topmost{
+            background-color: #645533;
+
+        }
+        
+        .redColor{
+             background-color: #de7123
+        }
+        
+        
+        .blue{
+             background-color: #47b1dd;
+        }
+        
+        .progress{
+            height: 5px;
+        } 
+        a{
+            color: #000;
+        }
+
+    } 
+
+
+
+    .filter-container{
+        .panel-body{
+            padding:0px;
+        }
+        ul{
+            margin: 0;
+            padding: 0;
+        }
+
+        li{
+            list-style: none;
+            margin: 10px;
+            cursor: pointer;
+            float: left;
+            span{
+                margin-left:9px;
+            }
+        }
+
+        .btn-primary{
+            padding:  6px 10px !important;
+        }
+        .btn-circle {
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 15px;
+            .btn-lg {
+                width: 50px;
+                height: 50px;
+                padding: 10px 16px;
+                font-size: 18px;
+                line-height: 1.33;
+                border-radius: 25px;
+            }
+        }
+
+        .ember{
+            background-color: #ffc107;
+        }
+        .green{
+            background-color: #009688;
+        }
+
+        .least{
+            background-color: #3f51b5;
+
+        }
+        .topmost{
+            background-color: #645533;
+
+        }
+        .panel-heading,.panel-footer{
+            background-color: transparent;
+        }
+        .panel-default{
+            // background: linear-gradient(to right, rgb(238, 156, 167), rgb(255, 221, 225));
+            // border-color: rgb(233, 64, 87);
+
+            .form-inline{
+                margin: 20px;
+            }
+
+        }
+    }
+
+
+    @media (min-width: 200px) and (max-width: 767px) {
+
+        .mapsize{
+            width:100%;
+            height:250px;
+        }
+        .crntlo{
+            width:100%
+        }
+    } 
+}

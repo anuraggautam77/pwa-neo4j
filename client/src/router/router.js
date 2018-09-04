@@ -12,20 +12,13 @@ export default class Routing extends Component {
     }
   
     render() {
-     
         return (
             <Router>
-               <div>
-                <div className="container-full">
-                      <NavMenu islogin={this.props.islogin}/>
-                 </div>
                  <div className="container">
                     <Route path="/" exact component={MainPage} />
-                    <Route path="/main" exact component={MainPage} />
-                    <Route path="/dashboard" exact component={Dashboard} />
+                    <Route path="/user" exact component={MainPage} />
+                    <Route path="/admin" exact component={Dashboard} />
                 </div>
-               
-             </div>      
             </Router>
         )
     }

@@ -46,6 +46,7 @@ module.exports = (apiRoutes) => {
                     cityID: val.city._id,
                     cityname: val.city.properties.cityName,
                     userCount: val.userCount,
+                    show:true,
                     type: "pcity"
                 };
 
@@ -70,7 +71,8 @@ module.exports = (apiRoutes) => {
                     cityID: val.cityid,
                     cityname: val.cityname,
                     userCount: val.userCount,
-                    type: "scity"
+                    type: "scity",
+                    show:true,
                 };
                 finalArray.push(objPerCity);
             });
@@ -104,7 +106,6 @@ module.exports = (apiRoutes) => {
     apiRoutes.post(`/${SERVICE_CONST.NEAR_BY_CURR_LOC}`, (req, res) => {
 
         UsersModel.nearByLoc(req.body, (jsondata) => {
-
             res.json({status: "success", mapdata: jsondata});
         });
     });
