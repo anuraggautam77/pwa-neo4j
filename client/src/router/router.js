@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Dashboard from '../containers/dashboard';
-import MainPage from '../containers/mainpage';
+import Dashboard from '../containers/admin';
+import MainPage from '../containers/user';
 import NavMenu from '../components/navigation/nav';
  
 

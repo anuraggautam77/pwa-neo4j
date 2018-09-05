@@ -9,6 +9,8 @@ import Filters from "./filters";
 import PrimaryFilters from "./pfilter";
 import SecondaryFilters from "./sfilter";
 import UserCount from "./usercount";
+import Mapview from "./markerview";
+
 import MarkerClusterer from "../../common/markerclusterer";
 import moment from "moment";
 const defaultradius = 16091;
@@ -21,6 +23,7 @@ class Adminpanel extends Component {
             nearByLocations: [],
             clusterShow: false,
             primaryCity: false,
+            viewtype: "DEFAULT",
             cities: false,
             breadcrum: [
                 {val: "primary", label: 'Primary Cities', active: 1},
@@ -36,7 +39,7 @@ class Adminpanel extends Component {
             mruDetails: {
                 mruContainer: "dn",
                 criteriaContainer: "dn",
-                criteriaValue: ""
+                criteriaValue: "popularLocation"
             }
         };
         this.newClusterMarkers = [];
@@ -191,8 +194,13 @@ class Adminpanel extends Component {
 
 
         if (this.state.clusterShow) {
-            // this.markCluster();
-            this.displayCluster();
+            if (this.state.viewtype === "DEFAULT") {
+                //  this.markCluster();
+                this.defaultMapView();
+            } else {
+                this.displayCluster();
+            }
+
         } else {
             if (this.state.cities) {
                 if (this.state.primaryCity) {
@@ -214,20 +222,15 @@ class Adminpanel extends Component {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             mapTypeControl: false
         });
+
     }
-    previousmarker(flag) {
+    previousmarker() {
         for (var i = 0; i < this.markers.length; i++) {
-            if (flag) {
-// if (this.markers[i].getTitle() != this.notToRemove) {
-                this.markers[i].setMap(null);
-                // }
-            } else {
-                this.markers[i].setMap(null);
-            }
+            this.markers[i].setMap(null);
         }
     }
     plotcites(flag) {
-        this.previousmarker(true);
+        this.previousmarker();
         var markerCitiesData = [];
         if (flag === "p") {
             markerCitiesData = this.state.primaryCities;
@@ -330,8 +333,24 @@ class Adminpanel extends Component {
             radius: radius
         })
     }
+    viewchange(flag) {
+        this.previousmarker();
+        this.clusterMarkers = [];
+        this.newClusterMarkers = [];
+        this.setState({
+            ...this.state,
+            viewtype: flag,
+            clusterShow: true,
+            mruDetails:
+                    {
+                        ...this.state.mruDetails,
+                        mruContainer: "dn",
+                        criteriaContainer: "dn"
+                    }});
+
+    }
     filteredRecord(obj) {
-        this.previousmarker(false);
+        this.previousmarker();
         this.clusterMarkers = [];
         this.setState({
             nearByLocations: obj,
@@ -372,33 +391,77 @@ class Adminpanel extends Component {
     }
     displayCluster() {
 
-        this.previousmarker(false);
+        this.previousmarker();
         this.clearHandler();
         this.clusterMarkers = [];
+        this.newClusterMarkers = [];
         for (var i = 0; i < this.state.nearByLocations.length; i++) {
 
-            let zipDetail = this.state.nearByLocations[i];
-            var latLng = new google.maps.LatLng(zipDetail.latitude,
-                    zipDetail.longitude);
-            var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=' +
-                    'FFFFFF,008CFF,000000&ext=.png';
-            var markerImage = new google.maps.MarkerImage(imageUrl, new google.maps.Size(24, 32));
-            var marker = new google.maps.Marker({
-                'position': latLng,
-                'icon': markerImage,
-                value: `${zipDetail.userCount}`,
-                lebel: `${zipDetail.userCount}`,
-                title: `${zipDetail.userCount}`
-            });
-            this.newClusterMarkers.push(marker);
-        }
 
-        this.markerClusterer = new MarkerClusterer(this.map, this.newClusterMarkers, {imagePath: '../img/culsterimg/m'});
+            var iconMarkerImg = "primarycity.png";
+            var zipDetail = this.state.nearByLocations[i];
+            if (zipDetail.show) {
+                if (zipDetail.relation === 'IS_AT') {
+                    iconMarkerImg = "green.png";
+                } else if (zipDetail.relation === 'IS_EXPECTED_AT') {
+                    iconMarkerImg = "ember.png";
+                } else {
+                    if (i <= 30) {
+                        iconMarkerImg = "darkcolor.png";
+                    }
+                }
+
+                var latLng = new google.maps.LatLng(zipDetail.latitude,
+                        zipDetail.longitude);
+                // var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&chco='FFFFFF,008CFF,000000&ext=.png';
+                //var markerImage = new google.maps.MarkerImage(imageUrl, new google.maps.Size(24, 32));
+                var zipmarker = new google.maps.Marker({
+                    'position': latLng,
+                    icon: {
+                        url: `img/culsterimg/zip/${iconMarkerImg}`,
+                        scaledSize: new google.maps.Size(30, 30), // scaled size
+                        origin: new google.maps.Point(0, 0)
+                    },
+                    usercount: `${zipDetail.userCount}`,
+                    value: `${zipDetail.zip}`,
+                    title: `${zipDetail.locName}`,
+                    relation: `${zipDetail.relation}`,
+                    mruid: `${zipDetail.mruid}`
+                });
+                var self = this;
+                zipmarker.addListener("click", function (e) {
+
+                    var mruRelateTo = this.relation === "null" ? "" : this.relation;
+                    var mruID = this.mruid === "null" ? "" : this.mruid;
+                    var alreadyText = "";
+                    if (mruRelateTo === "IS_AT") {
+                        alreadyText = "Mru is already placed at this location. Click End Mru button to End Service!";
+                    }
+
+                    self.setState({
+                        mruDetails: {
+                            ...self.state.mruDetails,
+                            zipcode: this.value,
+                            mruContainer: "db",
+                            alreadyTextmru: alreadyText,
+                            cityname: this.title,
+                            mruRelateTo: mruRelateTo,
+                            mruID: mruID
+                        },
+                        clusterShow: false,
+                        cities: false
+                    });
+                });
+                this.newClusterMarkers.push(zipmarker);
+            }
+        }
+        this.markerClusterer = new MarkerClusterer(this.map, this.newClusterMarkers, {minimumClusterSize: 10, imagePath: '../img/culsterimg/m'});
     }
-    markCluster() {
-        this.previousmarker(false);
+    defaultMapView() {
+        this.previousmarker();
         this.clearHandler();
         this.clusterMarkers = [];
+        this.newClusterMarkers = [];
         for (var i = 0; i < this.state.nearByLocations.length; ++i) {
 
             var iconMarkerImg = "primarycity.png";
@@ -421,12 +484,6 @@ class Adminpanel extends Component {
                 var zipmarker = new google.maps.Marker({
                     position: latLng,
                     draggable: false,
-                    /* label: {
-                     text: `${zipDetail.userCount}`,
-                     color: "#000",
-                     fontSize: "20",
-                     fontWeight: "bold"
-                     }, */
                     icon: {
                         url: `img/culsterimg/zip/${iconMarkerImg}`,
                         scaledSize: new google.maps.Size(30, 30), // scaled size
@@ -467,7 +524,7 @@ class Adminpanel extends Component {
                 this.clusterMarkers.push(zipmarker);
             }
         }
-        this.markerClusterer = new MarkerClusterer(this.map, this.clusterMarkers, {});
+        this.markerClusterer = new MarkerClusterer(this.map, this.clusterMarkers, {minimumClusterSize: 10000000});
     }
     bredcrumRender(state) {
         var flag = '';
@@ -517,52 +574,57 @@ class Adminpanel extends Component {
                 
                     <div id="content">
                         <div className="row">
-                            <div className="col-md-9 col-sm-6">
-                                <MruPlaceConatiner mruDetails={
-                                this.state.mruDetails}/> 
-                                <div className="chart-wrapper">
-                                    <div id="nearbyuser-maparea" style={ {
-                                    width: "100%", height: "600px"  }} >
-                                        <div id="nearbyuser-map" className="nearby-map" />
-                                    </div>
-                                </div>
-                            </div>
+                
                             <div className="col-md-3 col-sm-12">
                                 <UserCount></UserCount>
                                 { (() => {
-                                                        if (this.state.primaryCity) {
-                                                            return (<PrimaryFilters allRecord={this.state.primaryCities} primaryfilterRecord={(ob) => this.primaryfilterRecord(ob)}/>)
+                                                    if (this.state.primaryCity) {
+                                                        return (<PrimaryFilters allRecord={this.state.primaryCities} primaryfilterRecord={(ob) => this.primaryfilterRecord(ob)}/>)
                                 }
                                 })() 
                 
                                 }
                 
                                 <Criteria criteriaContainer={
-                                            this.state.mruDetails.criteriaContainer} onRadioChange={e => this.onRadioChange(e)}  />
+                                        this.state.mruDetails.criteriaContainer} onRadioChange={e => this.onRadioChange(e)}  />
                                 <SecondaryFilters criteriaContainer={this.state.mruDetails.criteriaContainer}  allRecord={this.state.secondaryCities} secondaryfilterRecord={(ob) => this.secondaryfilterRecord(ob)}/>
                 
                                 { (() => {
-                                                                if (this.state.nearByLocations.length >= 1) {
-                                                                    return(<Filters allRecord={this.state.nearByLocations} filterRecord={(ob) => this.filteredRecord(ob)} />
-                                                                            )
+                                                            if (this.state.nearByLocations.length >= 1) {
+                                                                return(
+                                                                <div>
+                                                                    <Mapview viewtype={(flag) => this.viewchange(flag)}/>
+                                                                    <Filters allRecord={this.state.nearByLocations} filterRecord={(ob) => this.filteredRecord(ob)} />
+                                                                </div>
+                                                                        )
                                 }
                                 })() 
                                 } 
                 
                                 {
-                                                                    (() => {
-                                                                        if (this.state.nearByLocations.length >= 1) {
-                                                                            return(<NearByLocation nearbystate={this.state.nearByLocations} onclickHandler={(e) => this.listClickhandler(e)}
-                                                                                            />
-                                                                                                    )
+                                                                (() => {
+                                                                    if (this.state.nearByLocations.length >= 1) {
+                                                                        return(<NearByLocation nearbystate={this.state.nearByLocations} onclickHandler={(e) => this.listClickhandler(e)}
+                                                                                        />
+                                                                                                )
                                 }
                                 })() 
                                 }
                             </div>
+                            <div className="col-md-9 col-sm-6">
+                                <MruPlaceConatiner mruDetails={
+                                                        this.state.mruDetails}/> 
+                                <div className="chart-wrapper">
+                                    <div id="nearbyuser-maparea" style={ {
+                                                            width: "100%", height: "750px"  }} >
+                                        <div id="nearbyuser-map" className="nearby-map" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                                                );
+                                                        );
                 }
             }
             export default Adminpanel;

@@ -3,12 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/demo/pwa-neo4j/client/src/containers/dashboard.js</file>
             <file>file:/D:/demo/pwa-neo4j/client/src/App.js</file>
             <file>file:/D:/demo/pwa-neo4j/client/src/components/navigation/nav.js</file>
             <file>file:/D:/demo/pwa-neo4j/client/src/index.js</file>
             <file>file:/D:/demo/pwa-neo4j/client/src/router/router.js</file>
-            <file>file:/D:/demo/pwa-neo4j/client/src/containers/mainpage.js</file>
+            <file>file:/D:/demo/pwa-neo4j/server/dbconnection.js</file>
             <file>file:/D:/demo/pwa-neo4j/client/src/components/admin/index.js</file>
         </group>
     </open-files>

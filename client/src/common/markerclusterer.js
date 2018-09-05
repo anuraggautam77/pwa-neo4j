@@ -372,8 +372,8 @@ MarkerClusterer.prototype.calculator_ = function (markers, numStyles) {
         index++;
     }
     markers.map((obj, data) => {
-        if (parseInt(obj.title) !== "NaN") {
-            text += parseInt(obj.title);
+        if (parseInt(obj.usercount) !== "NaN") {
+            text += parseInt(obj.usercount);
         }
 
     });

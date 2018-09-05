@@ -93,12 +93,12 @@ class MruPlaceConatiner extends Component {
     render() {
 
         return (
-                <div className="col-md-3 col-sm-12  admin-proilecard">
+                <div className="admin-proilecard">
                     <div className={`panel panel-default ${this.state.mruDetails.mruContainer}`}>
                         <div className="panel-heading">
                             <span>
                                 <b>
-                                    MRU Place at: {this.state.mruDetails.cityname}(
+                                    MRU Place at: { (this.state.mruDetails.cityname!=='null')?this.state.mruDetails.cityname:"" }(
                                     {this.state.mruDetails.zipcode}) 
                                 </b>
                             </span>

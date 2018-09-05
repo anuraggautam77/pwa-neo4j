@@ -20,7 +20,9 @@ class Criteria extends Component {
                             <div className="progress progress-xs progress-white progress-over-tile"></div>
                             <div className="row">
                                 <div className="col-md-6 label-white">  Popular Location</div>
-                                <div className="col-md-6 label-white"> <input
+                                <div className="col-md-6 label-white"> 
+                                <input
+                                        checked="checked"
                                         type="radio"
                                         name="location"
                                         value="popularLocation"
