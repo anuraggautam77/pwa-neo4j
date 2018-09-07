@@ -106,183 +106,188 @@ li {
     height: 250px; }
   .crntlo {
     width: 100%; } }
-.adminpanel .mapsize {
-  width: 100%;
-  height: 500px; }
-
-.adminpanel .graph-details {
-  height: 169px;
-  overflow: auto; }
-  .adminpanel .graph-details li {
-    cursor: pointer; }
-  .adminpanel .graph-details .green {
-    background-color: #b6ff6c;
-    color: #000;
-    font-weight: bold; }
-  .adminpanel .graph-details .yellow {
-    background-color: #ffff6c;
-    color: #000;
-    font-weight: bold; }
-  .adminpanel .graph-details .topmost {
-    background-color: #645533;
-    color: #fff;
-    font-weight: bold; }
-
-.adminpanel .admin-proilecard {
-  position: absolute;
-  z-index: 999; }
-  .adminpanel .admin-proilecard .pointer {
-    cursor: pointer; }
-  .adminpanel .admin-proilecard .panel-heading, .adminpanel .admin-proilecard .panel-footer {
-    background-color: transparent; }
-  .adminpanel .admin-proilecard .panel-default {
-    background: linear-gradient(to right, #4ca1af, #c4e0e5);
-    border-color: #e94057; }
-    .adminpanel .admin-proilecard .panel-default .form-inline {
-      margin: 20px; }
-
-.adminpanel .breadcrumb {
-  background-color: #f1f3f5;
-  border-radius: 0;
-  border: 0;
-  font-family: "Arial", sans-serif;
-  font-size: 15px;
-  padding: 8px 25px 10px; }
-  .adminpanel .breadcrumb .active {
-    color: #F15F79;
-    font-weight: bold; }
-
-.adminpanel .bg-info {
-  background-color: #3db9af !important;
-  color: white !important; }
-
-.adminpanel .bg-inverse {
-  background-color: #62707d !important;
-  color: white !important; }
-
-.adminpanel .bg-theme {
-  background-color: #f35958 !important;
-  color: white !important; }
-
-.adminpanel .well {
-  border-radius: 0;
-  background-color: #d6dde1;
-  border: 1px solid rgba(0, 0, 0, 0);
-  box-shadow: none; }
-
-.adminpanel .well {
-  min-height: 20px;
-  padding: 0px;
-  margin-bottom: 20px;
-  background-color: whitesmoke;
-  border: 1px solid #e3e3e3;
-  border-radius: 4px;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05); }
-
-.adminpanel .widget-tile {
-  position: relative;
-  overflow: hidden;
-  margin: 0;
-  padding: 15px; }
-  .adminpanel .widget-tile h3 {
-    padding-bottom: 10px; }
-  .adminpanel .widget-tile h5 {
-    margin-bottom: 8px; }
-
-.adminpanel .progress.progress-over-tile {
-  margin: auto -20px 5px;
-  width: auto !important; }
-
-.adminpanel .progress-xs {
-  height: 5px; }
-
-.adminpanel .zipcode-filter h3 {
-  font-size: 14px;
-  padding: 0;
-  margin: 0 0 10px 0; }
-
-.adminpanel .zipcode-filter .ember {
-  background-color: #ffc107; }
-
-.adminpanel .zipcode-filter .green {
-  background-color: #009688; }
-
-.adminpanel .zipcode-filter .least {
-  background-color: #3f51b5; }
-
-.adminpanel .zipcode-filter .topmost {
-  background-color: #645533; }
-
-.adminpanel .zipcode-filter .redColor {
-  background-color: #de7123; }
-
-.adminpanel .zipcode-filter .blue {
-  background-color: #47b1dd; }
-
-.adminpanel .zipcode-filter .progress {
-  height: 5px; }
-
-.adminpanel .zipcode-filter a {
-  color: #000; }
-
-.adminpanel .filter-container .panel-body {
-  padding: 0px; }
-
-.adminpanel .filter-container ul {
-  margin: 0;
-  padding: 0; }
-
-.adminpanel .filter-container li {
-  list-style: none;
-  margin: 10px;
-  cursor: pointer;
-  float: left; }
-  .adminpanel .filter-container li span {
-    margin-left: 9px; }
-
-.adminpanel .filter-container .btn-primary {
-  padding: 6px 10px !important; }
-
-.adminpanel .filter-container .btn-circle {
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px; }
-  .adminpanel .filter-container .btn-circle .btn-lg {
-    width: 50px;
-    height: 50px;
-    padding: 10px 16px;
-    font-size: 18px;
-    line-height: 1.33;
-    border-radius: 25px; }
-
-.adminpanel .filter-container .ember {
-  background-color: #ffc107; }
-
-.adminpanel .filter-container .green {
-  background-color: #009688; }
-
-.adminpanel .filter-container .least {
-  background-color: #3f51b5; }
-
-.adminpanel .filter-container .topmost {
-  background-color: #645533; }
-
-.adminpanel .filter-container .panel-heading, .adminpanel .filter-container .panel-footer {
-  background-color: transparent; }
-
-.adminpanel .filter-container .panel-default .form-inline {
-  margin: 20px; }
-
-@media (min-width: 200px) and (max-width: 767px) {
+.adminpanel {
+  /* Modal Content */ }
   .adminpanel .mapsize {
     width: 100%;
-    height: 250px; }
-  .adminpanel .crntlo {
-    width: 100%; } }
+    height: 500px; }
+  .adminpanel .graph-details {
+    height: 169px;
+    overflow: auto; }
+    .adminpanel .graph-details li {
+      cursor: pointer; }
+    .adminpanel .graph-details .green {
+      background-color: #b6ff6c;
+      color: #000;
+      font-weight: bold; }
+    .adminpanel .graph-details .yellow {
+      background-color: #ffff6c;
+      color: #000;
+      font-weight: bold; }
+    .adminpanel .graph-details .topmost {
+      background-color: #645533;
+      color: #fff;
+      font-weight: bold; }
+  .adminpanel .admin-proilecard {
+    position: absolute;
+    z-index: 999;
+    padding: 0; }
+    .adminpanel .admin-proilecard .pointer {
+      cursor: pointer; }
+    .adminpanel .admin-proilecard .panel-heading, .adminpanel .admin-proilecard .panel-footer {
+      background-color: transparent; }
+    .adminpanel .admin-proilecard .panel-default {
+      background: linear-gradient(to right, #4ca1af, #c4e0e5);
+      border-color: #e94057; }
+      .adminpanel .admin-proilecard .panel-default .form-inline {
+        margin: 20px; }
+  .adminpanel .breadcrumb {
+    background-color: #f1f3f5;
+    border-radius: 0;
+    border: 0;
+    font-family: "Arial", sans-serif;
+    font-size: 15px;
+    padding: 8px 25px 10px; }
+    .adminpanel .breadcrumb .active {
+      color: #F15F79;
+      font-weight: bold; }
+  .adminpanel .bg-info {
+    background-color: #3db9af !important;
+    color: white !important; }
+  .adminpanel .bg-inverse {
+    background-color: #62707d !important;
+    color: white !important; }
+  .adminpanel .bg-theme {
+    background-color: #f35958 !important;
+    color: white !important; }
+  .adminpanel .well {
+    border-radius: 0;
+    background-color: #d6dde1;
+    border: 1px solid rgba(0, 0, 0, 0);
+    box-shadow: none; }
+  .adminpanel .well {
+    min-height: 20px;
+    padding: 0px;
+    margin-bottom: 20px;
+    background-color: whitesmoke;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05); }
+  .adminpanel .widget-tile {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 15px; }
+    .adminpanel .widget-tile h3 {
+      padding-bottom: 10px; }
+    .adminpanel .widget-tile h5 {
+      margin-bottom: 8px; }
+  .adminpanel .progress.progress-over-tile {
+    margin: auto -20px 5px;
+    width: auto !important; }
+  .adminpanel .progress-xs {
+    height: 5px; }
+  .adminpanel .zipcode-filter h3 {
+    font-size: 14px;
+    padding: 0;
+    margin: 0 0 10px 0; }
+  .adminpanel .zipcode-filter .ember {
+    background-color: #ffc107; }
+  .adminpanel .zipcode-filter .green {
+    background-color: #009688; }
+  .adminpanel .zipcode-filter .least {
+    background-color: #3f51b5; }
+  .adminpanel .zipcode-filter .topmost {
+    background-color: #645533; }
+  .adminpanel .zipcode-filter .redColor {
+    background-color: #de7123; }
+  .adminpanel .zipcode-filter .blue {
+    background-color: #47b1dd; }
+  .adminpanel .zipcode-filter .progress {
+    height: 5px; }
+  .adminpanel .zipcode-filter a {
+    color: #000; }
+  .adminpanel .filter-container .panel-body {
+    padding: 0px; }
+  .adminpanel .filter-container ul {
+    margin: 0;
+    padding: 0; }
+  .adminpanel .filter-container li {
+    list-style: none;
+    margin: 10px;
+    cursor: pointer;
+    float: left; }
+    .adminpanel .filter-container li span {
+      margin-left: 9px; }
+  .adminpanel .filter-container .btn-primary {
+    padding: 6px 10px !important; }
+  .adminpanel .filter-container .btn-circle {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px; }
+    .adminpanel .filter-container .btn-circle .btn-lg {
+      width: 50px;
+      height: 50px;
+      padding: 10px 16px;
+      font-size: 18px;
+      line-height: 1.33;
+      border-radius: 25px; }
+  .adminpanel .filter-container .ember {
+    background-color: #ffc107; }
+  .adminpanel .filter-container .green {
+    background-color: #009688; }
+  .adminpanel .filter-container .least {
+    background-color: #3f51b5; }
+  .adminpanel .filter-container .topmost {
+    background-color: #645533; }
+  .adminpanel .filter-container .panel-heading, .adminpanel .filter-container .panel-footer {
+    background-color: transparent; }
+  .adminpanel .filter-container .panel-default .form-inline {
+    margin: 20px; }
+  .adminpanel .close {
+    margin-top: -18px; }
+  .adminpanel .modal {
+    display: block;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: black;
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */ }
+  .adminpanel .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888; }
+  .adminpanel .panel-green {
+    border-color: #5cb85c; }
+    .adminpanel .panel-green .panel-heading {
+      border-color: #5cb85c;
+      color: white;
+      background-color: #5cb85c; }
+  @media (min-width: 200px) and (max-width: 767px) {
+    .adminpanel .mapsize {
+      width: 100%;
+      height: 250px; }
+    .adminpanel .crntlo {
+      width: 100%; } }
 .userpanel .landing-page {
   margin-top: 10px; }
 

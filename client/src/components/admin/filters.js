@@ -106,6 +106,18 @@ class Filters extends Component {
                             <strong> <button type="button" onClick={() => this.props.filterRecord(this.changeFilter(""))} className="btn btn-primary btn-xs"> Reset filter</button></strong>
                         </div>
                     </div>
+                    <div className="well panel-heading alignheading">
+                        <div className="widget-tile">
+                            <section>
+                                <h5>
+                                    <strong> User Registration</strong>  
+                                </h5>
+                            </section>
+                            <strong> <button type="button"  className="btn btn-primary btn-xs"> Registration Growth</button></strong>       
+                
+                        </div>
+                    </div>
+                
                 </div>
                 );
     }

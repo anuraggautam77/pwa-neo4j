@@ -16,6 +16,7 @@
   "dependencies": {
     "algorithmia": "^0.3.10",
     "autoprefixer": "^9.0.2",
+    "chart.js": "^2.7.2",
     "connect-history-api-fallback": "^1.5.0",
     "cors": "^2.8.4",
     "css-loader": "^0.28.5",
@@ -39,7 +40,8 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
     "react-virtualized": "^9.19.0",
-    "request": "^2.85.0"
+    "request": "^2.85.0",
+    "sort-by-distance": "^1.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.7.6",

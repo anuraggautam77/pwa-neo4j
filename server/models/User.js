@@ -71,6 +71,33 @@ UsersModel = {
             });
         }
     },
+    registerUserAtPrimary: function (req, callback) {
+        var query = `match (user:User)-[r:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(city:MasterCity) return  count(distinct user) as mruCount`;
+        driver.cypher({query: query}, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });
+    },
+    registerUserAtSecondary: function (id, callback) {
+        var query = `optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=${id} with count(distinct user) as primaryCount optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=${id} with count(distinct user) as secondaryCount,primaryCount return secondaryCount+primaryCount as mruCount`;
+        driver.cypher({query: query}, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });
+    },
+    
+    registerUserAtThirdLevel:function(req,callback){
+        var query = `optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=${req.locid} with count(distinct user) as primaryCount optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=${req.locid} with count(distinct user) as secondaryCount,primaryCount return secondaryCount+primaryCount as mruCount`;
+          
+          driver.cypher({query: query}, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });
+    },
+    
     citiesDetails: function (req, callback) {
 
         if (isDebugLocal) {
@@ -126,8 +153,8 @@ UsersModel = {
                 locflag = 'nearbyLocation';
             }
             //'${req.todaydate}'
-
-           var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where mr.date >= '${req.todaydate}' and (not exists(mr.status) or not mr.status='completed')  return mru.mru_id as mruid, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
+            var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where not mr.status='completed'  return mru.mru_id as mruid,mr.status, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
+            // var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where mr.date >= '${req.todaydate}' and (not exists(mr.status) or not mr.status='completed')  return mru.mru_id as mruid, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
             //  var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where ((ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation")) and  distance(point({longitude:c.lang,latitude:c.lat}),point({longitude:zip.lang,latitude:zip.lat}))  < 159999 optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU) where mr.date >= '${req.todaydate}' return mru.mru_id as mruid, type(mr) as relation,ID(c), c.cityName as cityname,zip.locationName as locName, zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
 
 
@@ -151,25 +178,27 @@ UsersModel = {
 
             });
         }
-
-        // Match (user:User)-[:REGISTERED_MRU|:REGISTERED_PRO]-(zip:Mastergeo)-[:BELONGS_TO]-(city:MasterCity{cityName:"Indianapolis"}) return city.cityName, count(user) as userCount, zip.lat, zip.lang 
-
+ 
     },
     saveMruDetails: function (data, callback) {
+        var query = '';
+        if (data.relationTo === 'WAS_AT') {
+            query = `MERGE (zip:Mastergeo {zip:${data.zipcode}})  MERGE (mru:MRU {mru_id:'${data.mruID}'}) 
+             MERGE (zip) <- [:WAS_AT {date:'${data.startDate}',status:'completed'}] - (mru)
+             with zip,mru MATCH (zip) <- [prevRel:${data.mruprevRelation} {date:'${data.prevdate}'}] - (mru) SET prevRel.status='completed'`;
+        } else {
+            query = `MERGE (zip:Mastergeo {zip:${data.zipcode}}) 
+                     MERGE (mru:MRU {mru_id:'${data.mruID}'}) 
+                     MERGE (zip) <- [:${data.relationTo} {date:'${data.startDate}',status:'progress'}] - (mru)`;
+        }
 
-        var query = `MATCH (zip:Mastergeo {zip:${data.zipcode}}) 
-                    MERGE (mru:MRU {mru_id:'${data.mruID}'}) 
-                    MERGE (zip) <- [:${data.relationTo} {date:'${data.startDate}'}] - (mru)`;
-
-
-        //  MERGE (mru:MRU {mru_id:'mru_22544'})-[mr:IS_AT]-(z:Mastergeo{zip:22544}) set mr.status= CASE WHEN mr.status='completed' THEN  'progress' WHEN mr.status='progress' THEN  'completed' ELSE 'completed' end
-
+        console.log("saveMruDetails >>>>>>>>>");
+        console.log(query);
+        console.log("saveMruDetails>>>>>>>>>");
 
         driver.cypher({query: query}, (err, results) => {
             if (err)
                 throw err;
-
-
             if (data.relationTo === "IS_AT" || data.relationTo === "IS_EXPECTED_AT") {
                 var obj = {};
                 if (data.relationTo === "IS_EXPECTED_AT") {
@@ -180,7 +209,7 @@ UsersModel = {
                 obj.title = "MRU is nearby you";
                 this.postToSubscriber(obj, data, callback);
             } else {
-                callback(results);
+                callback({showRecommended: true, data: data});
             }
 
         });
@@ -228,7 +257,7 @@ UsersModel = {
                                     } else {
                                         count++;
                                         if (count === tokencount) {
-                                            callback("Message send to >>" + count + ' Devices');
+                                            callback({message: "Message send to >>" + count + ' Devices', });
                                             console.log("/////////////////////");
                                             console.log("Message send to >>" + count + ' Devices');
                                             console.log("/////////////////////");

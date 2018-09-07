@@ -8,9 +8,9 @@ import Criteria from "./criteria";
 import Filters from "./filters";
 import PrimaryFilters from "./pfilter";
 import SecondaryFilters from "./sfilter";
+
 import UserCount from "./usercount";
 import Mapview from "./markerview";
-
 import MarkerClusterer from "../../common/markerclusterer";
 import moment from "moment";
 const defaultradius = 16091;
@@ -21,6 +21,8 @@ class Adminpanel extends Component {
             primaryCities: [],
             secondaryCities: [],
             nearByLocations: [],
+            level: 0,
+            userCount: {0: null, 1: null, 2: null},
             clusterShow: false,
             primaryCity: false,
             viewtype: "DEFAULT",
@@ -42,6 +44,9 @@ class Adminpanel extends Component {
                 criteriaValue: "popularLocation"
             }
         };
+
+        this.directionsDisplay = null;
+        this.directionsService = new google.maps.DirectionsService();
         this.newClusterMarkers = [];
         this.markers = [];
         this.clusterMarkers = [];
@@ -127,7 +132,12 @@ class Adminpanel extends Component {
                     this.setState({
                         primaryCities: json.mapdata,
                         cities: true,
-                        primaryCity: true
+                        primaryCity: true,
+                        userCount: {
+                            0: json.usercount
+                        }
+
+
                     });
                 });
     }
@@ -153,6 +163,11 @@ class Adminpanel extends Component {
                         secondaryCities: json.mapdata,
                         cities: true,
                         primaryCity: false,
+                        level: 1,
+                        userCount: {
+                            ...this.state.userCount,
+                            1: json.usercount
+                        },
                         mruDetails: {
                             ...this.state.mruDetails,
                             criteriaContainer: "db"
@@ -179,6 +194,11 @@ class Adminpanel extends Component {
                             {val: "secondary", label: 'Secondary Cities', active: 0},
                             {val: "zipcode", label: 'Zipcode ', active: 1}
                         ],
+                        level: 2,
+                        userCount: {
+                            ...this.state.userCount,
+                            2: json.usercount
+                        },
                         clusterShow: true,
                         mruDetails:
                                 {
@@ -212,6 +232,7 @@ class Adminpanel extends Component {
         }
     }
     plotmap() {
+        this.directionsDisplay = new google.maps.DirectionsRenderer();
         var latlng = {
             lat: this.state.mapCenter.latitude,
             lng: this.state.mapCenter.longitude
@@ -222,6 +243,7 @@ class Adminpanel extends Component {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             mapTypeControl: false
         });
+        this.directionsDisplay.setMap(this.map);
 
     }
     previousmarker() {
@@ -252,13 +274,13 @@ class Adminpanel extends Component {
                         primaryMarker = "green.png";
                     }
 
+
                     mapMarker = {
                         icon: {
                             url: `img/primary/${primaryMarker}`,
                             scaledSize: new google.maps.Size(60, 60), // scaled size
                             origin: new google.maps.Point(0, 0)
                         },
-                        // icon:`img/icon-64.png`,
                         position: latLng, draggable: false, citytype: `${markerCitiesData[i].type}`,
                         label: `${markerCitiesData[i].userCount}`,
                         map: this.map, typeof : "p", title: `${markerCitiesData[i].cityID}`
@@ -398,16 +420,16 @@ class Adminpanel extends Component {
         for (var i = 0; i < this.state.nearByLocations.length; i++) {
 
 
-            var iconMarkerImg = "primarycity.png";
+            var iconMarkerImg = "primarycity";
             var zipDetail = this.state.nearByLocations[i];
             if (zipDetail.show) {
                 if (zipDetail.relation === 'IS_AT') {
-                    iconMarkerImg = "green.png";
+                    iconMarkerImg = "green";
                 } else if (zipDetail.relation === 'IS_EXPECTED_AT') {
-                    iconMarkerImg = "ember.png";
+                    iconMarkerImg = "ember";
                 } else {
                     if (i <= 30) {
-                        iconMarkerImg = "darkcolor.png";
+                        iconMarkerImg = "darkcolor";
                     }
                 }
 
@@ -418,7 +440,7 @@ class Adminpanel extends Component {
                 var zipmarker = new google.maps.Marker({
                     'position': latLng,
                     icon: {
-                        url: `img/culsterimg/zip/${iconMarkerImg}`,
+                        url: `img/culsterimg/zip/${iconMarkerImg}.png`,
                         scaledSize: new google.maps.Size(30, 30), // scaled size
                         origin: new google.maps.Point(0, 0)
                     },
@@ -426,7 +448,9 @@ class Adminpanel extends Component {
                     value: `${zipDetail.zip}`,
                     title: `${zipDetail.locName}`,
                     relation: `${zipDetail.relation}`,
-                    mruid: `${zipDetail.mruid}`
+                    mruid: `${zipDetail.mruid}`,
+                    prevdate: `${zipDetail.mrudate}`,
+                    icontype: iconMarkerImg
                 });
                 var self = this;
                 zipmarker.addListener("click", function (e) {
@@ -446,7 +470,11 @@ class Adminpanel extends Component {
                             alreadyTextmru: alreadyText,
                             cityname: this.title,
                             mruRelateTo: mruRelateTo,
-                            mruID: mruID
+                            mruID: mruID,
+                            mruprevRelation: mruRelateTo,
+                            preDate: this.prevdate,
+                            currentloc: this.getPosition(),
+                            icontype: this.icontype
                         },
                         clusterShow: false,
                         cities: false
@@ -462,18 +490,20 @@ class Adminpanel extends Component {
         this.clearHandler();
         this.clusterMarkers = [];
         this.newClusterMarkers = [];
-        for (var i = 0; i < this.state.nearByLocations.length; ++i) {
+        var locations = this.state.nearByLocations;
 
-            var iconMarkerImg = "primarycity.png";
-            var zipDetail = this.state.nearByLocations[i];
+        for (var i = 0; i < locations.length; ++i) {
+
+            var iconMarkerImg = "primarycity";
+            var zipDetail = locations[i];
             if (zipDetail.show) {
                 if (zipDetail.relation === 'IS_AT') {
-                    iconMarkerImg = "green.png";
+                    iconMarkerImg = "green";
                 } else if (zipDetail.relation === 'IS_EXPECTED_AT') {
-                    iconMarkerImg = "ember.png";
+                    iconMarkerImg = "ember";
                 } else {
                     if (i <= 30) {
-                        iconMarkerImg = "darkcolor.png";
+                        iconMarkerImg = "darkcolor";
                     }
                 }
 
@@ -485,15 +515,17 @@ class Adminpanel extends Component {
                     position: latLng,
                     draggable: false,
                     icon: {
-                        url: `img/culsterimg/zip/${iconMarkerImg}`,
+                        url: `img/culsterimg/zip/${iconMarkerImg}.png`,
                         scaledSize: new google.maps.Size(30, 30), // scaled size
                         origin: new google.maps.Point(0, 0)
                     },
                     value: `${zipDetail.zip}`,
                     title: `${zipDetail.locName}`,
                     relation: `${zipDetail.relation}`,
-                    mruid: `${zipDetail.mruid}`
-                })
+                    mruid: `${zipDetail.mruid}`,
+                    prevdate: `${zipDetail.mrudate}`,
+                    icontype: iconMarkerImg
+                });
                 /**
                  * bind events of handler
                  */
@@ -515,12 +547,16 @@ class Adminpanel extends Component {
                             alreadyTextmru: alreadyText,
                             cityname: this.title,
                             mruRelateTo: mruRelateTo,
-                            mruID: mruID
+                            mruID: mruID,
+                            mruprevRelation: mruRelateTo,
+                            preDate: this.prevdate,
+                            currentloc: this.getPosition(),
+                            icontype: this.icontype
                         },
                         clusterShow: false,
                         cities: false
-                    })
-                })
+                    });
+                });
                 this.clusterMarkers.push(zipmarker);
             }
         }
@@ -558,6 +594,8 @@ class Adminpanel extends Component {
 
     }
     render() {
+
+
         return (
                 <div id="main">
                     <div id="header">
@@ -576,7 +614,7 @@ class Adminpanel extends Component {
                         <div className="row">
                 
                             <div className="col-md-3 col-sm-12">
-                                <UserCount></UserCount>
+                                <UserCount usercount={this.state}></UserCount>
                                 { (() => {
                                                     if (this.state.primaryCity) {
                                                         return (<PrimaryFilters allRecord={this.state.primaryCities} primaryfilterRecord={(ob) => this.primaryfilterRecord(ob)}/>)
@@ -611,9 +649,12 @@ class Adminpanel extends Component {
                                 })() 
                                 }
                             </div>
-                            <div className="col-md-9 col-sm-6">
-                                <MruPlaceConatiner mruDetails={
-                                                        this.state.mruDetails}/> 
+                            <div className="col-md-9 col-sm-12">
+                                <MruPlaceConatiner 
+                                    allRecord={
+                                                        this.state.nearByLocations}  filteredRecord={(ob) => this.filteredRecord(ob)}   mruDetails={ this.state.mruDetails}
+                
+                                    /> 
                                 <div className="chart-wrapper">
                                     <div id="nearbyuser-maparea" style={ {
                                                             width: "100%", height: "750px"  }} >
@@ -623,6 +664,10 @@ class Adminpanel extends Component {
                             </div>
                         </div>
                     </div>
+                    
+               
+                    
+                    
                 </div>
                                                         );
                 }

@@ -15,7 +15,7 @@ const cors = require('cors');
 const app = express();
 const apiRoutes = express.Router();
 const isDev = process.env.NODE_ENV !== 'production';
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5300;
 
 const server = app.listen(port, function () {
     console.log('Express server listening on port ' + port);
