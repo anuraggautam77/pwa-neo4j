@@ -87,17 +87,15 @@ UsersModel = {
             callback(results);
         });
     },
-    
-    registerUserAtThirdLevel:function(req,callback){
+    registerUserAtThirdLevel: function (req, callback) {
         var query = `optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=${req.locid} with count(distinct user) as primaryCount optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=${req.locid} with count(distinct user) as secondaryCount,primaryCount return secondaryCount+primaryCount as mruCount`;
-          
-          driver.cypher({query: query}, function (err, results) {
+
+        driver.cypher({query: query}, function (err, results) {
             if (err)
                 throw err;
             callback(results);
         });
     },
-    
     citiesDetails: function (req, callback) {
 
         if (isDebugLocal) {
@@ -178,7 +176,7 @@ UsersModel = {
 
             });
         }
- 
+
     },
     saveMruDetails: function (data, callback) {
         var query = '';
@@ -199,18 +197,20 @@ UsersModel = {
         driver.cypher({query: query}, (err, results) => {
             if (err)
                 throw err;
-            if (data.relationTo === "IS_AT" || data.relationTo === "IS_EXPECTED_AT") {
-                var obj = {};
-                if (data.relationTo === "IS_EXPECTED_AT") {
-                    obj.infotext = `${data.mruID} is expected to placed at your registered Location ${data.zipcode} on  (${data.startDate})`;
-                } else {
-                    obj.infotext = `${data.mruID} is currently at your registered Location ${data.zipcode}  (${data.startDate})`;
-                }
+            //  if (data.relationTo === "IS_AT" || data.relationTo === "IS_EXPECTED_AT") {
+            var obj = {};
+            if (data.relationTo === "IS_EXPECTED_AT") {
                 obj.title = "MRU is nearby you";
-                this.postToSubscriber(obj, data, callback);
+                obj.infotext = `${data.mruID} is expected to placed at your registered Location ${data.zipcode} on  (${data.startDate})`;
+            } else if (data.relationTo === "IS_AT") {
+                obj.infotext = `${data.mruID} is currently at your registered Location ${data.zipcode}  (${data.startDate})`;
+                obj.title = "MRU is nearby you";
             } else {
+                obj.infotext = `${data.mruID} will be ending service at your registered location ${data.zipcode} by today end of day `;
+                obj.title = "MRU service ending Today EOD!";
                 callback({showRecommended: true, data: data});
             }
+            this.postToSubscriber(obj, data, callback);
 
         });
     },
@@ -257,7 +257,7 @@ UsersModel = {
                                     } else {
                                         count++;
                                         if (count === tokencount) {
-                                            callback({message: "Message send to >>" + count + ' Devices', });
+                                            // callback({message: "Message send to >>" + count + ' Devices', });
                                             console.log("/////////////////////");
                                             console.log("Message send to >>" + count + ' Devices');
                                             console.log("/////////////////////");
