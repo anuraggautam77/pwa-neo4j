@@ -64,6 +64,7 @@ class Adminpanel extends Component {
         if (flag === "primary") {
             this.setState({
                 ...this.state,
+                level: 0,
                 breadcrum: [{val: "primary", label: 'Primary Cities', active: 1},
                     {val: "secondary", label: 'Secondary Cities', active: 0},
                     {val: "zipcode", label: 'Zipcode ', active: 0}
@@ -83,6 +84,7 @@ class Adminpanel extends Component {
             this.setState({
                 ...this.state,
                 cities: true,
+                 level: 1,
                 nearByLocations: [],
                 primaryCity: false,
                 clusterShow: false,
