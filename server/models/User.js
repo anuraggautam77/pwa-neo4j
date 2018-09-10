@@ -300,7 +300,6 @@ UsersModel = {
                 }, (err, pCities) => {
                     if (typeof pCities !== 'undefined' && pCities.length > 0) {
                         console.log('In if block');
-                        // console.log('inIFCount is '+inIFCount++)
                         pCity = pCities[0];
                         driver.cypher({
                             query: `MATCH (loc:Mastergeo) where ID(loc)=${geo._id} MATCH (pc:MasterCity) where ID(pc)=${pCity.pCity._id} MERGE (loc)-[:IS_CITY_OF{type:"primaryLocation",distance:toFloat(${pCity.dist})}]->(pc)`,
@@ -308,12 +307,11 @@ UsersModel = {
                             if (err) {
                                 console.log('Has some error in pCity is' + pCity.pCity._id + ' error is' + err + ' loc is ' + geo._id);
                             } else {
-                                console.log('total primaryCount is ' + primaryCount++)
+                                console.log('total primaryCount is ' + primaryCount++);
                                 //primaryCount = primaryCount + 1;
                             }
                         });
                     } else {
-                        console.log('In else block');
                         driver.cypher({
                             query: `WITH point({longitude: ${geo.properties.lang}, latitude: ${geo.properties.lat} }) AS currentPoint match (pCity:MasterCity)-[:IS_SECONDARY_CITY]-(:CityType) with currentPoint,pCity,point({longitude:pCity.lang,latitude:pCity.lat}) as locationPoints with locationPoints,pCity,distance(currentPoint,locationPoints) as dist order by dist limit 1 where dist < 160934 return pCity,dist`,
                         }, (err, nearestSCity) => {
