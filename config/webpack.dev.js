@@ -15,7 +15,7 @@ module.exports = merge(commonConfig, {
 
   output: {
     filename: 'js/app.js',
-   chunkFilename: '[id].chunk.js'
+    chunkFilename: '[id].chunk.js'
   },
 
   devServer: {

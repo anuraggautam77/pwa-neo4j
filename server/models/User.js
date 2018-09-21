@@ -271,10 +271,6 @@ UsersModel = {
             });
         });
 
-
-
-        var token = 'd_FL3jzk1Sw:APA91bHc6WU0kfNb8_dECGVMKzTZdlHzhimu0Qo3DBgnilhKZvjKjCbSmGUZtL32OS2gSs_IuQnjh7DOWS91qlPB-Efcjyn8qXD_JSfOgCnpmxiwqn0EHgGiTWVLJfPXpHKCsy6rK43g';
-
     },
     mapLocationtoCity: function (zipId) {
 
