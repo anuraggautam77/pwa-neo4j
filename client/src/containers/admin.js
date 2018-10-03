@@ -9,7 +9,8 @@ export default class Dashboard extends Component {
     render() {
         return (
                 <div>
-                    <div className="adminpanel main-landing row content">
+                    <div className="adminpanel main-landing row">
+                     
                         <Adminpanel />
                     </div>
                 

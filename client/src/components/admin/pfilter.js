@@ -52,20 +52,20 @@ class PrimaryFilters extends Component {
                         <div className="widget-tile">
                             <section>
                                 <h5>
-                                    <strong> Primary Filter</strong>  
+                                    <strong> PRIMARY FILTERS </strong>  
                                 </h5>
                                 <div className="progress progress-xs progress-white progress-over-tile"></div>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <a href="javascript:void(0)" onClick={() => this.props.primaryfilterRecord(this.changeFilter("TOP"))}>
                                             <h3>Top Primary Cities </h3>
-                                            <div className="progress xs green"></div>
+                                            <div className="progress xs" style={{"backgroundColor": "#b15eae"}}></div>
                                         </a>
                                     </div>
                                     <div className="col-md-6">
                                         <a href="javascript:void(0)" onClick={() => this.props.primaryfilterRecord(this.changeFilter("LEAST"))}>
-                                            <h3> Least Primary Cities  </h3>
-                                            <div className="progress xs blue"></div>
+                                            <h3>Rest of the Cities  </h3>
+                                            <div className="progress xs"  style={{"backgroundColor": "#44b6c0 "}}></div>
                                         </a>
                                     </div>
                                 </div>

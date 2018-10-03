@@ -59,30 +59,26 @@ class Mrufilter extends Component {
 
     }
     render() {
-        return (<div>
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h5><b>Filters </b> </h5>
+        return (  
+            <div className="row">
+                <div className="col-md-4 col-sm-12" style={{"padding":"0px","margin":"0"}} >
+                    <span  onClick={() => this.props.filterRecord(this.changeFilter("IS_AT"))}> <img style={{"width":"50px"}} src="img/mru/IS_AT/mru.png"/>
+                    Current locations</span>
+                  
+                </div> 
+                <div className="col-md-5 col-sm-12" style={{"padding":"0px","margin":"0"}} >
+                <span onClick={() => this.props.filterRecord(this.changeFilter("IS_EXPECTED_AT"))}>
+                   <img style={{"width":"50px"}}  src="img/mru/IS_EXPECTED_AT/mru.png"/>
+                   Expected locations
+                   </span>
+                  
                 </div>
-                <div className="panel-body">
-                    <ul>
-                        <li onClick={() => this.props.filterRecord(this.changeFilter("IS_AT"))}>
-                            <img src="img/mru/IS_AT/mru.png"/>
-                            <span>Is at locations</span>
-                        </li>
-                        <li  onClick={() => this.props.filterRecord(this.changeFilter("IS_EXPECTED_AT"))}>
-                            <img src="img/mru/IS_EXPECTED_AT/mru.png"/>
-                            <span>Is Expected locations</span>
-                        </li>
-        
-                    </ul>
-                </div>
-                <div className="panel-footer">
-                    <button type="button" onClick={() => this.props.filterRecord(this.changeFilter(""))} className="btn btn-primary btn-xs"> Reset filter</button>
+                <div className="col-md-1 col-sm-12" style={{"padding":"0px","margin":"0"}} >
+                      <button type="button" onClick={() => this.props.filterRecord(this.changeFilter(""))} className="btn btn-primary btn-xs"> Reset filter</button>
                 </div>
             </div>
-        </div>
-                );
+               
+               );
     }
 }
 

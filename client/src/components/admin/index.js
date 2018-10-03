@@ -271,7 +271,10 @@ class Adminpanel extends Component {
                         );
                 var mapMarker = null;
                 if (flag === "p") {
-                    var primaryMarker = "blue.png";
+                    
+                    
+                if(markerCitiesData[i].userCount>0){
+                     var primaryMarker = "blue.png";
                     if (i <= 5) {
                         primaryMarker = "green.png";
                     }
@@ -284,10 +287,13 @@ class Adminpanel extends Component {
                             origin: new google.maps.Point(0, 0)
                         },
                         position: latLng, draggable: false, citytype: `${markerCitiesData[i].type}`,
-                        label: `${markerCitiesData[i].userCount}`,
+                        label:{text: `${markerCitiesData[i].userCount}`,color:"#000"},
                         map: this.map, typeof : "p", title: `${markerCitiesData[i].cityID}`
                                 //animation: google.maps.Animation.DROP
                     };
+                }    
+                
+                   
                 } else {
                     var scale = 4;
                     var color = "#393";
@@ -601,6 +607,9 @@ class Adminpanel extends Component {
         return (
                 <div id="main">
                     <div id="header">
+                        <h4> <span className="glyphicon glyphicon-globe" aria-hidden="true"></span> MRU APP</h4>
+                    </div>
+                    <div className="row text-right">
                         {(() => {
                                         return (
                                                 <ol className="breadcrumb">
@@ -658,8 +667,7 @@ class Adminpanel extends Component {
                 
                                     /> 
                                 <div className="chart-wrapper">
-                                    <div id="nearbyuser-maparea" style={ {
-                                                            width: "100%", height: "750px"  }} >
+                                    <div id="nearbyuser-maparea" style={ {  width: "100%", height: "750px"  }} >
                                         <div id="nearbyuser-map" className="nearby-map" />
                                     </div>
                                 </div>
@@ -670,7 +678,7 @@ class Adminpanel extends Component {
                
                     
                     
-                </div>
+                    </div>
                                                         );
                 }
             }

@@ -225,16 +225,12 @@ class MainPage extends Component {
     }
     handleCurrentLocation() {
 
-
-        /*   var input = {
-         "mode": "encode",
-         "latitude": this.state.cur_lng,
-         "longitude": this.state.cur_lat
-         };
-         Algorithmia.client(hashKey).algo("Geo/GeoHash/0.1.1")
-         .pipe(input)
-         .then(response => { })*/
-        var dataobject = {};
+  
+  
+  
+  if(this.state.cur_lng!==undefined){
+      
+       var dataobject = {};
         dataobject.cur_lng = this.state.cur_lng;
         dataobject.cur_lat = this.state.cur_lat;
         dataobject.deviceid = this.state.deviceid;
@@ -250,6 +246,8 @@ class MainPage extends Component {
             dataobject.type = 'withoutZip';
         }
 
+    
+
         fetch("api/registeruser", {
             method: "post",
             body: JSON.stringify({data: dataobject}),
@@ -257,8 +255,14 @@ class MainPage extends Component {
                 "Content-Type": "application/json"
             }
         }).then(res => res.json()).then(json => {
-            // this.setState({mrudetails:'', showflagmrus: true});
+            alert("Registration successfully for this Location!!");
         });
+      
+  }else{
+      alert("Please enter Location first!!");
+  }
+       
+       
 
     }
     filterRecord(sortdata) {
@@ -268,32 +272,28 @@ class MainPage extends Component {
     render() {
         return (
                 <div className="userpanel main-landing row content">
-                    <div id="header"></div>
+                    <div id="header">
+                        <h4> <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>  MRU APP</h4>
+                    </div>
                     <div className="landing-page">
-                        <div className="col-md-4 col-sm-12 proilecard">
-                            <Registration handleCurrentLocation={this.handleCurrentLocation} ondropdownchange={ (value) => {
-                        this.setState({"regtype": value});} }/>
-                        </div>
-                
-                        <div className="col-md-4 col-sm-12 filter-container">
-                            <Mrufilter filterRecord={
-                            (sortdata) => this.filterRecord(sortdata)}
-                                       allmru ={  this.state.mrudetails} />
-                        </div>
-                
-                        <div className="col-md-4 col-sm-12 proilecard">
-                            <div className="panel panel-default">
-                                <div className="panel-heading">
-                                    <h5><b>Filters </b> </h5>
-                                </div>
-                                <div className="panel-body">
-                
-                                </div>
-                                <div className="panel-footer">
-                
-                                </div>
-                            </div>
-                        </div>
+                        
+                       
+              <div className="col-md-12 col-sm-12">
+                       <div className="panel panel-default">
+                             <div className="panel-body">
+                              <div className="col-md-6 col-sm-12">
+                                <Registration handleCurrentLocation={this.handleCurrentLocation} ondropdownchange={ (value) => { this.setState({"regtype": value});} }/>
+                              </div>     
+                            
+                                   
+                <div className="col-md-1 col-sm-12"></div>
+                        <div className="col-md-5 col-sm-12">
+                             <Mrufilter filterRecord={ (sortdata) => this.filterRecord(sortdata)} allmru ={  this.state.mrudetails} />
+                        </div> 
+                       </div>
+                   </div>
+             </div>   
+                        
                 
                         <div className="col-md-12 col-sm-12">
                             <div className="panel panel-default">

@@ -1,3 +1,23 @@
+# Compiled files
+#netbean folders
+ nbproject
+
+# Node stuff
+node_modules
+.npm
+.node_repl_history
+.lock-wscript
+logs
+*.log
+npm-debug.log*
+
+# OS stuff
+Desktop.ini
+ehthumbs.db
+Thumbs.db
+$RECYCLE.BIN/
+._*
 .DS_Store
-node_modules/
-build/
+.Spotlight-V100
+.Trashes
+/nbproject/private/

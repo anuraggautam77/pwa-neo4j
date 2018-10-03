@@ -15,7 +15,7 @@ class Mapview extends Component {
                         <div className="widget-tile">
                             <section>
                                 <h5>
-                                    <strong> Map View</strong>  
+                                    <strong> MAP VIEW</strong>  
                                 </h5>
                                 <div className="progress progress-xs progress-white progress-over-tile"></div>
                                 <div className="row">
@@ -28,7 +28,7 @@ class Mapview extends Component {
                                     <div className="col-md-6">
                                         <a href="javascript:void(0)" onClick={() => this.props.viewtype("CLUSTER")}>
                                             <h3> Cluster View </h3>
-                                            <img src="img/culsterimg/m1.png"/>
+                                            <img src="img/culsterimg/m2.png"/>
                                         </a>
                                     </div>
                                 </div>

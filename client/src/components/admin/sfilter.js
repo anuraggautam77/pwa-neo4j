@@ -53,19 +53,19 @@ class SecondaryFilters extends Component {
                         <div className="widget-tile">
                             <section>
                                 <h5>
-                                    <strong> Secondary Filter</strong>  
+                                    <strong> SECONDARY FILTERS</strong>  
                                 </h5>
                                 <div className="progress progress-xs progress-white progress-over-tile"></div>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <a href="javascript:void(0)" onClick={() => this.props.secondaryfilterRecord(this.changeFilter("TOP"))}>
-                                            <h3>Top Secondary Cities </h3>
+                                            <h3>Top Cities </h3>
                                             <div className="progress xs redColor"></div>
                                         </a>
                                     </div>
                                     <div className="col-md-6">
                                         <a href="javascript:void(0)" onClick={() => this.props.secondaryfilterRecord(this.changeFilter("LEAST"))}>
-                                            <h3> Least Secondary Cities  </h3>
+                                            <h3> Rest of the Cities  </h3>
                                             <div className="progress xs green"></div>
                                         </a>
                                     </div>

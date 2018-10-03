@@ -2,13 +2,15 @@ body{
     margin: 0;
     padding: 0;
     font-family: sans-serif;
+    background:#edf4f7;
+     font-family: "Verdana";
     .container-full{
         width:100%;
         margin:0 auto;
     }
 }
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-family: "Open Sans";
+    font-family: "Verdana";
     font-weight: 300;
     margin: 0;
 }
@@ -16,20 +18,31 @@ a{
     text-decoration: none;
 }
 
-#header {
-    background: rgb(255, 255, 255);
-    border-bottom: 5px rgb(10, 166, 153) solid;
-    height: 42px;
-    left: 0;
-    right: 0;
-    top: 0;
-    -webkit-transition: -webkit-transform 0.5s;
-    transition: transform 0.5s;
-    .tools-bar {
-        margin-left: 250px;
-        padding: 0 15px 0 0;
-    }
+.form-control{
+        border: 1px solid rgb(207, 210, 212);
 }
+
+#header {
+        background: rgb(47, 69, 90);
+        // border-bottom: 5px rgb(10, 166, 153) solid;
+        height: 42px;
+        left: 0;
+        right: 0;
+        line-height: 60px;
+        top: 0;
+        -webkit-transition: -webkit-transform 0.5s;
+        transition: transform 0.5s;
+        h4{
+            color:#fff;
+            padding:15px;
+        }
+        .tools-bar {
+            margin-left: 250px;
+            padding: 0 15px 0 0;
+        }
+    }
+
+
 
 
 #main {
@@ -70,8 +83,8 @@ li{
 
 .btn-primary{
     color: #fff;
-    background:rgb(165, 9, 9);
-    border-radius: 0px !important;
+    background:#3071a9;
+ //   border-radius: 0px !important;
     padding: 10px 15px !important;
     text-transform: uppercase;
     border:none;
@@ -79,13 +92,12 @@ li{
 
 .panel{
     border-radius: 0px !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .input-first{
     margin-bottom: 10px;
 }
-.form-control{
-    border-radius:0px !important;
-}
+ 
 
 .title-col{
 
