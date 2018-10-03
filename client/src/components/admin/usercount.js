@@ -16,7 +16,7 @@ class UserCount extends Component {
         return (
                 <div className="row zipcode-filter">
                     <div className="well panel-heading alignheading" style={{"textAlign": "center", "marginBottom": "10px", "padding":"25px 0"}}>
-                        <div class="widget-tile">
+                        <div className="widget-tile">
                             <section><h5><span>REGISTERED USERS</span></h5>
                                 <h1  style={{"color": "#d3455b", "fontWeight": "normal !important"}} >{mruCount}</h1>
                             </section></div>

@@ -349,7 +349,7 @@ class MruPlaceConatiner extends Component {
             })()}
           </div>
         </div>
-             <GraphOverlay showgraph ={this.state.showgraph}/>
+             <GraphOverlay showgraph ={this.state.showgraph}  setshowgraph={(val)=>{this.setState({"showgraph":val})}}/>
       </div>
     );
   }

@@ -288,8 +288,9 @@ class Adminpanel extends Component {
                         },
                         position: latLng, draggable: false, citytype: `${markerCitiesData[i].type}`,
                         label:{text: `${markerCitiesData[i].userCount}`,color:"#000"},
-                        map: this.map, typeof : "p", title: `${markerCitiesData[i].cityID}`
+                        map: this.map, typeof : "p", title: `${markerCitiesData[i].cityname}`,
                                 //animation: google.maps.Animation.DROP
+                         titlename: `${markerCitiesData[i].cityID}`
                     };
                 }    
                 
@@ -306,7 +307,8 @@ class Adminpanel extends Component {
                         icon: {path: google.maps.SymbolPath.CIRCLE, scale: scale, strokeColor: color},
                         typeof : "s",
                         map: this.map,
-                        title: `${markerCitiesData[i].cityID}`
+                        title: `${markerCitiesData[i].cityname}`,
+                        titlename: `${markerCitiesData[i].cityID}`
                     };
                 }
 
@@ -315,9 +317,9 @@ class Adminpanel extends Component {
                 var self = this;
                 var map = this.map;
                 marker.addListener("click", function () {
-
+                    console.log(this.titlename)
                     if (this.typeof === "p") {
-                        self.getSecondary(this.getTitle());
+                         self.getSecondary(this.titlename);
                         var bounds = new google.maps.LatLngBounds();
                         var latlng = new google.maps.LatLng(this.getPosition().lat(), this.getPosition().lng());
                         bounds.extend(latlng);
@@ -327,7 +329,7 @@ class Adminpanel extends Component {
 
 
                         if (self.state.mruDetails.criteriaValue !== '') {
-                            self.getzipcodes(this.getTitle());
+                            self.getzipcodes(this.titlename);
                             var bounds = new google.maps.LatLngBounds();
                             var latlng = new google.maps.LatLng(this.getPosition().lat(), this.getPosition().lng());
                             self.createCircle(map, latlng, 160934);
