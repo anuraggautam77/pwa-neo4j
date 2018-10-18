@@ -1,6 +1,7 @@
 const UsersModel = require('../../models/User');
 
 const request = require('request');
+//const clusterMaker = require('clusters');
 const path = require('path');
 //const promoimgages = path.resolve("dist/img/promoimages");
 const fs = require('fs');
@@ -130,9 +131,8 @@ module.exports = (apiRoutes) => {
 
         var nearbyData = new Promise(function (resolve, reject) {
             UsersModel.nearByLoc(req.body, (jsondata) => {
-                 resolve(jsondata);
+                resolve(jsondata);
             });
- 
         });
 
         var userCount = new Promise(function (resolve, reject) {
@@ -142,7 +142,24 @@ module.exports = (apiRoutes) => {
         });
 
         Promise.all([nearbyData, userCount]).then(function (values) {
-            res.json({status: "success", mapdata: values[0], usercount: values[1][0].mruCount});
+            var arrCluster = [];
+            values[0].map((obj) => {
+                obj = {type: "Feature", properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}}
+                arrCluster.push(obj);
+            });
+
+
+        /*    var arrClusterdata = [];
+            clusterMaker.k(3);
+            clusterMaker.iterations(50);
+
+            values[0].map((obj) => {
+                obj = [obj.longitude, obj.latitude];
+                arrClusterdata.push(obj);
+            });
+            clusterMaker.data(arrClusterdata); */
+
+            res.json({status: "success", mapdata: values[0], clusterData: arrCluster, usercount: values[1][0].mruCount});
         });
 
     });

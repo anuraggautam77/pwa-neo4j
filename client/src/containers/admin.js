@@ -10,7 +10,6 @@ export default class Dashboard extends Component {
         return (
                 <div>
                     <div className="adminpanel main-landing row">
-                     
                         <Adminpanel />
                     </div>
                 

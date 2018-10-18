@@ -22,11 +22,11 @@ UsersModel = {
             var zipPresent = `MATCH (n:Mastergeo{zip:${obj.zip}}) RETURN n`;
             driver.cypher({'query': zipPresent}, (err, zipcount) => {
                 var query = `MERGE ( user:User{ _id :'${obj.deviceid}', lat:${obj.cur_lat}, lang:${obj.cur_lng} })  MERGE( 
- zeo:Mastergeo {zip:${obj.zip},lat:${obj.zip_lat},lang:${obj.zip_lng}}) MERGE(user)-[:IS_REGISTERED_MRU]->(zeo)`;
+ zeo:Mastergeo {zip:${obj.zip},lat:${obj.zip_lat},lang:${obj.zip_lng},created_at: TIMESTAMP() }) MERGE(user)-[:IS_REGISTERED_MRU]->(zeo)`;
              //   console.log(">>>>>zip present or not>>>>>>>");
              //   console.log(prettyjson.render(zipcount));
                 if (zipcount.length > 0) {
-                    query = `MERGE ( user:User{ _id :'${obj.deviceid}', lat:${obj.cur_lat}, lang:${obj.cur_lng} })  MERGE( zeo:Mastergeo {
+                    query = `MERGE ( user:User{ _id :'${obj.deviceid}', lat:${obj.cur_lat}, lang:${obj.cur_lng},created_at: TIMESTAMP() })  MERGE( zeo:Mastergeo {
  zip:${obj.zip}}) MERGE(user)-[:IS_REGISTERED_MRU]->(zeo)`;
                 }
 
@@ -151,7 +151,7 @@ UsersModel = {
                 locflag = 'nearbyLocation';
             }
             //'${req.todaydate}'
-            var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where not mr.status='completed'  return mru.mru_id as mruid,mr.status, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
+            var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where not mr.status='completed'  return mru.mru_id as mruid,mr.status, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc`;
             // var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where mr.date >= '${req.todaydate}' and (not exists(mr.status) or not mr.status='completed')  return mru.mru_id as mruid, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
             //  var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where ((ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation")) and  distance(point({longitude:c.lang,latitude:c.lat}),point({longitude:zip.lang,latitude:zip.lat}))  < 159999 optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU) where mr.date >= '${req.todaydate}' return mru.mru_id as mruid, type(mr) as relation,ID(c), c.cityName as cityname,zip.locationName as locName, zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
 
@@ -170,7 +170,6 @@ UsersModel = {
                 results.map((obj) => {
                     obj.show = true;
                 });
-
 
                 callback(results);
 

@@ -1,5 +1,35 @@
 .adminpanel{
+    .input-range__track{
+        height: 8px !important;
+    }
 
+    .input-range__label--min,{
+        left: -17px !important;
+        top: -6px;
+    }
+
+    .input-range__label--max{
+        right: -17px !important;
+        top: -6px;
+    }
+    .input-range__label--value{
+        top:-33px !important;
+    }
+    .input-range__label{
+        color: rgb(43, 6, 6);
+        font-family: "Helvetica Neue", san-serif;
+        font-size: 19px;
+
+    }
+
+    .input-range__slider{
+
+        height: 14px !important;
+        margin-top: -11px !important;
+        top: 29% !important;
+        width: 14px!important;
+
+    }
     a {
         color: rgb(48, 113, 169);
         text-decoration: none;

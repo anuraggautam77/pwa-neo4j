@@ -96,10 +96,10 @@ li {
   background-repeat: repeat; }
 
 .dn {
-  display: none; }
+  display: none  !important; }
 
 .db {
-  display: block; }
+  display: block  !important; }
 
 .mapsize {
   width: 100%;
@@ -113,6 +113,25 @@ li {
     width: 100%; } }
 .adminpanel {
   /* Modal Content */ }
+  .adminpanel .input-range__track {
+    height: 8px !important; }
+  .adminpanel .input-range__label--min {
+    left: -17px !important;
+    top: -6px; }
+  .adminpanel .input-range__label--max {
+    right: -17px !important;
+    top: -6px; }
+  .adminpanel .input-range__label--value {
+    top: -33px !important; }
+  .adminpanel .input-range__label {
+    color: #2b0606;
+    font-family: "Helvetica Neue", san-serif;
+    font-size: 19px; }
+  .adminpanel .input-range__slider {
+    height: 14px !important;
+    margin-top: -11px !important;
+    top: 29% !important;
+    width: 14px !important; }
   .adminpanel a {
     color: #3071a9;
     text-decoration: none; }
