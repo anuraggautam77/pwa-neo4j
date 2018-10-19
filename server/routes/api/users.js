@@ -144,7 +144,7 @@ module.exports = (apiRoutes) => {
         Promise.all([nearbyData, userCount]).then(function (values) {
             var arrCluster = [];
             values[0].map((obj) => {
-                obj = {type: "Feature", properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}}
+                obj = {type: "Feature", zipdetail:obj, properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}}
                 arrCluster.push(obj);
             });
 

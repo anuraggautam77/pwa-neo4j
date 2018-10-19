@@ -57,19 +57,22 @@ class SecondaryFilters extends Component {
                                 </h5>
                                 <div className="progress progress-xs progress-white progress-over-tile"></div>
                                 <div className="row">
-                                    <div className="col-md-6">
+                                    <div className="col-md-12">
                                         <a href="javascript:void(0)" onClick={() => this.props.secondaryfilterRecord(this.changeFilter("TOP"))}>
                                             <h3>Top Cities </h3>
                                             <div className="progress xs redColor"></div>
                                         </a>
                                     </div>
-                                    <div className="col-md-6">
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-12">
                                         <a href="javascript:void(0)" onClick={() => this.props.secondaryfilterRecord(this.changeFilter("LEAST"))}>
                                             <h3> Rest of the Cities  </h3>
                                             <div className="progress xs green"></div>
                                         </a>
                                     </div>
                                 </div>
+                
                 
                             </section>
                             <strong> <button type="button" onClick={() => this.props.secondaryfilterRecord(this.changeFilter(""))} className="btn btn-primary btn-xs"> Reset filter</button></strong>

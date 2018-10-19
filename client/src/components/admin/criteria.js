@@ -19,8 +19,8 @@ class Criteria extends Component {
                             <h5><strong> Criteria</strong> </h5>
                             <div className="progress progress-xs progress-white progress-over-tile"></div>
                             <div className="row">
-                                <div className="col-md-6 label-white">  Popular Location</div>
-                                <div className="col-md-6 label-white"> 
+                                <div className="col-md-10 label-white">  Popular Location</div>
+                                <div className="col-md-2 label-white"> 
                                 <input
                                         checked="checked"
                                         type="radio"
@@ -31,8 +31,8 @@ class Criteria extends Component {
                 
                             </div>
                             <div className="row">
-                                <div className="col-md-6 label-white">  Near by Location</div>
-                                <div className="col-md-6 label-white"> <input
+                                <div className="col-md-10 label-white">  Near by Location</div>
+                                <div className="col-md-2 label-white"> <input
                                         type="radio"
                                         name="location"
                                         value="nearByLocation"

@@ -10,6 +10,9 @@ import SecondaryFilters from "./sfilter";
 import UserCount from "./usercount";
 import Mapview from "./markerview";
 import MarkerClusterer from "../../common/markerclusterer";
+
+import ClusterMatrix from "./clustermatrix";
+
 import moment from "moment";
 const defaultradius = 16091;
 
@@ -23,6 +26,7 @@ class Adminpanel extends Component {
       cluserData: [],
       turf: [],
       cluster: [],
+      matrix:[],
       level: 0,
       userCount: { 0: null, 1: null, 2: null },
       clusterShow: false,
@@ -51,6 +55,7 @@ class Adminpanel extends Component {
     this.newClusterMarkers = [];
     (this.trufMarkers = []), (this.markers = []);
     this.clusterMarkers = [];
+  
     this.markerClusterer = null;
     this.map = null;
     this.radiusMarker = null;
@@ -169,11 +174,11 @@ class Adminpanel extends Component {
         });
       });
   }
-
   getpointswithCluster(count, data) {
     var options = { numberOfClusters: count };
     var points = { type: "FeatureCollection", features: data };
     var clustered = turf.clustersKmeans(points, options);
+    
     return clustered;
   }
   getzipcodes(loc) {
@@ -194,10 +199,22 @@ class Adminpanel extends Component {
           this.state.clustercount,
           json.clusterData
         );
+
+      var matrix= this.clusterMatrix(clustered.features,this.state.clustercount);
+       var centeriod=[];
+       clustered.features.map((obj)=>{
+                    if(obj.properties.centroid.length>0){
+                        centeriod.push(obj.properties.centroid[0]+"&&"+obj.properties.centroid[1])
+                    }
+      });
+    
+       var uniquecenter=[...new Set(centeriod)]; 
         this.setState({
           cluserData: json.clusterData,
           nearByLocations: json.mapdata,
           turf: clustered.features,
+          matrix:matrix,
+          trufCenter:uniquecenter,
           cluster: json.pointerDetail,
           breadcrum: [
             { val: "primary", label: "Primary Cities", active: 0 },
@@ -217,10 +234,25 @@ class Adminpanel extends Component {
         });
       });
   }
+  getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = this.deg2rad(lat2 - lat1); // deg2rad below
+        var dLon = this.deg2rad(lon2 - lon1);
+        var a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2)
+                ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c; // Distance in km
+        return d;
+    }
+  deg2rad(deg) {
+        return deg * (Math.PI / 180);
+    }
   componentDidMount() {
     this.plotmap();
   }
-
   componentDidUpdate(props) {
     if (this.state.clusterShow) {
       if (this.state.viewtype === "DEFAULT") {
@@ -342,7 +374,11 @@ class Adminpanel extends Component {
                 this.getPosition().lat(),
                 this.getPosition().lng()
               );
-              self.createCircle(map, latlng, 160934);
+              self.createCircle(map, latlng,160934);
+              
+                //25 MILES:40234
+               //50MILES: 80469
+              
               bounds.extend(latlng);
               map.setCenter(bounds.getCenter());
               map.setZoom(7.3);
@@ -368,16 +404,45 @@ class Adminpanel extends Component {
       radius: radius
     });
   };
+  clusterMatrix(clusterdata,count){
+      var arrmatrix=[];
+      clusterdata.map((obj)=>{
+          
+          if(typeof arrmatrix[obj.properties.cluster]==='undefined'){
+               arrmatrix[obj.properties.cluster]={cid:null,count:0,group:[],distance:[],centriod:null};
+          };
+       
+        obj.zipdetail.distance= this.getDistanceFromLatLonInKm(obj.properties.centroid[1],obj.properties.centroid[0],obj.zipdetail.latitude,obj.zipdetail.longitude)
+        arrmatrix[obj.properties.cluster]['distance'].push(this.getDistanceFromLatLonInKm(obj.properties.centroid[1],obj.properties.centroid[0],obj.zipdetail.latitude,obj.zipdetail.longitude));
+        arrmatrix[obj.properties.cluster]['count']=arrmatrix[obj.properties.cluster]['count']+obj.zipdetail.userCount;
+        arrmatrix[obj.properties.cluster]['group'].push(obj.zipdetail);
+        arrmatrix[obj.properties.cluster]['cid']=obj.properties.cluster;
+        arrmatrix[obj.properties.cluster]['centriod']=obj.properties.centroid;
+     });
+        return arrmatrix;
+  }
   viewchange(flag, count) {
     this.previousmarker();
     this.clusterMarkers = [];
     this.newClusterMarkers = [];
+    var centeriod=[];
     if (count !== undefined) {
       var clustered = this.getpointswithCluster(count, this.state.cluserData);
+      var matrix= this.clusterMatrix(clustered.features,count);
+      clustered.features.map((obj)=>{
+            if(obj.properties.centroid.length>0){
+                centeriod.push(obj.properties.centroid[0]+"&&"+obj.properties.centroid[1])
+            }
+        });
+            
+      var uniquecenter=[...new Set(centeriod)];
+      
       this.setState({
         ...this.state,
         viewtype: flag,
         clusterShow: true,
+        trufCenter:uniquecenter,
+        matrix:matrix,
         turf: clustered.features,
         mruDetails: {
           ...this.state.mruDetails,
@@ -438,8 +503,7 @@ class Adminpanel extends Component {
       }
     });
   }
-
-  displayCluster() {
+  displayCluster() { /*
     this.previousmarker();
     this.clearHandler();
     this.clusterMarkers = [];
@@ -515,7 +579,7 @@ class Adminpanel extends Component {
       this.newClusterMarkers,
       { minimumClusterSize: 10, imagePath: "../img/culsterimg/m" }
     );
-  }
+  */ }
   defaultMapView() {
     this.previousmarker();
     this.clearHandler();
@@ -605,8 +669,27 @@ class Adminpanel extends Component {
       color4: "#A0522D"
     };
 
+
+      for (var i = 0; i < this.state.trufCenter.length; ++i) {
+            var center = this.state.trufCenter[i];
+            var latLng = new google.maps.LatLng( Number(center.split("&&")[1]),  Number(center.split("&&")[0]) );
+            var  mapMarker = {
+                        icon: {
+                             scaledSize: new google.maps.Size(30, 30), // scaled size
+                             origin: new google.maps.Point(0, 0),
+                            url: `img/cluster.png`
+                        },
+                        position: latLng,
+                        draggable: false,
+                        map: this.map,
+                        title: `Cluster ${i+1}`
+            };
+        var centriodPlace=new google.maps.Marker(mapMarker);
+        this.trufMarkers.push(centriodPlace);
+    }
+
     for (var i = 0; i < clusterData.length; ++i) {
-      var position = clusterData[i];
+       var position = clusterData[i];
       var latLng = new google.maps.LatLng(
         position.geometry.coordinates[1],
         position.geometry.coordinates[0]
@@ -614,6 +697,11 @@ class Adminpanel extends Component {
       var zips = {
         position: latLng,
         draggable: false,
+         value: `${position.zipdetail.zip}`,
+          title: `${position.zipdetail.locName}`,
+          relation: `${position.zipdetail.relation}`,
+          mruid: `${position.zipdetail.mruid}`,
+          prevdate: `${position.zipdetail.mrudate}`,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 3,
@@ -622,14 +710,43 @@ class Adminpanel extends Component {
         map: this.map
       };
       var zipmarker = new google.maps.Marker(zips);
-      this.trufMarkers.push(zipmarker);
-    }
-  }
+       var self = this;
+       zipmarker.addListener("click", function(e) {
+          var mruRelateTo = this.relation === "null" ? "" : this.relation;
+          var mruID = this.mruid === "null" ? "" : this.mruid;
+          var alreadyText = "";
+          if (mruRelateTo === "IS_AT") {
+            alreadyText =
+              "Mru is already placed at this location. Click End Mru button to End Service!";
+          }
 
+          self.setState({
+            mruDetails: {
+              ...self.state.mruDetails,
+              zipcode: this.value,
+              mruContainer: "db",
+              alreadyTextmru: alreadyText,
+              cityname: this.title,
+              mruRelateTo: mruRelateTo,
+              mruID: mruID,
+              mruprevRelation: mruRelateTo,
+              preDate: this.prevdate,
+              currentloc: this.getPosition(),
+              icontype: this.icontype
+            },
+            clusterShow: false,
+            cities: false
+          });
+        });
+       this.trufMarkers.push(zipmarker);
+    }
+    
+  
+  }
   bredcrumRender(state) {
     var flag = "";
     return state.breadcrum.map((obj, i) => {
-      if (obj.active == 1) {
+      if (obj.active === 1) {
         flag = true;
         return (
           <li className="breadcrumb-item active" key={i}>
@@ -637,7 +754,7 @@ class Adminpanel extends Component {
           </li>
         );
       } else {
-        if (flag != true) {
+        if (flag !== true) {
           return (
             <li className="breadcrumb-item active" key={i}>
               <a
@@ -686,15 +803,14 @@ class Adminpanel extends Component {
   }
 
   render() {
-    return (
+        return (
       <div id="main">
         <div id="header">
           <h4>
-            {" "}
             <span
               className="glyphicon glyphicon-globe"
               aria-hidden="true"
-            />{" "}
+            /> 
             MRU APP
           </h4>
         </div>
@@ -708,28 +824,15 @@ class Adminpanel extends Component {
 
         <div id="content">
           <div className="row">
-            <div className="col-md-3 col-sm-12">
+            <div className="col-md-2 col-sm-12">
               <UserCount usercount={this.state} />
-              {(() => {
-                if (this.state.primaryCity) {
-                  return (
-                    <PrimaryFilters
-                      allRecord={this.state.primaryCities}
-                      primaryfilterRecord={ob => this.primaryfilterRecord(ob)}
-                    />
-                  );
-                }
-              })()}
+              
 
               <Criteria
                 criteriaContainer={this.state.mruDetails.criteriaContainer}
                 onRadioChange={e => this.onRadioChange(e)}
               />
-              <SecondaryFilters
-                criteriaContainer={this.state.mruDetails.criteriaContainer}
-                allRecord={this.state.secondaryCities}
-                secondaryfilterRecord={ob => this.secondaryfilterRecord(ob)}
-              />
+             
 
               {(() => {
                 if (this.state.nearByLocations.length >= 1) {
@@ -742,10 +845,7 @@ class Adminpanel extends Component {
                             this.viewchange(flag, count)
                           }
                         />
-                        <Filters
-                          allRecord={this.state.nearByLocations}
-                          filterRecord={ob => this.filteredRecord(ob)}
-                        />
+                         
                         <NearByLocation
                           nearbystate={this.state.nearByLocations}
                           onclickHandler={e => this.listClickhandler(e)}
@@ -761,13 +861,14 @@ class Adminpanel extends Component {
                             this.viewchange(flag, count)
                           }
                         />
+                      
                       </div>
                     );
                   }
                 }
               })()}
             </div>
-            <div className="col-md-9 col-sm-12">
+            <div className="col-md-8 col-sm-12">
               <MruPlaceConatiner
                 allRecord={this.state.nearByLocations}
                 filteredRecord={ob => this.filteredRecord(ob)}
@@ -782,6 +883,48 @@ class Adminpanel extends Component {
                 </div>
               </div>
             </div>
+            
+              <div className="col-md-2 col-sm-12">
+                        {(() => {
+                if (this.state.primaryCity) {
+                  return (
+                    <PrimaryFilters
+                      allRecord={this.state.primaryCities}
+                      primaryfilterRecord={ob => this.primaryfilterRecord(ob)}
+                    />
+                  );
+                }
+              })()}
+              
+              
+                 <SecondaryFilters
+                criteriaContainer={this.state.mruDetails.criteriaContainer}
+                allRecord={this.state.secondaryCities}
+                secondaryfilterRecord={ob => this.secondaryfilterRecord(ob)}
+              />
+                  
+                   {(() => {
+                if (this.state.nearByLocations.length >= 1) {
+                  if (this.state.viewtype === "DEFAULT") {
+                    return (
+                      <div>
+                        <Filters
+                          allRecord={this.state.nearByLocations}
+                          filterRecord={ob => this.filteredRecord(ob)}
+                        />
+                      </div>
+                    );
+                  }else{
+                  
+                     return (  <ClusterMatrix matrix={this.state.matrix} centriod={this.centriodMarker}/>)                      
+                                           
+                 }  
+                }
+              })()}
+                  
+                  
+              </div>
+            
           </div>
         </div>
       </div>

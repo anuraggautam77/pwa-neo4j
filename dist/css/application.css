@@ -168,6 +168,8 @@ li {
       background-color: #645533;
       color: #fff;
       font-weight: bold; }
+    .adminpanel .graph-details .list-group-item {
+      padding: 5px 5px; }
   .adminpanel .admin-proilecard {
     position: absolute;
     z-index: 999;
