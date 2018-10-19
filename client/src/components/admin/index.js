@@ -613,7 +613,7 @@ class Adminpanel extends Component {
             origin: new google.maps.Point(0, 0)
           },
           value: `${zipDetail.zip}`,
-          title: `${zipDetail.locName}`,
+          title: `${(zipDetail.locName==null)?'':zipDetail.locName}`,
           relation: `${zipDetail.relation}`,
           mruid: `${zipDetail.mruid}`,
           prevdate: `${zipDetail.mrudate}`,

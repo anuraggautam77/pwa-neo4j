@@ -52,7 +52,7 @@ class PrimaryFilters extends Component {
                         <div className="widget-tile">
                             <section>
                                 <h5>
-                                    <strong> PRIMARY FILTERS </strong>  
+                                    <strong> FILTERS </strong>  
                                 </h5>
                                 <div className="progress progress-xs progress-white progress-over-tile"></div>
                                 <div className="row">

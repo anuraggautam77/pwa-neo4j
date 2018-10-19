@@ -53,7 +53,7 @@ class SecondaryFilters extends Component {
                         <div className="widget-tile">
                             <section>
                                 <h5>
-                                    <strong> SECONDARY FILTERS</strong>  
+                                    <strong> FILTERS</strong>  
                                 </h5>
                                 <div className="progress progress-xs progress-white progress-over-tile"></div>
                                 <div className="row">
@@ -72,8 +72,6 @@ class SecondaryFilters extends Component {
                                         </a>
                                     </div>
                                 </div>
-                
-                
                             </section>
                             <strong> <button type="button" onClick={() => this.props.secondaryfilterRecord(this.changeFilter(""))} className="btn btn-primary btn-xs"> Reset filter</button></strong>
                         </div>
