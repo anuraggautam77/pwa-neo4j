@@ -3,7 +3,7 @@ body{
     padding: 0;
     font-family: sans-serif;
     background:#edf4f7;
-     font-family: "Verdana";
+    font-family: "Verdana";
     .container-full{
         width:100%;
         margin:0 auto;
@@ -19,28 +19,28 @@ a{
 }
 
 .form-control{
-        border: 1px solid rgb(207, 210, 212);
+    border: 1px solid rgb(207, 210, 212);
 }
 
 #header {
-        background: rgb(47, 69, 90);
-        // border-bottom: 5px rgb(10, 166, 153) solid;
-        height: 42px;
-        left: 0;
-        right: 0;
-        line-height: 60px;
-        top: 0;
-        -webkit-transition: -webkit-transform 0.5s;
-        transition: transform 0.5s;
-        h4{
-            color:#fff;
-            padding:15px;
-        }
-        .tools-bar {
-            margin-left: 250px;
-            padding: 0 15px 0 0;
-        }
+    background: rgb(47, 69, 90);
+    // border-bottom: 5px rgb(10, 166, 153) solid;
+    height: 42px;
+    left: 0;
+    right: 0;
+    line-height: 60px;
+    top: 0;
+    -webkit-transition: -webkit-transform 0.5s;
+    transition: transform 0.5s;
+    h4{
+        color:#fff;
+        padding:15px;
     }
+    .tools-bar {
+        margin-left: 250px;
+        padding: 0 15px 0 0;
+    }
+}
 
 
 
@@ -84,7 +84,7 @@ li{
 .btn-primary{
     color: #fff;
     background:#3071a9;
- //   border-radius: 0px !important;
+    //   border-radius: 0px !important;
     padding: 10px 15px !important;
     text-transform: uppercase;
     border:none;
@@ -97,7 +97,7 @@ li{
 .input-first{
     margin-bottom: 10px;
 }
- 
+
 
 .title-col{
 
@@ -135,3 +135,4 @@ li{
         width:100%
     }
 }
+ 
