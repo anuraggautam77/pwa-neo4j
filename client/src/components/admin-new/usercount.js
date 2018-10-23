@@ -21,25 +21,6 @@ class UserCount extends Component {
                                 <h4  style={{"color": "#d3455b", "fontWeight": "normal !important"}} >{mruCount}</h4>
                             </section></div>
                     </div>
-                    
-                 {/*   
-                    <div className="well panel-heading alignheading" style={{"padding": "20px 0","textAlign":"center"}}>
-                        <div className="row" style={{"marginBottom": "10px"}}>
-                            <div className="col-md-4 label-white"><h5><strong>MRU</strong></h5></div>
-                            <div className="col-md-4 label-white"><h5><strong>Promotion</strong></h5></div>
-                            <div className="col-md-4 label-white"><h5><strong>Coupon</strong></h5></div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-4" style={{"fontSize": "16px", "color": "rgb(48, 113, 169)"}}>{mruCount}</div>
-                            <div className="col-md-4" style={{"fontSize": "16px", "color": "rgb(48, 113, 169)"}}>0</div>
-                            <div className="col-md-4" style={{"fontSize": "16px", "color": "rgb(48, 113, 169)"}}>0</div>
-                        </div>
-                    </div>
-                
-                  */}
-                
-                
-                
                 </div>
                                     );
                         }
