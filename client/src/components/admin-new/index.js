@@ -465,9 +465,9 @@ class Adminpanel extends Component {
             var latLng = new google.maps.LatLng(Number(center[0]), Number(center[1]));
             var mapMarker = {
                 icon: {
-                    scaledSize: new google.maps.Size(25, 25), // scaled size
+                    scaledSize: new google.maps.Size(30, 30), // scaled size
                     origin: new google.maps.Point(0, 0),
-                    url: `img/drag.png`
+                    url: `img/cluster.png`
                 },
                 position: latLng,
                 draggable: true,
