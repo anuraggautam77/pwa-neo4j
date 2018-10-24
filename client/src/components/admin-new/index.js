@@ -48,8 +48,8 @@ class Adminpanel extends Component {
     this.markerClusterer = null;
     this.locid=null;
     this.trufMarkers=[];
-    
-     this.mruPlaceMarker=[];
+    this.centriodmarker=[];
+    this.mruPlaceMarker=[];
     this.map = null;
     this.platlng=null;
     this.radiusMarker = null;
@@ -105,25 +105,67 @@ class Adminpanel extends Component {
         });
       });
   }
+  recluster(loc,count,distance){
+     var centriod=[];
+     this.centriodmarker.map((a)=>{
+        var teamparr=[];
+        teamparr.push(a.position.lat());
+        teamparr.push(a.position.lng());
+        centriod.push(teamparr);
+    });
+    fetch("api/recluster", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+	"cityid":loc,
+	"locfilter":"popularLocation",
+	"distance":distance.toString(),
+	"centriods": centriod
+       })
+    })
+      .then(res => res.json())
+      .then(json => {
+         var json=JSON.parse(json.body);
+         this.setState({
+          ...this.state,
+          clusterData: json.data,
+          trufCenter:json.centriods,
+          primaryCity: false,
+          breadcrum: [
+            { val: "primary", label: "Primary Cities", active: 0 },
+            { val: "zipcode", label: "Zipcode ", active: 1 }
+          ],
+          level: 1,
+          userCount: {
+            ...this.state.userCount,
+            1: json.usercount
+          },
+          clusterShow: true,
+          mruDetails: {
+            ...this.state.mruDetails
+          }
+        });  
+      });
+    
+  }
+  
   
   
   getClusterdata(loc,count,distance){
-       console.log(this.map);
-       console.log(count);
-       console.log(distance);
+      
       this.createCircle(this.map,this.platlng,distance);
       this.locid=loc;
-      fetch(`https://django-pwa.herokuapp.com//pwa/api/clustering/kmeans/getKMeansRandomCentroidClusters/?cityid=${loc}&locfilter=popularLocation&distance=${distance}&nclust=${count}`, {
+      fetch(`api/getcluster/${loc}/popularLocation/${distance}/${count}`, {
       method: "get",
       headers: {
-        "Access-Control-Allow-Credentials" : "true",
-            "Access-Control-Allow-Origin" : "https://django-pwa.herokuapp.com",
         "Content-Type": "application/json"
       }
     })
       .then(res => res.json())
       .then(json => {
-       
+         var json=JSON.parse(json.body);
          this.setState({
           ...this.state,
           clusterData: json.data,
@@ -145,10 +187,8 @@ class Adminpanel extends Component {
         });  
       });
       
-      
-      
-      
   }
+  
   getzipcodes(loc) {
     fetch("api/allzipcodes", {
       method: "post",
@@ -281,26 +321,22 @@ class Adminpanel extends Component {
       radius: Number(radius)
     });
   };
-  viewchange(flag, count,distance) {
+  viewchange(flag, count,distance,clusterflag) {
     this.previousmarker();
     this.clusterMarkers = [];
     this.newClusterMarkers = [];
-    if(flag==='TRUF'){
-        this.getClusterdata(this.locid,count,distance);
-    }
-    /*
-      this.setState({
-        ...this.state,
-        viewtype: flag,
-        clusterShow: true,
-        mruDetails: {
-          ...this.state.mruDetails,
-          mruContainer: "dn",
-          criteriaContainer: "dn"
-        }
-      });*/
     
+    if(clusterflag==="recluster"){
+        this.recluster(this.locid,count,distance);
+    }else{
+        if(flag==='TRUF'){
+         this.getClusterdata(this.locid,count,distance);
+    } 
+    }
+    
+   
   }
+  
   filteredRecord(obj) {
     this.previousmarker();
     this.clusterMarkers = [];
@@ -405,10 +441,9 @@ class Adminpanel extends Component {
     });
   }
   displaytrufCluster() {
-      
-     
     this.previousmarker();
     this.clearHandler();
+      this.centriodmarker=[];
     var colorobj = {
       color0: "#800080",
       color1: "#C71585",
@@ -417,7 +452,7 @@ class Adminpanel extends Component {
       color4: "#A0522D"
     };
     
-     var clusterData = this.state.clusterData;
+   
      for (var i = 0; i < this.state.trufCenter.length; ++i) {
             var center = this.state.trufCenter[i];
             var latLng = new google.maps.LatLng( Number(center[0]),  Number(center[1]) );
@@ -428,17 +463,17 @@ class Adminpanel extends Component {
                             url: `img/cluster.png`
                         },
                         position: latLng,
-                        draggable: false,
+                        draggable: true,
                         map: this.map,
                         title: `Cluster ${i+1} ,Count :`
             };
         var centriodPlace=new google.maps.Marker(mapMarker);
-        this.trufMarkers.push(centriodPlace);
+        this.centriodmarker.push(centriodPlace);
     }
+     var clusterData = this.state.clusterData;
      for (var i = 0; i < clusterData.length; ++i) {
        var position = clusterData[i];
-      var latLng = new google.maps.LatLng(
-     
+       var latLng = new google.maps.LatLng(
         position.latitude,   position.longitude
       );
       var zips = {
@@ -488,7 +523,6 @@ class Adminpanel extends Component {
        this.trufMarkers.push(zipmarker);
     }
     
-    
   }
   bredcrumRender(state) {
     var flag = "";
@@ -527,7 +561,9 @@ class Adminpanel extends Component {
      for (var i = 0; i < this.trufMarkers.length; i++) {
       this.trufMarkers[i].setMap(null);
     }
-   
+      for (var i = 0; i < this.centriodmarker.length; i++) {
+      this.centriodmarker[i].setMap(null);
+    }
   }
   clearHandler() {
     if (this.markerClusterer) {
@@ -577,9 +613,10 @@ class Adminpanel extends Component {
           });
         });
         
-        
-        
   }
+  
+ 
+  
   render() {
         return (
       <div id="main">
@@ -605,8 +642,6 @@ class Adminpanel extends Component {
          
      <div className="col-md-2 col-sm-12">
         <UserCount usercount={this.state} />
-            <input type="button" onClick={()=>{this.placeMru()}} value="PlaceMRU" />
-          
               {(() => {
                   if(this.state.clusterShow){
                       
@@ -615,22 +650,20 @@ class Adminpanel extends Component {
                   if (this.state.viewtype === "DEFAULT") {
                     return (
                       <div>
-                        <Mapview    selectedmap={this.state.viewtype}  
-                                    viewtype={(flag,count,distance) => this.viewchange(flag,count,distance)
+                        <Mapview    placemru={()=>{this.placeMru()}}   selectedmap={this.state.viewtype}   viewtype={(flag,count,distance,recluster) => this.viewchange(flag,count,distance,recluster)
                           } />
                          
-                        <NearByLocation
-                          nearbystate={this.state.nearByLocations}
-                          onclickHandler={e => this.listClickhandler(e)}
+                        <NearByLocation  nearbystate={this.state.nearByLocations} onclickHandler={e => this.listClickhandler(e)}
                         />
                       </div>
                     );
                   } else {
                     return (
                       <div>
-                        <Mapview
+                        <Mapview   
+                          placemru={()=>{this.placeMru()}}
                           selectedmap={this.state.viewtype} 
-                          viewtype={(flag, count, distance) => this.viewchange(flag, count,distance) }
+                          viewtype={(flag, count, distance,recluster) => this.viewchange(flag, count,distance,recluster) }
                         />
                       
                       </div>

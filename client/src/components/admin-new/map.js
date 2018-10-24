@@ -20,7 +20,6 @@ class Map extends Component {
     setRegisterUrserMarkers() { }
     componentDidUpdate() {
         this.createCircle(this.map, {lat: this.state.latitude, lng: this.state.longitude}, this.state.radius)
-
     }
     componentDidMount() {
        

@@ -11,13 +11,12 @@ const SERVICE_CONST = {
     GET_MRU: "getallmrus",
     NEAR_BY_CURR_LOC: 'nearbyloc',
     ALL_CITIES_DETAILS: 'allcitiesdetails',
-    ALL_PRIMARY_CITIES:'allprimarycities',
-    
-    ALL_ZIP_CODES:'allzipcodes',
-    
-    
+    ALL_PRIMARY_CITIES: 'allprimarycities',
+    ALL_ZIP_CODES: 'allzipcodes',
     GET_SECOND_LEVEL_CITIES: 'getsecondlevelcities',
-    PLACE_MRU_DETAILS: "placemru"
+    PLACE_MRU_DETAILS: "placemru",
+    GET_CLUSTER_DETAIL: "getcluster",
+    RE_CLUSTER: "recluster"
 
 };
 
@@ -76,7 +75,7 @@ module.exports = (apiRoutes) => {
     });
 
 
-    
+
     apiRoutes.get(`/${SERVICE_CONST.ALL_PRIMARY_CITIES}`, (req, res) => {
 
         var getCitiesData = new Promise(function (resolve, reject) {
@@ -191,17 +190,17 @@ module.exports = (apiRoutes) => {
         Promise.all([nearbyData, userCount]).then(function (values) {
             var arrCluster = [];
             values[0].map((obj) => {
-                obj = {type: "Feature", zipdetail:obj, properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}};
+                obj = {type: "Feature", zipdetail: obj, properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}};
                 arrCluster.push(obj);
             });
             res.json({status: "success", mapdata: values[0], clusterData: arrCluster, usercount: values[1][0].mruCount});
         });
 
     });
-    
-    
-    
-      apiRoutes.post(`/${SERVICE_CONST.ALL_ZIP_CODES}`, (req, res) => {
+
+
+
+    apiRoutes.post(`/${SERVICE_CONST.ALL_ZIP_CODES}`, (req, res) => {
 
         var nearbyData = new Promise(function (resolve, reject) {
             UsersModel.allzipCode(req.body, (jsondata) => {
@@ -218,18 +217,51 @@ module.exports = (apiRoutes) => {
         Promise.all([nearbyData, userCount]).then(function (values) {
             var arrCluster = [];
             values[0].map((obj) => {
-                obj = {type: "Feature", zipdetail:obj, properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}};
+                obj = {type: "Feature", zipdetail: obj, properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}};
                 arrCluster.push(obj);
             });
             res.json({status: "success", mapdata: values[0], clusterData: arrCluster, usercount: values[1][0].mruCount});
         });
 
     });
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+    apiRoutes.get(`/${SERVICE_CONST.GET_CLUSTER_DETAIL}/:cityid/:locfilter/:distance/:nclus`, (req, res) => {
+
+        var param = req.params;
+
+        request({url: `https://django-pwa.herokuapp.com//pwa/api/clustering/kmeans/getKMeansRandomCentroidClusters/?cityid=${param.cityid}&locfilter=${param.locfilter}&distance=${param.distance}&nclust=${param.nclus}`,
+            method: 'GET',
+            headers: {
+                'Content-Type': ' application/json',
+            }
+
+        }, function (error, response, body) {
+            //  res.json({data: JSON.parse(json.data.body.data)});
+            res.json(response);
+
+        });
+
+
+
+
+    })
+
+
+
+    apiRoutes.post(`/${SERVICE_CONST.RE_CLUSTER}`, (req, res) => {
+        request({url: `https://django-pwa.herokuapp.com/pwa/api/clustering/kmeans/getKMeansCustomCentroidClusters/`,
+            method: 'POST',
+            headers: {
+                'Content-Type': ' application/json'
+            },
+            body: JSON.stringify(req.body)
+
+        }, function (error, response, body) {
+            res.json(response);
+        });
+    })
+
 };
