@@ -116,6 +116,8 @@ class Adminpanel extends Component {
       fetch(`https://django-pwa.herokuapp.com//pwa/api/clustering/kmeans/getKMeansRandomCentroidClusters/?cityid=${loc}&locfilter=popularLocation&distance=${distance}&nclust=${count}`, {
       method: "get",
       headers: {
+        "Access-Control-Allow-Credentials" : "true",
+            "Access-Control-Allow-Origin" : "https://graph-pwa.herokuapp.com/",
         "Content-Type": "application/json"
       }
     })
