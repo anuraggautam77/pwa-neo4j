@@ -23,7 +23,9 @@ const server = app.listen(port, function () {
 
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://graph-pwa.herokuapp.com'
+}));
 app.use(morgan('dev'));
 
 app.use(express.static(path.resolve(__dirname, '../dist')));
