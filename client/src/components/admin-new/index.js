@@ -139,7 +139,7 @@ class Adminpanel extends Component {
                         ...this.state,
                         clusterData: json.data,
                         trufCenter: json.centriods,
-                        matrix: json.dist_matrix_miles,
+                        matrix: json.cluster_matrix,
                         primaryCity: false,
                         breadcrum: [
                             {val: "primary", label: "Primary Cities", active: 0},
@@ -171,13 +171,15 @@ class Adminpanel extends Component {
         })
                 .then(res => res.json())
                 .then(json => {
+                  
                     var json = JSON.parse(json.body);
+              console.log(json)
                     this.props.updateLoader("dn");
                     this.setState({
                         ...this.state,
                         clusterData: json.data,
                         trufCenter: json.centriods,
-                        matrix: json.dist_matrix_miles,
+                        matrix: json.cluster_matrix,
                         primaryCity: false,
                         breadcrum: [
                             {val: "primary", label: "Primary Cities", active: 0},

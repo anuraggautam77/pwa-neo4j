@@ -18,10 +18,10 @@ class ClusterMatrix extends Component {
             console.log(obj)
             return (
                     <div className="row" style={{"borderBottom":"1px solid #2f455a"}} key={i}   >
-                        <div className="col-md-2">{i + 1}</div>
-                        <div className="col-md-3"></div>
-                        <div className="col-md-3">{(obj.mean).toFixed(2)} </div>
-                        <div className="col-md-4">{(obj.amax).toFixed(2)}</div>
+                        <div className="col-md-2">{obj.cluster + 1}</div>
+                        <div className="col-md-3">{obj.userCount_sum}</div>
+                        <div className="col-md-3">{(obj.distance_miles_mean).toFixed(2)} </div>
+                        <div className="col-md-4">{(obj.distance_miles_max).toFixed(2)}</div>
                     </div>
                         );
 
