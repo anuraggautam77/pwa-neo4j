@@ -15,7 +15,6 @@ UsersModel = {
         // console.log(driver);
     },
     regsiterUser: function (objdata, callback) {
-
         obj = objdata.data;
         if (obj.type === 'withZip') {
 
@@ -23,8 +22,7 @@ UsersModel = {
             driver.cypher({'query': zipPresent}, (err, zipcount) => {
                 var query = `MERGE ( user:User{ _id :'${obj.deviceid}', lat:${obj.cur_lat}, lang:${obj.cur_lng} })  MERGE( 
  zeo:Mastergeo {zip:${obj.zip},lat:${obj.zip_lat},lang:${obj.zip_lng},created_at: TIMESTAMP() }) MERGE(user)-[:IS_REGISTERED_MRU]->(zeo)`;
-             //   console.log(">>>>>zip present or not>>>>>>>");
-             //   console.log(prettyjson.render(zipcount));
+
                 if (zipcount.length > 0) {
                     query = `MERGE ( user:User{ _id :'${obj.deviceid}', lat:${obj.cur_lat}, lang:${obj.cur_lng},created_at: TIMESTAMP() })  MERGE( zeo:Mastergeo {
  zip:${obj.zip}}) MERGE(user)-[:IS_REGISTERED_MRU]->(zeo)`;
@@ -33,8 +31,6 @@ UsersModel = {
                 driver.cypher({'query': query}, (err, results) => {
                     if (err)
                         throw err;
-                 //   console.log("<<<<<<<<<<<<<<>>>>>>>>>>>>");
-                 //   console.log(prettyjson.render(results));
                     callback(results);
                     if (zipcount.length === 0) {
                         this.mapLocationtoCity(obj.zip);
@@ -43,15 +39,12 @@ UsersModel = {
             });
 
         } else {
-         //   console.log("withoutzip");
 
             var query = `MERGE ( user:User{ _id :'${obj.deviceid}',lat:${obj.cur_lat},lang:${obj.cur_lng} })
                               MERGE( zeo:Mastergeo)  MERGE(user)-[:IS_REGISTERED_MRU]->(zeo)`;
-          //  console.log(query);
             driver.cypher({'query': query}, function (err, results) {
                 if (err)
                     throw err;
-              //  console.log(results);
                 callback(results);
             });
         }
@@ -59,17 +52,12 @@ UsersModel = {
     },
     getAllMruLocation: function (req, callback) {
 
-        if (isDebugLocal) {
-            // callback(citiesData);
+        driver.cypher({query: queries.GET_ALL_MRUS}, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });
 
-        } else {
-            console.log(queries.GET_ALL_MRUS);
-            driver.cypher({query: queries.GET_ALL_MRUS}, function (err, results) {
-                if (err)
-                    throw err;
-                callback(results);
-            });
-        }
     },
     registerUserAtPrimary: function (req, callback) {
         var query = `match (user:User)-[r:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(city:MasterCity) return  count(distinct user) as mruCount`;
@@ -98,83 +86,96 @@ UsersModel = {
     },
     citiesDetails: function (req, callback) {
 
-        if (isDebugLocal) {
-            // callback(citiesData);
+        var query = `match cities =(n:MasterCity)-[:IS_PRIMARY_CITY]-(:CityType) unwind nodes(cities) as city optional match (user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=ID(city) with count(distinct user) as primaryCount,city optional match (user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=ID(city) with count(distinct user) as secondaryCount,primaryCount,city return city,secondaryCount+primaryCount as userCount order by userCount desc`;
+        driver.cypher({
+            query: query
+        }, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });
 
-        } else {
+    },
+    allprimaryCities: function (req,callback) {
 
-            var query = `match cities =(n:MasterCity)-[:IS_PRIMARY_CITY]-(:CityType) unwind nodes(cities) as city optional match (user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=ID(city) with count(distinct user) as primaryCount,city optional match (user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=ID(city) with count(distinct user) as secondaryCount,primaryCount,city return city,secondaryCount+primaryCount as userCount order by userCount desc`;
-            // query = 'match (c:MasterCity)-[:IS_PRIMARY_CITY]-(p:CityType) return c';
-          //  console.log(query);
-            driver.cypher({
-                query: query
-            }, function (err, results) {
-                if (err)
-                    throw err;
-                callback(results);
-            });
-        }
+        var query = `match cities =(n:MasterCity)-[:IS_PRIMARY_CITY]-(:CityType) unwind nodes(cities) as city optional match (user:User)-[]-(zip:Mastergeo)-[pr]-(c:MasterCity) where (ID(c)=ID(city) and pr.distance < 160934) with count(distinct user) as primaryCount,city optional match (user:User)-[]-(zip:Mastergeo)-[sr]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where (ID(p)=ID(city)  and sr.distance > 160934) with count(distinct user) as secondaryCount,primaryCount,city return city,secondaryCount+primaryCount as userCount order by userCount desc`;
+        driver.cypher({
+            query: query
+        }, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });
     },
     getSecondLevelCities: function (citiid, callback) {
 
-        if (!isDebugLocal) {
-            //   var query = `Match (c:MasterCity) where ID(c)=${citiid} Match (c)-[:IS_CITY_OF]-(city:MasterCity) return city`;
-            var query = `match(user:User)-[]-(zip:Mastergeo)-[]->(mc:MasterCity) where ID(mc)=${citiid} return mc.cityName as cityname, ID(mc) as cityid, mc.lat as latitude, mc.lang as longitude,count(distinct user) as userCount UNION match(user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=${citiid} return c.cityName as cityname, ID(c) as cityid, c.lat as latitude, c.lang as longitude,count(distinct user) as userCount order by userCount desc`;
-         //   console.log("Second>>>>>>>>>");
-          //  console.log(query);
-         //   console.log("Second>>>>>>>>>");
 
+        var query = `match(user:User)-[]-(zip:Mastergeo)-[]->(mc:MasterCity) where ID(mc)=${citiid} return mc.cityName as cityname, ID(mc) as cityid, mc.lat as latitude, mc.lang as longitude,count(distinct user) as userCount UNION match(user:User)-[]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=${citiid} return c.cityName as cityname, ID(c) as cityid, c.lat as latitude, c.lang as longitude,count(distinct user) as userCount order by userCount desc`;
 
-            driver.cypher({
-                query: query
-            }, function (err, results) {
-                if (err)
-                    throw err;
-                callback(results);
+        driver.cypher({
+            query: query
+        }, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });
+    },
+    
+    
+    allzipCode:function(req, callback){
+
+        var locflag = 'popularLocation';
+
+        if (req.criteria === "nearByLocation") {
+            locflag = 'nearbyLocation';
+        }
+        //'${req.todaydate}'
+        var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") and r.distance < 160934 optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where not mr.status='completed'  return mru.mru_id as mruid,mr.status, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc`;
+
+        driver.cypher({
+            query: query
+        }, function (err, results) {
+            if (err)
+                throw err;
+
+            results.map((obj) => {
+                obj.show = true;
             });
 
-        } else {
-            //isDebugLocal
-        }
+            callback(results);
+
+        });
 
 
+   
     },
+    
+    
     nearByLoc: function (req, callback) {
 
 
         var locflag = 'popularLocation';
-        if (isDebugLocal) {
-            // callback(jsonData);
-        } else {
 
-            if (req.criteria === "nearByLocation") {
-                locflag = 'nearbyLocation';
-            }
-            //'${req.todaydate}'
-            var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where not mr.status='completed'  return mru.mru_id as mruid,mr.status, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc`;
-            // var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where mr.date >= '${req.todaydate}' and (not exists(mr.status) or not mr.status='completed')  return mru.mru_id as mruid, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
-            //  var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where ((ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation")) and  distance(point({longitude:c.lang,latitude:c.lat}),point({longitude:zip.lang,latitude:zip.lat}))  < 159999 optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU) where mr.date >= '${req.todaydate}' return mru.mru_id as mruid, type(mr) as relation,ID(c), c.cityName as cityname,zip.locationName as locName, zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc limit 100`;
-
-
-          //  console.log("Location >>>>>>>>>");
-          //  console.log(query);
-          //  console.log("Location>>>>>>>>>");
-
-
-            driver.cypher({
-                query: query
-            }, function (err, results) {
-                if (err)
-                    throw err;
-
-                results.map((obj) => {
-                    obj.show = true;
-                });
-
-                callback(results);
-
-            });
+        if (req.criteria === "nearByLocation") {
+            locflag = 'nearbyLocation';
         }
+        //'${req.todaydate}'
+        var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where not mr.status='completed'  return mru.mru_id as mruid,mr.status, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc`;
+
+        driver.cypher({
+            query: query
+        }, function (err, results) {
+            if (err)
+                throw err;
+
+            results.map((obj) => {
+                obj.show = true;
+            });
+
+            callback(results);
+
+        });
+
 
     },
     saveMruDetails: function (data, callback) {
@@ -189,14 +190,9 @@ UsersModel = {
                      MERGE (zip) <- [:${data.relationTo} {date:'${data.startDate}',status:'progress'}] - (mru)`;
         }
 
-      //  console.log("saveMruDetails >>>>>>>>>");
-       // console.log(query);
-      //  console.log("saveMruDetails>>>>>>>>>");
-
         driver.cypher({query: query}, (err, results) => {
             if (err)
                 throw err;
-            //  if (data.relationTo === "IS_AT" || data.relationTo === "IS_EXPECTED_AT") {
             var obj = {};
             if (data.relationTo === "IS_EXPECTED_AT") {
                 obj.title = "MRU is nearby you";
@@ -219,8 +215,6 @@ UsersModel = {
         var query = `match (user:User)-[:IS_REGISTERED_MRU]->(zip:Mastergeo{zip:${data.zipcode}}) return user`;
         driver.cypher({query: query}, (err, userdetails) => {
             async.each(userdetails, (tokendetail) => {
-            //    console.log(JSON.stringify(tokendetail));
-
                 if (tokendetail.hasOwnProperty('user')) {
                     if (tokendetail.user.hasOwnProperty('properties')) {
                         if (tokendetail.user.properties.hasOwnProperty('_id')) {
@@ -241,7 +235,6 @@ UsersModel = {
                                                     "body": obj.infotext,
                                                     "icon": "https://graph-pwa.herokuapp.com/img/icons/Icon-57.png",
                                                     "click_action": "https://graph-pwa.herokuapp.com",
-                                                    
                                                 },
                                                 "to": token
                                             }
@@ -249,7 +242,7 @@ UsersModel = {
                                 }, function (error, response, body) {
 
                                     if (error) {
-                                       console.error(error, response, body);
+                                        console.error(error, response, body);
                                     } else if (response.statusCode >= 400) {
                                         console.error('HTTP Error: ' + response.statusCode + ' - ' + response.statusMessage + '\n' + body);
                                     } else {
@@ -261,7 +254,7 @@ UsersModel = {
                                             console.log("/////////////////////");
                                         }
                                     }
-                                })
+                                });
                             }
                         }
                     }
@@ -271,37 +264,26 @@ UsersModel = {
 
     },
     mapLocationtoCity: function (zipId) {
-
-      //  console.log("<<<<<<<<<<<<<<Iinside Map location>>>>>>>>>>>>");
         var primaryCount = 0;
         var popularCityCount = 0;
         var nearbyCityCountSuccess = 0;
-     //  console.log(`match (geo:Mastergeo{zip:${zipId}) where not (geo)-[]-(:MasterCity) return geo`)
         driver.cypher({
             query: `match (geo:Mastergeo{zip:${zipId}}) where not (geo)-[]-(:MasterCity) return geo`
         }, (err, results) => {
-        //    console.log('Length is ' + results.length);
             async.each(results, (result, callbackfirst) => {
-
                 var geo = result.geo;
-
-               // console.log(prettyjson.render(result));
-               // console.log(`WITH point({longitude: ${geo.properties.lang}, latitude: ${geo.properties.lat} }) AS currentPoint match (pCity:MasterCity)-[:IS_PRIMARY_CITY]-(:CityType) with currentPoint,pCity,point({longitude:pCity.lang,latitude:pCity.lat}) as locationPoints with locationPoints,pCity,distance(currentPoint,locationPoints) as dist where dist < 80467 return pCity,dist order by dist limit 1`);
-
-                //00041 
                 driver.cypher({
                     query: `WITH point({longitude: ${geo.properties.lang}, latitude: ${geo.properties.lat} }) AS currentPoint match (pCity:MasterCity)-[:IS_PRIMARY_CITY]-(:CityType) with currentPoint,pCity,point({longitude:pCity.lang,latitude:pCity.lat}) as locationPoints with locationPoints,pCity,distance(currentPoint,locationPoints) as dist where dist < 80467 return pCity,dist order by dist limit 1`
                 }, (err, pCities) => {
                     if (typeof pCities !== 'undefined' && pCities.length > 0) {
-                     //   console.log('In if block');
                         pCity = pCities[0];
                         driver.cypher({
                             query: `MATCH (loc:Mastergeo) where ID(loc)=${geo._id} MATCH (pc:MasterCity) where ID(pc)=${pCity.pCity._id} MERGE (loc)-[:IS_CITY_OF{type:"primaryLocation",distance:toFloat(${pCity.dist})}]->(pc)`,
                         }, (err, re1) => {
                             if (err) {
-                        //      //  console.log('Has some error in pCity is' + pCity.pCity._id + ' error is' + err + ' loc is ' + geo._id);
+                                //      //  console.log('Has some error in pCity is' + pCity.pCity._id + ' error is' + err + ' loc is ' + geo._id);
                             } else {
-                              //  console.log('total primaryCount is ' + primaryCount++);
+                                //  console.log('total primaryCount is ' + primaryCount++);
                                 //primaryCount = primaryCount + 1;
                             }
                         });
@@ -317,12 +299,12 @@ UsersModel = {
                                     query: `MATCH (z:Mastergeo{zip:${geo.properties.zip}}) MATCH (c:MasterCity) where ID(c)=${nearSCity.pCity._id} MERGE (z)-[:IS_CITY_OF{type:"nearbyLocation",distance:toFloat(${nearSCity.dist})}]->(c)`,
                                 }, (err, re1) => {
                                     if (err) {
-                                      //  console.log('Has some error in nearSCity is' + nearSCity.pCity._id + ' error is' + err + ' zip is ' + geo.properties.zip);
-                                    } else{
-                                       // console.log('total nearbyCityCount success is ' + nearbyCityCountSuccess++)
-                               
+                                        //  console.log('Has some error in nearSCity is' + nearSCity.pCity._id + ' error is' + err + ' zip is ' + geo.properties.zip);
+                                    } else {
+                                        // console.log('total nearbyCityCount success is ' + nearbyCityCountSuccess++)
+
                                     }
-                                    });
+                                });
 
                             }
                         });
@@ -337,11 +319,11 @@ UsersModel = {
                                     query: `MATCH (z:Mastergeo{zip:${geo.properties.zip}}) MATCH (c:MasterCity) where ID(c)=${popularSCity.pCity._id} MERGE (z)-[:IS_CITY_OF{type:"popularLocation",distance:toFloat(${popularSCity.dist})}]->(c)`,
                                 }, (err, re1) => {
                                     if (err) {
-                                       // console.log('Has some error in popularSCity is' + popularSCity.pCity._id + '  error is' + err + ' zip is ' + geo.properties.zip);
-                                    } else{
-                                       // console.log('total popularCityCount is ' + popularCityCount++)
+                                        // console.log('Has some error in popularSCity is' + popularSCity.pCity._id + '  error is' + err + ' zip is ' + geo.properties.zip);
+                                    } else {
+                                        // console.log('total popularCityCount is ' + popularCityCount++)
                                     }
-                                    });
+                                });
                             }
                         });
                     }
@@ -351,8 +333,6 @@ UsersModel = {
             });
 
         });
-
-
     }
 }
 

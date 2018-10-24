@@ -11,6 +11,11 @@ const SERVICE_CONST = {
     GET_MRU: "getallmrus",
     NEAR_BY_CURR_LOC: 'nearbyloc',
     ALL_CITIES_DETAILS: 'allcitiesdetails',
+    ALL_PRIMARY_CITIES:'allprimarycities',
+    
+    ALL_ZIP_CODES:'allzipcodes',
+    
+    
     GET_SECOND_LEVEL_CITIES: 'getsecondlevelcities',
     PLACE_MRU_DETAILS: "placemru"
 
@@ -71,6 +76,48 @@ module.exports = (apiRoutes) => {
     });
 
 
+    
+    apiRoutes.get(`/${SERVICE_CONST.ALL_PRIMARY_CITIES}`, (req, res) => {
+
+        var getCitiesData = new Promise(function (resolve, reject) {
+            UsersModel.allprimaryCities(req.body, (citydata) => {
+                var finalArray = [];
+                citydata.forEach((val, i) => {
+                    console.log(val.userCount);
+                    var objPerCity = {
+                        lat: val.city.properties.lat,
+                        lng: val.city.properties.lang,
+                        cityID: val.city._id,
+                        cityname: val.city.properties.cityName,
+                        userCount: val.userCount,
+                        show: true,
+                        type: "pcity"
+                    };
+
+                    finalArray.push(objPerCity);
+                });
+                resolve(finalArray);
+            });
+        });
+
+        var getPrimaryCount = new Promise(function (resolve, reject) {
+            UsersModel.registerUserAtPrimary(req.body, (count) => {
+                resolve(count);
+            });
+        });
+
+        Promise.all([getCitiesData, getPrimaryCount]).then(function (values) {
+            res.json({status: "success", mapdata: values[0], usercount: values[1][0].mruCount});
+
+        });
+
+    });
+
+
+
+
+
+
 
     apiRoutes.post(`/${SERVICE_CONST.GET_SECOND_LEVEL_CITIES}`, (req, res) => {
         var cityID = req.body.cityID;
@@ -87,11 +134,11 @@ module.exports = (apiRoutes) => {
                         cityname: val.cityname,
                         userCount: val.userCount,
                         type: "scity",
-                        show: true,
+                        show: true
                     };
                     finalArray.push(objPerCity);
                 });
-                resolve(finalArray)
+                resolve(finalArray);
 
             });
         });
@@ -144,24 +191,45 @@ module.exports = (apiRoutes) => {
         Promise.all([nearbyData, userCount]).then(function (values) {
             var arrCluster = [];
             values[0].map((obj) => {
-                obj = {type: "Feature", zipdetail:obj, properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}}
+                obj = {type: "Feature", zipdetail:obj, properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}};
                 arrCluster.push(obj);
             });
-
-
-        /*    var arrClusterdata = [];
-            clusterMaker.k(3);
-            clusterMaker.iterations(50);
-
-            values[0].map((obj) => {
-                obj = [obj.longitude, obj.latitude];
-                arrClusterdata.push(obj);
-            });
-            clusterMaker.data(arrClusterdata); */
-
             res.json({status: "success", mapdata: values[0], clusterData: arrCluster, usercount: values[1][0].mruCount});
         });
 
     });
+    
+    
+    
+      apiRoutes.post(`/${SERVICE_CONST.ALL_ZIP_CODES}`, (req, res) => {
 
+        var nearbyData = new Promise(function (resolve, reject) {
+            UsersModel.allzipCode(req.body, (jsondata) => {
+                resolve(jsondata);
+            });
+        });
+
+        var userCount = new Promise(function (resolve, reject) {
+            UsersModel.registerUserAtThirdLevel(req.body, (count) => {
+                resolve(count);
+            });
+        });
+
+        Promise.all([nearbyData, userCount]).then(function (values) {
+            var arrCluster = [];
+            values[0].map((obj) => {
+                obj = {type: "Feature", zipdetail:obj, properties: {}, geometry: {coordinates: [obj.longitude, obj.latitude], type: "Point"}};
+                arrCluster.push(obj);
+            });
+            res.json({status: "success", mapdata: values[0], clusterData: arrCluster, usercount: values[1][0].mruCount});
+        });
+
+    });
+    
+    
+    
+    
+    
+    
+    
 };

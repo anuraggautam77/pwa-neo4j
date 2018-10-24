@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
 class Map extends Component {
-    
     constructor(props) {
         super(props);
         this.state = {
-            lng: props.mapCenter.longitude,
-            lat: props.mapCenter.latitude,
-            zoom: props.mapCenter.zoom
+            latitude: 37.3788789,
+            longitude: -93.9515576,
+            radius: 4,
+            zoom: 12
         };
 
         this.radiusMarker = null;
@@ -16,18 +16,15 @@ class Map extends Component {
         this.registerUserMarker = [];
 
     }
-
     setBusinessMarkers() { }
-
     setRegisterUrserMarkers() { }
-
     componentDidUpdate() {
-        this.createCircle(this.map, {lat: this.props.mapCenter.latitude, lng: this.props.mapCenter.longitude}, this.props.mapCenter.radius)
+        this.createCircle(this.map, {lat: this.state.latitude, lng: this.state.longitude}, this.state.radius)
 
     }
-
     componentDidMount() {
-        var latlng = {lat: this.state.lat, lng: this.state.lng}
+       
+        var latlng = {lat: this.state.latitude, lng: this.state.longitude}
         this.map = new google.maps.Map(document.getElementById('admin-map'), {
             zoom: 13,
             center: latlng
@@ -41,7 +38,7 @@ class Map extends Component {
                 zoom: this.map.getZoom()
             };
             this.props.mapSearchPointChange(viewport);
-            this.createCircle(this.map, {lat: lngLat.lat(), lng: lngLat.lng()}, this.props.mapCenter.radius);
+            this.createCircle(this.map, {lat: lngLat.lat(), lng: lngLat.lng()}, this.state.radius);
         };
 
         var marker = new google.maps.Marker({
@@ -50,10 +47,9 @@ class Map extends Component {
             animation: google.maps.Animation.DROP,
             position: latlng
         }).addListener('dragend', onDragEnd);
-        this.createCircle(this.map, latlng, this.props.mapCenter.radius);
+        this.createCircle(this.map, latlng, this.state.radius);
 
     }
-
     createCircle = (map, latlng, radius) => {
         if (this.radiusMarker !== null) {
             this.radiusMarker.setMap(null);
@@ -71,7 +67,6 @@ class Map extends Component {
         });
 
     }
-
     render() {
         return (<div id="admin-map" className="admin-map"></div>);
     }

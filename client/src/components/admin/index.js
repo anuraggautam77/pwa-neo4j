@@ -922,10 +922,7 @@ class Adminpanel extends Component {
                 mruDetails={this.state.mruDetails}
               />
               <div className="chart-wrapper">
-                <div
-                  id="nearbyuser-maparea"
-                  style={{ width: "100%", height: "750px" }}
-                >
+                <div  id="nearbyuser-maparea" style={{ width: "100%", height: "750px" }} >
                   <div id="nearbyuser-map" className="nearby-map" />
                 </div>
               </div>
@@ -942,9 +939,7 @@ class Adminpanel extends Component {
                   );
                 }
               })()}
-              
-              
-                 <SecondaryFilters
+              <SecondaryFilters
                 criteriaContainer={this.state.mruDetails.criteriaContainer}
                 allRecord={this.state.secondaryCities}
                 secondaryfilterRecord={ob => this.secondaryfilterRecord(ob)}
@@ -962,16 +957,11 @@ class Adminpanel extends Component {
                       </div>
                     );
                   }else{
-                  
                      return (  <ClusterMatrix matrix={this.state.matrix} centriod={this.centriodMarker}/>)                      
-                                           
                  }  
                 }
               })()}
-                  
-                  
               </div>
-            
           </div>
         </div>
       </div>

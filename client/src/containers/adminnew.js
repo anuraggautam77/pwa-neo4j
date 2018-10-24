@@ -11,7 +11,6 @@ export default class AdminDashboard extends Component {
                     <div className="adminpanel main-landing row">
                         <Adminpanel />
                     </div>
-                
                 </div>
                             );
                 }

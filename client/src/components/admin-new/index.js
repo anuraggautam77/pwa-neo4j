@@ -18,26 +18,23 @@ class Adminpanel extends Component {
     this.state = {
       primaryCities: [],
       nearByLocations: [],
-      cluserData: [],
-      turf: [],
-      cluster: [],
-      matrix:[],
       level: 0,
       userCount: { 0: null, 1: null,},
+      clusterData:[],
+      trufCenter:[],
       clusterShow: false,
       primaryCity: false,
-      viewtype: "DEFAULT",
+      viewtype: "TRUF",
       cities: false,
       clustercount: 3,
+      zipcodeDistance:80469,
       breadcrum: [
         { val: "primary", label: "Primary Cities", active: 1 },
         { val: "zipcode", label: "Zipcode ", active: 0 }
       ],
       mapCenter: {
         latitude: 37.3788789,
-        longitude: -93.9515576,
-        radius: 4,
-        zoom: 12
+        longitude: -93.9515576
       },
       mruDetails: {
         mruContainer: "dn",
@@ -46,11 +43,15 @@ class Adminpanel extends Component {
     };
     this.directionsDisplay = null;
     this.newClusterMarkers = [];
-    (this.trufMarkers = []), (this.markers = []);
+    this.markers=[];
     this.clusterMarkers = [];
     this.markerClusterer = null;
+    this.locid=null;
+    this.trufMarkers=[];
+    
      this.mruPlaceMarker=[];
     this.map = null;
+    this.platlng=null;
     this.radiusMarker = null;
     this.clearHandler = this.clearHandler.bind(this);
     this.breadcrumbHandler = this.breadcrumbHandler.bind(this);
@@ -79,12 +80,11 @@ class Adminpanel extends Component {
       this.map.setZoom(4);
     }  
   }
-  
   componentWillMount() {
     this.getPrimaryCites();
   }
   getPrimaryCites() {
-    fetch("api/allcitiesdetails", {
+    fetch("api/allprimarycities", {
       method: "get",
       headers: {
         "Content-Type": "application/json"
@@ -105,15 +105,50 @@ class Adminpanel extends Component {
         });
       });
   }
-  getpointswithCluster(count, data) {
-    var options = { numberOfClusters: count };
-    var points = { type: "FeatureCollection", features: data };
-    var clustered = turf.clustersKmeans(points, options);
-    
-    return clustered;
+  
+  
+  getClusterdata(loc,count,distance){
+       console.log(this.map);
+       console.log(count);
+       console.log(distance);
+      this.createCircle(this.map,this.platlng,distance);
+      this.locid=loc;
+      fetch(`https://django-pwa.herokuapp.com//pwa/api/clustering/kmeans/getKMeansRandomCentroidClusters/?cityid=${loc}&locfilter=popularLocation&distance=${distance}&nclust=${count}`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(json => {
+       
+         this.setState({
+          ...this.state,
+          clusterData: json.data,
+          trufCenter:json.centriods,
+          primaryCity: false,
+          breadcrum: [
+            { val: "primary", label: "Primary Cities", active: 0 },
+            { val: "zipcode", label: "Zipcode ", active: 1 }
+          ],
+          level: 1,
+          userCount: {
+            ...this.state.userCount,
+            1: json.usercount
+          },
+          clusterShow: true,
+          mruDetails: {
+            ...this.state.mruDetails
+          }
+        });  
+      });
+      
+      
+      
+      
   }
   getzipcodes(loc) {
-    fetch("api/nearbyloc", {
+    fetch("api/allzipcodes", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -126,28 +161,10 @@ class Adminpanel extends Component {
     })
       .then(res => res.json())
       .then(json => {
-        var clustered = this.getpointswithCluster(
-          this.state.clustercount,
-          json.clusterData
-        );
-
-      var matrix= this.clusterMatrix(clustered.features,this.state.clustercount);
-       var centeriod=[];
-       clustered.features.map((obj)=>{
-                    if(obj.properties.centroid.length>0){
-                        centeriod.push(obj.properties.centroid[0]+"&&"+obj.properties.centroid[1]);
-                    }
-      });
-    
-       var uniquecenter=[...new Set(centeriod)]; 
+      
         this.setState({
-          cluserData: json.clusterData,
           nearByLocations: json.mapdata,
-          turf: clustered.features,
-          matrix:matrix,
           primaryCity: false,
-          trufCenter:uniquecenter,
-          cluster: json.pointerDetail,
           breadcrum: [
             { val: "primary", label: "Primary Cities", active: 0 },
             { val: "zipcode", label: "Zipcode ", active: 1 }
@@ -164,22 +181,6 @@ class Adminpanel extends Component {
         });
       });
   }
-  getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-        var R = 6371; // Radius of the earth in km
-        var dLat = this.deg2rad(lat2 - lat1); // deg2rad below
-        var dLon = this.deg2rad(lon2 - lon1);
-        var a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
-                ;
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c; // Distance in km
-        return d;
-    }
-  deg2rad(deg) {
-        return deg * (Math.PI / 180);
-   }
   componentDidMount() {
     this.plotmap();
   }
@@ -189,9 +190,7 @@ class Adminpanel extends Component {
         this.defaultMapView();
       } else if (this.state.viewtype === "TRUF") {
         this.displaytrufCluster();
-      }else{
-         this.displaytrufCluster(); 
-      } 
+      }  
     } else {
       if (this.state.cities) {
           this.plotcites();
@@ -212,7 +211,6 @@ class Adminpanel extends Component {
     });
     this.directionsDisplay.setMap(this.map);
   }
-  
   plotcites() {
     this.previousmarker();
     var markerCitiesData = [];
@@ -254,16 +252,14 @@ class Adminpanel extends Component {
         var self = this;
         var map = this.map;
         marker.addListener("click", function() {
-              self.getzipcodes(this.titlename);
+              self.getClusterdata(this.titlename,self.state.clustercount,self.state.zipcodeDistance);
               var bounds = new google.maps.LatLngBounds();
-              var latlng = new google.maps.LatLng(
+              self.platlng = new google.maps.LatLng(
                 this.getPosition().lat(),
                 this.getPosition().lng()
               );
-              self.createCircle(map, latlng,40234);
-                //25 MILES:40234
-               //50MILES: 80469
-              bounds.extend(latlng);
+               self.createCircle(map,self.platlng,self.state.zipcodeDistance);
+              bounds.extend(self.platlng);
               map.setCenter(bounds.getCenter());
               map.setZoom(7.3);
         });
@@ -280,67 +276,28 @@ class Adminpanel extends Component {
       fillOpacity: 0.5,
       map: map,
       center: latlng,
-      radius: radius
+      radius: Number(radius)
     });
   };
-  clusterMatrix(clusterdata,count){
-      var arrmatrix=[];
-      clusterdata.map((obj)=>{
-          
-          if(typeof arrmatrix[obj.properties.cluster]==='undefined'){
-               arrmatrix[obj.properties.cluster]={cid:null,count:0,group:[],distance:[],centriod:null};
-          };
-       
-        obj.zipdetail.distance= this.getDistanceFromLatLonInKm(obj.properties.centroid[1],obj.properties.centroid[0],obj.zipdetail.latitude,obj.zipdetail.longitude)
-        arrmatrix[obj.properties.cluster]['distance'].push(this.getDistanceFromLatLonInKm(obj.properties.centroid[1],obj.properties.centroid[0],obj.zipdetail.latitude,obj.zipdetail.longitude));
-        arrmatrix[obj.properties.cluster]['count']=arrmatrix[obj.properties.cluster]['count']+obj.zipdetail.userCount;
-        arrmatrix[obj.properties.cluster]['group'].push(obj.zipdetail);
-        arrmatrix[obj.properties.cluster]['cid']=obj.properties.cluster;
-        arrmatrix[obj.properties.cluster]['centriod']=obj.properties.centroid;
-     });
-        return arrmatrix;
-  }
-  viewchange(flag, count) {
+  viewchange(flag, count,distance) {
     this.previousmarker();
     this.clusterMarkers = [];
     this.newClusterMarkers = [];
-    var centeriod=[];
-    if (count !== undefined) {
-      var clustered = this.getpointswithCluster(count, this.state.cluserData);
-      var matrix= this.clusterMatrix(clustered.features,count);
-      clustered.features.map((obj)=>{
-            if(obj.properties.centroid.length>0){
-                centeriod.push(obj.properties.centroid[0]+"&&"+obj.properties.centroid[1])
-            }
-        });
-            
-      var uniquecenter=[...new Set(centeriod)];
-      
-      this.setState({
-        ...this.state,
-        viewtype: flag,
-        clusterShow: true,
-        trufCenter:uniquecenter,
-        matrix:matrix,
-        turf: clustered.features,
-        mruDetails: {
-          ...this.state.mruDetails,
-          mruContainer: "dn",
-          criteriaContainer: "dn"
-        }
-      });
-    } else {
-      this.setState({
-        ...this.state,
-        viewtype: flag,
-        clusterShow: true,
-        mruDetails: {
-          ...this.state.mruDetails,
-          mruContainer: "dn",
-          criteriaContainer: "dn"
-        }
-      });
+    if(flag==='TRUF'){
+        this.getClusterdata(this.locid,count,distance);
     }
+    /*
+      this.setState({
+        ...this.state,
+        viewtype: flag,
+        clusterShow: true,
+        mruDetails: {
+          ...this.state.mruDetails,
+          mruContainer: "dn",
+          criteriaContainer: "dn"
+        }
+      });*/
+    
   }
   filteredRecord(obj) {
     this.previousmarker();
@@ -349,7 +306,6 @@ class Adminpanel extends Component {
       nearByLocations: obj,
       breadcrum: [
         { val: "primary", label: "Primary Cities", active: 0 },
-        { val: "secondary", label: "Secondary Cities", active: 0 },
         { val: "zipcode", label: "Zipcode ", active: 1 }
       ],
       clusterShow: true,
@@ -447,9 +403,10 @@ class Adminpanel extends Component {
     });
   }
   displaytrufCluster() {
+      
+     
     this.previousmarker();
     this.clearHandler();
-    var clusterData = this.state.turf;
     var colorobj = {
       color0: "#800080",
       color1: "#C71585",
@@ -457,11 +414,11 @@ class Adminpanel extends Component {
       color3: "#32CD32",
       color4: "#A0522D"
     };
-  
-
-      for (var i = 0; i < this.state.trufCenter.length; ++i) {
+    
+     var clusterData = this.state.clusterData;
+     for (var i = 0; i < this.state.trufCenter.length; ++i) {
             var center = this.state.trufCenter[i];
-            var latLng = new google.maps.LatLng( Number(center.split("&&")[1]),  Number(center.split("&&")[0]) );
+            var latLng = new google.maps.LatLng( Number(center[0]),  Number(center[1]) );
             var  mapMarker = {
                         icon: {
                              scaledSize: new google.maps.Size(30, 30), // scaled size
@@ -471,30 +428,29 @@ class Adminpanel extends Component {
                         position: latLng,
                         draggable: false,
                         map: this.map,
-                        title: `Cluster ${i+1} ,Count :${this.state.matrix[i].count}`
+                        title: `Cluster ${i+1} ,Count :`
             };
         var centriodPlace=new google.maps.Marker(mapMarker);
         this.trufMarkers.push(centriodPlace);
     }
-
-    for (var i = 0; i < clusterData.length; ++i) {
+     for (var i = 0; i < clusterData.length; ++i) {
        var position = clusterData[i];
       var latLng = new google.maps.LatLng(
-        position.geometry.coordinates[1],
-        position.geometry.coordinates[0]
+     
+        position.latitude,   position.longitude
       );
       var zips = {
         position: latLng,
         draggable: false,
-         value: `${position.zipdetail.zip}`,
-          title: `${position.zipdetail.locName}`,
-          relation: `${position.zipdetail.relation}`,
-          mruid: `${position.zipdetail.mruid}`,
-          prevdate: `${position.zipdetail.mrudate}`,
+         value: `${position.zip}`,
+          title: `${position.locName}`,
+          relation: `${position.relation}`,
+          mruid: `${position.mruid}`,
+          prevdate: `${position.mrudate}`,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 3,
-          strokeColor: colorobj[`color${position.properties.cluster}`]
+          strokeColor: colorobj[`color${position.cluster}`]
         },
         map: this.map
       };
@@ -529,6 +485,8 @@ class Adminpanel extends Component {
         });
        this.trufMarkers.push(zipmarker);
     }
+    
+    
   }
   bredcrumRender(state) {
     var flag = "";
@@ -559,16 +517,15 @@ class Adminpanel extends Component {
   listClickhandler(index) {
     google.maps.event.trigger(this.clusterMarkers[index], "click");
   }
-   
-  
   previousmarker() {
     for (var i = 0; i < this.markers.length; i++) {
       this.markers[i].setMap(null);
     }
-
-    for (var i = 0; i < this.trufMarkers.length; i++) {
+    
+     for (var i = 0; i < this.trufMarkers.length; i++) {
       this.trufMarkers[i].setMap(null);
     }
+   
   }
   clearHandler() {
     if (this.markerClusterer) {
@@ -580,9 +537,7 @@ class Adminpanel extends Component {
       this.radiusMarker.setMap(null);
     }
   }
-
-   placeMru(){
-       
+  placeMru(){
      for (var i = 0; i < this.mruPlaceMarker.length; i++) {
           this.mruPlaceMarker[i].setMap(null);
             }
@@ -601,17 +556,6 @@ class Adminpanel extends Component {
       this.mruPlaceMarker.push(mrumarker);
        var self = this;
        mrumarker.addListener("click", function(e) {
-        //  var mruRelateTo = this.relation === "null" ? "" : this.relation;
-         // var mruID = this.mruid === "null" ? "" : this.mruid;
-        //  var alreadyText = "";
-        //  if (mruRelateTo === "IS_AT") {
-          //  alreadyText =
-           //   "Mru is already placed at this location. Click End Mru button to End Service!";
-         // }
-         
-         
-         console.log(this.getPosition().lat());
-
           self.setState({
             mruDetails: {
               ...self.state.mruDetails,
@@ -634,8 +578,6 @@ class Adminpanel extends Component {
         
         
   }
-
-
   render() {
         return (
       <div id="main">
@@ -664,11 +606,15 @@ class Adminpanel extends Component {
             <input type="button" onClick={()=>{this.placeMru()}} value="PlaceMRU" />
           
               {(() => {
-                if (this.state.nearByLocations.length >= 1) {
+                  if(this.state.clusterShow){
+                      
+                 
+                if (this.state.nearByLocations.length >= 1 || this.state.clusterData.length>=1 ) {
                   if (this.state.viewtype === "DEFAULT") {
                     return (
                       <div>
-                        <Mapview  selectedmap={this.state.viewtype}   viewtype={(flag, count) => this.viewchange(flag, count)
+                        <Mapview    selectedmap={this.state.viewtype}  
+                                    viewtype={(flag,count,distance) => this.viewchange(flag,count,distance)
                           } />
                          
                         <NearByLocation
@@ -681,15 +627,14 @@ class Adminpanel extends Component {
                     return (
                       <div>
                         <Mapview
-                          selectedmap={this.state.viewtype}
-                          viewtype={(flag, count) =>
-                            this.viewchange(flag, count)
-                          }
+                          selectedmap={this.state.viewtype} 
+                          viewtype={(flag, count, distance) => this.viewchange(flag, count,distance) }
                         />
                       
                       </div>
                     );
                   }
+                }
                 }
               })()}
             </div>
@@ -721,10 +666,12 @@ class Adminpanel extends Component {
                   );
                 }
               })()}
-                 
-                  
                    {(() => {
-                if (this.state.nearByLocations.length >= 1) {
+                       
+                   if(this.state.clusterShow){
+                       
+                   
+                if (this.state.nearByLocations.length >= 1 || this.state.clusterData.length>=1) {
                   if (this.state.viewtype === "DEFAULT") {
                     return (
                       <div>
@@ -736,9 +683,10 @@ class Adminpanel extends Component {
                     );
                   }else{
                   
-                     return (  <ClusterMatrix matrix={this.state.matrix} centriod={this.centriodMarker}/>)                      
+                     return (  <ClusterMatrix matrix={[]} centriod={[]}/>)                      
                                            
                  }  
+                }
                 }
               })()}
                   
