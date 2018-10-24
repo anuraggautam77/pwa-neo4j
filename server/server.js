@@ -23,9 +23,8 @@ const server = app.listen(port, function () {
 
 
 
-app.use(cors({
-    origin: 'https://graph-pwa.herokuapp.com'
-}));
+app.use(cors());
+app.options('*', cors());
 app.use(morgan('dev'));
 
 app.use(express.static(path.resolve(__dirname, '../dist')));
@@ -35,8 +34,11 @@ app.use(bodyParser.json({limit: '50MB'}));
 // catch 404 and forward to error handler
 
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+   
+     res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
     next();
 });
 

@@ -117,7 +117,7 @@ class Adminpanel extends Component {
       method: "get",
       headers: {
         "Access-Control-Allow-Credentials" : "true",
-            "Access-Control-Allow-Origin" : "https://graph-pwa.herokuapp.com/",
+            "Access-Control-Allow-Origin" : "https://django-pwa.herokuapp.com",
         "Content-Type": "application/json"
       }
     })
