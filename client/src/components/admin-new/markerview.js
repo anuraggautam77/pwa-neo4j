@@ -44,7 +44,7 @@ import 'react-input-range/lib/css/index.css'
         return (<div>
             <div className="row zipcode-filter" >
                 <div className="well panel-heading alignheading">
-                    <div className="widget-tile">
+                    <div className="widget-tile dn">
                         <section>
                             <h5>
                                 <strong> MAP VIEW</strong>  
@@ -64,8 +64,6 @@ import 'react-input-range/lib/css/index.css'
                             </div>
                         </section>
                     </div>
-                
-                
                     <div className="widget-tile">
                         <div className="row">
                                 <div className="col-md-12">

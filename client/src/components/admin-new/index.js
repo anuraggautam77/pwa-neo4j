@@ -638,63 +638,10 @@ class Adminpanel extends Component {
                     <div id="content">
                         <div className="row">
                 
-                            <div className="col-md-2 col-sm-12">
+                            <div className="col-md-3 col-sm-12">
                                 <UserCount usercount={this.state} />
-                                {(() => {
-                                    if (this.state.clusterShow) {
-
-
-                                        if (this.state.nearByLocations.length >= 1 || this.state.clusterData.length >= 1) {
-                                            if (this.state.viewtype === "DEFAULT") {
-                                                return (
-                                                                <div>
-                                                                    <Mapview    placemru={() => {
-                                                                            this.placeMru()
-                                                }}   selectedmap={this.state.viewtype}   viewtype={(flag, count, distance, recluster) => this.viewchange(flag, count, distance, recluster)
-                                                                                } />
-                                                
-                                                                    <NearByLocation  nearbystate={this.state.nearByLocations} onclickHandler={e => this.listClickhandler(e)}
-                                                                                     />
-                                                                </div>
-                                                                );
-                                } else {
-                                                                return (
-                                                                                <div>
-                                                                                    <Mapview   
-                                                                                        placemru={() => {
-                                                                                        this.placeMru()
-                                                                }}
-                                                                                        selectedmap={this.state.viewtype} 
-                                                                                        viewtype={(flag, count, distance, recluster) => this.viewchange(flag, count, distance, recluster) }
-                                                                                        />
-                                                                
-                                                                                </div>
-                                                                            );
-                                }
-                                }
-                                }
-                                })()}
-                            </div>
-                
-                            <div className="col-md-8 col-sm-12 ">
-                                <MruPlaceConatiner
-                                    allRecord={
-                                                                    this.state.nearByLocations}
-                                    filteredRecord={ob => this.filteredRecord(ob)}
-                                    mruDetails={this.state.mruDetails}
-                                    />
-                                <div className="chart-wrapper">
-                                    <div
-                                        id="nearbyuser-maparea"
-                                        style={{width: "100%", height: "750px" }}
-                                        >
-                                        <div id="nearbyuser-map" className="nearby-map" />
-                                    </div>
-                                </div>
-                            </div>
-                
-                            <div className="col-md-2 col-sm-12">
-                                {(() => {
+                               
+                               {(() => {
                                                                             if (this.state.primaryCity) {
                                                                                 return (
                                                                                                                 <PrimaryFilters
@@ -728,10 +675,57 @@ class Adminpanel extends Component {
                                 }
                                 }
                                 })()}
-                
+            
+            
+                            {(() => {
+                                    if (this.state.clusterShow) {
+
+
+                                        if (this.state.nearByLocations.length >= 1 || this.state.clusterData.length >= 1) {
+                                            if (this.state.viewtype === "DEFAULT") {
+                                                return (
+                                                  <div>
+                                              <Mapview   placemru={() => {
+                                                                            this.placeMru()
+                                                }}   selectedmap={this.state.viewtype}   viewtype={(flag, count, distance, recluster) => this.viewchange(flag, count, distance, recluster)
+                                                                                } />
+                                                
+                                             <NearByLocation  nearbystate={this.state.nearByLocations} onclickHandler={e => this.listClickhandler(e)}
+                                                                                     />
+                                                                </div>
+                                                                );
+                                } else {
+                                                                return (
+                                                                                <div>
+                                                                                    <Mapview   
+                                                                                        placemru={() => {
+                                                                                        this.placeMru()
+                                                                }}
+                                                                                        selectedmap={this.state.viewtype} 
+                                                                                        viewtype={(flag, count, distance, recluster) => this.viewchange(flag, count, distance, recluster) }
+                                                                                        />
+                                                                
+                                                                                </div>
+                                                                            );
+                                }
+                                }
+                                }
+                                })()}
+                                
                 
                             </div>
-                
+                            <div className="col-md-9 col-sm-12 ">
+                                <MruPlaceConatiner 
+                                    allRecord={ this.state.nearByLocations}
+                                    filteredRecord={ob => this.filteredRecord(ob)}
+                                    mruDetails={this.state.mruDetails}
+                                    />
+                                <div className="chart-wrapper">
+                                    <div  id="nearbyuser-maparea"  style={{width: "100%", height: "750px" }}  >
+                                        <div id="nearbyuser-map" className="nearby-map" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

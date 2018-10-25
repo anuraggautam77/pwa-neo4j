@@ -6,7 +6,7 @@ import React, { Component } from "react";
         constructor(props) {
             super(props);
             this.state={
-                loaderShow:"dn"
+                loaderShow:"db"
             }
         }
         
@@ -22,7 +22,7 @@ import React, { Component } from "react";
                     MRU APP
                 </h4>
             </div>
-            <div className={`modal ${this.state.loaderShow}`} style={{ "paddingLeft": "40%", "paddingTop":"28%" }}>
+            <div className={`modal ${this.state.loaderShow}`} style={{ "paddingLeft": "60%", "paddingTop":"28%" }}>
                  <Loader type="Puff"  color="#ff2266fc" height="75" width="75"  /> 
             </div>
            
