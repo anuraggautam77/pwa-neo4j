@@ -62,26 +62,34 @@ UsersModel = {
     registerUserAtPrimary: function (req, callback) {
         var query = `match (user:User)-[r:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(city:MasterCity) return  count(distinct user) as mruCount`;
         driver.cypher({query: query}, function (err, results) {
-            if (err)
-                throw err;
-            callback(results);
+            if (err){
+               console.log(err)
+            }else{
+                callback(results); 
+            }
         });
     },
     registerUserAtSecondary: function (id, callback) {
         var query = `optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=${id} with count(distinct user) as primaryCount optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=${id} with count(distinct user) as secondaryCount,primaryCount return secondaryCount+primaryCount as mruCount`;
         driver.cypher({query: query}, function (err, results) {
-            if (err)
-                throw err;
-            callback(results);
+            if (err){
+               console.log(err)
+            }else{
+                callback(results); 
+            }
         });
     },
     registerUserAtThirdLevel: function (req, callback) {
         var query = `optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity) where ID(c)=${req.locid} with count(distinct user) as primaryCount optional match (user:User)-[:IS_REGISTERED_MRU]-(zip:Mastergeo)-[]-(c:MasterCity)-[:IS_CITY_OF]-(p:MasterCity) where ID(p)=${req.locid} with count(distinct user) as secondaryCount,primaryCount return secondaryCount+primaryCount as mruCount`;
 
         driver.cypher({query: query}, function (err, results) {
-            if (err)
-                throw err;
-            callback(results);
+            if (err){
+               console.log(err)
+            }else{
+                callback(results); 
+            }
+               
+           
         });
     },
     citiesDetails: function (req, callback) {
@@ -102,9 +110,11 @@ UsersModel = {
         driver.cypher({
             query: query
         }, function (err, results) {
-            if (err)
-                throw err;
-            callback(results);
+            if (err){
+               console.log(err)
+            }else{
+                callback(results); 
+            }
         });
     },
     getSecondLevelCities: function (citiid, callback) {
