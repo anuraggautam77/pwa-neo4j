@@ -6,7 +6,7 @@ import React, { Component } from "react";
         constructor(props) {
             super(props);
             this.state={
-                loaderShow:"db"
+                loaderShow:"dn"
             }
         }
         
