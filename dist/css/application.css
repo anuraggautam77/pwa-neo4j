@@ -3,7 +3,8 @@ body {
   padding: 0;
   font-family: sans-serif;
   background: #edf4f7;
-  font-family: "Verdana"; }
+  font-family: "Verdana";
+  overflow: hidden; }
   body .container-full {
     width: 100%;
     margin: 0 auto; }
@@ -111,6 +112,130 @@ li {
     height: 250px; }
   .crntlo {
     width: 100%; } }
+
+.colorsix {
+  background: #fbb168; }
+
+.colorfour {
+  background: #a285c5; }
+
+.colortwo {
+  background: #68cab6; }
+
+.colorone {
+  background: #666981; }
+
+.colorfive {
+  background: #22ba9b; }
+
+.colorthree {
+  background: #e17695; }
+
+.small-box {
+  border-radius: 3px;
+  position: relative;
+  display: block;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  color: #fff; }
+
+.small-box > .inner {
+  padding: 10px; }
+
+.small-box > .small-box-footer {
+  position: relative;
+  text-align: center;
+  padding: 3px 0;
+  color: white;
+  color: rgba(255, 255, 255, 0.8);
+  display: block;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.1);
+  text-decoration: none; }
+
+.small-box .icon {
+  transition: all .3s linear;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 0;
+  font-size: 28px;
+  color: white; }
+
+.box.box-primary {
+  border-top-color: #3c8dbc; }
+
+.box {
+  position: relative;
+  border-radius: 3px;
+  background: white;
+  border-top: 3px solid #d2d6de;
+  margin-bottom: 20px;
+  width: 100%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); }
+  .box .box-header {
+    color: #444444;
+    display: block;
+    padding: 10px;
+    position: relative; }
+    .box .box-header .box-title {
+      display: inline-block;
+      font-size: 18px;
+      margin: 0;
+      line-height: 1; }
+  .box .box-header.with-border {
+    border-bottom: 1px solid #f4f4f4; }
+  .box .box-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 10px; }
+    .box .box-body .products-list {
+      list-style: none;
+      margin: 0;
+      padding: 0; }
+      .box .box-body .products-list .item {
+        box-shadow: none;
+        border-radius: 0;
+        border-bottom: 1px solid #f4f4f4;
+        padding: 5px 0;
+        background: white; }
+        .box .box-body .products-list .item .product-img {
+          float: left; }
+          .box .box-body .products-list .item .product-img i {
+            font-size: 20px;
+            color: #c5d2cd; }
+      .box .box-body .products-list .product-info {
+        margin-left: 40px; }
+        .box .box-body .products-list .product-info h4 {
+          margin: 0;
+          padding: 0; }
+
+.top-drawer {
+  background: white;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+  .top-drawer .custom-container .form-control {
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 6px 2px;
+    font-size: 12px; }
+
+.table {
+  margin-bottom: 0px; }
+  .table td {
+    padding: 6px;
+    font-size: 12px; }
+  .table th {
+    text-align: center;
+    font-size: 12px;
+    padding: 6px; }
+
+.border-class {
+  border: 1px solid #dddddd; }
 .adminpanel {
   /* Modal Content */ }
   .adminpanel .input-range__track {
@@ -124,9 +249,14 @@ li {
   .adminpanel .input-range__label--value {
     top: -33px !important; }
   .adminpanel .input-range__label {
-    color: #2b0606;
+    color: #fff;
     font-family: "Helvetica Neue", san-serif;
     font-size: 19px; }
+  .adminpanel .input-range__track--active {
+    background: red; }
+  .adminpanel .input-range__slider {
+    background: red;
+    border: red; }
   .adminpanel .input-range__slider {
     height: 14px !important;
     margin-top: -11px !important;

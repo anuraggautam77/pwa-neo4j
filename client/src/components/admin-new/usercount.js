@@ -13,17 +13,20 @@ class UserCount extends Component {
     }
     render() {
         var mruCount = this.state.count.userCount[this.state.count.level];
-        return (
-                <div className="row zipcode-filter">
-                    <div className="well panel-heading alignheading" style={{"textAlign": "center", "marginBottom": "10px"}}>
-                        <div className="widget-tile">
-                            <section><h5><span>REGISTERED USERS</span></h5>
-                                <h4  style={{"color": "#d3455b", "fontWeight": "normal !important"}} >{mruCount}</h4>
-                            </section></div>
-                    </div>
-                </div>
-                                    );
-                        }
-                    }
-
-                    export default UserCount;
+        return (   
+                    <div className="small-box colorone" style={{"minHeight":"122px"}}>
+                            <div className="inner">
+                                <h3  style={{"fontWeight": "normal !important"}} >{mruCount}</h3>
+                                            <br/>
+                                <h6>REGISTERED USERS</h6>
+                            </div>
+                            <div className="icon">
+                                <i className="glyphicon glyphicon-user"></i>
+                            </div>
+                            <div className="small-box-footer">&nbsp;  </div>
+                     </div>
+                 
+                 );
+              }
+             }
+    export default UserCount;

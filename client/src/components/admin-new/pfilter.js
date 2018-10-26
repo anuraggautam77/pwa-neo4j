@@ -9,20 +9,20 @@ class PrimaryFilters extends Component {
         };
     }
     componentWillReceiveProps(props) {
-        this.setState({allRecord: props.allRecord})
+        this.setState({allRecord: props.allRecord});
     }
     changeFilter(flag) {
 
         switch (flag) {
             case "TOP":
-                  this.state.allRecord.map((obj, i) => {
+                this.state.allRecord.map((obj, i) => {
                     if (i <= 5) {
                         obj.show = true;
                     } else {
                         obj.show = false;
                     }
                 });
-                 
+
                 break;
 
             case "LEAST":
@@ -47,38 +47,19 @@ class PrimaryFilters extends Component {
     }
     render() {
         return (
-                <div className="row zipcode-filter" >
-                    <div className="well panel-heading alignheading">
-                        <div className="widget-tile">
-                            <section>
-                                <h5>
-                                    <strong> FILTERS </strong>  
-                                </h5>
-                                <div className="progress progress-xs progress-white progress-over-tile"></div>
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <a href="javascript:void(0)" onClick={() => this.props.primaryfilterRecord(this.changeFilter("TOP"))}>
-                                            <h3>Top Primary Cities </h3>
-                                            <div className="progress xs" style={{"backgroundColor": "#b15eae"}}></div>
-                                        </a>
-                                    </div>
-                                </div>
-                                 <div className="row">
-                                    <div className="col-md-12">
-                                        <a href="javascript:void(0)" onClick={() => this.props.primaryfilterRecord(this.changeFilter("LEAST"))}>
-                                            <h3>Rest of the Cities  </h3>
-                                            <div className="progress xs"  style={{"backgroundColor": "#44b6c0 "}}></div>
-                                        </a>
-                                    </div>
-                                </div>
-                
-                            </section>
-                            <strong> <button type="button" onClick={() => this.props.primaryfilterRecord(this.changeFilter(""))} className="btn btn-primary btn-xs"> Reset filter</button></strong>
+                    <div className="small-box colorone" style={{"minHeight":"122px"}}>
+                        <div className="inner">
+                            <h6 style={{"marginBottom":"15px"}}>
+                                <strong> FILTERS </strong>  
+                            </h6>
+                            <button onClick={() => this.props.primaryfilterRecord(this.changeFilter("TOP"))} class="btn  btn-sm" style={{"backgroundColor": "#9722d7"}}>Top Primary Cities</button>
+                            &nbsp;  <button onClick={() => this.props.primaryfilterRecord(this.changeFilter("LEAST"))} class="btn  btn-sm" style={{"backgroundColor": "#44b6c0"}}>Rest of the Cities</button>
                         </div>
+                        <a style={{"color": "#fff"}} href="javascript:void(0)" onClick={() => this.props.primaryfilterRecord(this.changeFilter(""))} className="small-box-footer">Reset filter </a>
                     </div>
-                </div>
-                );
-    }
-}
+               
+                            );
+                }
+            }
 
-export default PrimaryFilters;
+            export default PrimaryFilters;

@@ -18,12 +18,21 @@
         top:-33px !important;
     }
     .input-range__label{
-        color: rgb(43, 6, 6);
+        color: #fff;
         font-family: "Helvetica Neue", san-serif;
         font-size: 19px;
 
     }
 
+    .input-range__track--active{
+        background:red;
+    }
+    .input-range__slider{
+         background:red;
+         border:red;
+    }
+    
+    
     .input-range__slider{
 
         height: 14px !important;

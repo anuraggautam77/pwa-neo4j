@@ -102,7 +102,6 @@ class Filters extends Component {
                                 
                                 
                                 <div className="row">
-                                    
                                     <div className="col-md-12">
                                         <a href="javascript:void(0)" onClick={() => this.props.filterRecord(this.changeFilter("LEAST_MOST"))}>
                                             <h3> Remaining Location </h3>
