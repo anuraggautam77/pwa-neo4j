@@ -47,15 +47,16 @@ class PrimaryFilters extends Component {
     }
     render() {
         return (
-                    <div className="small-box colorone" style={{"minHeight":"122px"}}>
+                    <div className="small-box" style={{"minHeight":"122px"}}>
                         <div className="inner">
                             <h6 style={{"marginBottom":"15px"}}>
                                 <strong> FILTERS </strong>  
                             </h6>
-                            <button onClick={() => this.props.primaryfilterRecord(this.changeFilter("TOP"))} class="btn  btn-sm" style={{"backgroundColor": "#9722d7"}}>Top Primary Cities</button>
-                            &nbsp;  <button onClick={() => this.props.primaryfilterRecord(this.changeFilter("LEAST"))} class="btn  btn-sm" style={{"backgroundColor": "#44b6c0"}}>Rest of the Cities</button>
+                            <button onClick={() => this.props.primaryfilterRecord(this.changeFilter("TOP"))} className="btn  btn-sm" style={{"backgroundColor": "#9722d7"}}>Top Primary Cities</button>
+                            &nbsp;  <button onClick={() => this.props.primaryfilterRecord(this.changeFilter("LEAST"))} className="btn  btn-sm" style={{"backgroundColor": "#44b6c0"}}>Rest of the Cities</button>
                         </div>
-                        <a style={{"color": "#fff"}} href="javascript:void(0)" onClick={() => this.props.primaryfilterRecord(this.changeFilter(""))} className="small-box-footer">Reset filter </a>
+                        <div className="text-center"> <a style={{"color": "#fff"}} href="javascript:void(0)" onClick={() => this.props.primaryfilterRecord(this.changeFilter(""))} className="text-center">Reset filter </a></div>
+                       
                     </div>
                
                             );

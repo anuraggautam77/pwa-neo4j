@@ -21,3 +21,4 @@ $RECYCLE.BIN/
 .Spotlight-V100
 .Trashes
 /nbproject/private/
+package-lock.json

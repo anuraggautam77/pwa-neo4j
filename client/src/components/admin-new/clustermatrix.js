@@ -17,10 +17,10 @@ class ClusterMatrix extends Component {
             return (
                     
                         <tr>
-                                     <td>{i+1}.</td>
-                                    <td>{obj.userCount_sum} ({obj.total_users_count_percentages})</td>
-                                    <td>{(obj.distance_miles_mean).toFixed(2)}</td>
-                                    <td>{(obj.average_dist_covered_users).toFixed(2)}({obj.avg_dist_covered_users_percentages})</td>
+                                    <td className="col-xs-3">{i+1}.</td>
+                                    <td className="col-xs-3">{obj.userCount_sum} ({obj.total_users_count_percentages})</td>
+                                    <td className="col-xs-3">{(obj.distance_miles_mean).toFixed(2)}</td>
+                                    <td className="col-xs-3">{(obj.average_dist_covered_users).toFixed(2)}({obj.avg_dist_covered_users_percentages})</td>
                         </tr>
                         
                         
@@ -34,13 +34,13 @@ class ClusterMatrix extends Component {
 
             return (
                     
-                        <table class="table table-bordered text-center">
+                        <table className="table table-bordered text-center table-fixed">
                             <thead>
                                 <tr>
-                                    <th>Cluster</th>
-                                    <th>Users(%)</th>
-                                    <th>Avg dis</th>
-                                    <th>Avg dis users(%)</th>
+                                    <th className="col-xs-3">Cluster</th>
+                                    <th className="col-xs-3">Users(%)</th>
+                                    <th className="col-xs-3">Avg dis</th>
+                                    <th className="col-xs-3">Avg dis users(%)</th>
                                 </tr>
                             </thead>
                             <tbody>

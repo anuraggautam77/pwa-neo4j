@@ -12,7 +12,7 @@ class Mapview extends Component {
             //distance:props.distance
             type: "TRUF",
             distance: 80469
-        }
+        };
 
     }
     componentWillReceiveProps(props) {
@@ -41,10 +41,9 @@ class Mapview extends Component {
     }
     render() {
 
-        return (<div className="small-box colorone border-class">
+        return (<div className="small-box border-class">
            <div className="row text-center">
                 <div className="small-box-footer" style={{"margin": "10px"}}>Custom Changes  </div>
-              
                 <div className="col-md-4 col-md-offset-1">
                     <div className="custom-container">
                         <div className="inner">

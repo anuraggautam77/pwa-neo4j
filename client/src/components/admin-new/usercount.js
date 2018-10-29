@@ -13,17 +13,17 @@ class UserCount extends Component {
     }
     render() {
         var mruCount = this.state.count.userCount[this.state.count.level];
+        console.log(this.state.count);
         return (   
-                    <div className="small-box colorone" style={{"minHeight":"122px"}}>
+                    <div className="small-box" style={{"minHeight":"122px"}}>
                             <div className="inner">
                                 <h3  style={{"fontWeight": "normal !important"}} >{mruCount}</h3>
                                             <br/>
-                                <h6>REGISTERED USERS</h6>
+                                <h5>REGISTERED USERS</h5>
                             </div>
                             <div className="icon">
                                 <i className="glyphicon glyphicon-user"></i>
                             </div>
-                            <div className="small-box-footer">&nbsp;  </div>
                      </div>
                  
                  );

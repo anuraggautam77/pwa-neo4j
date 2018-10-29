@@ -62,7 +62,7 @@ a{
     -webkit-overflow-scrolling: touch;
 }
 #content {
-    padding: 15px 30px 0;
+    padding: 0 30px 0;
 }
 
 
@@ -175,7 +175,6 @@ li{
     border-radius: 3px;
     position: relative;
     display: block;
-    margin-bottom: 20px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.1);
     color:#fff;
 }
@@ -304,17 +303,76 @@ li{
 
 }
 .table{
+    color:#fff;
     margin-bottom: 0px;
     td{
-          padding:6px;
         font-size: 12px;
+        padding: 2px !important;
+        border: none !important;
+        border-right: 1px solid !important;
+        border-top: 1px solid !important;
     }
     th{
         text-align: center;
         font-size: 12px;
-        padding:6px;
+        border: none !important;
+        vertical-align: top !important;
+        padding: 9px !important;
+      
+    } 
+ 
+
+}
+
+.table-fixed{
+    width: 100%;
+    tbody{
+        height: 66px;
+        overflow-y:auto;
+        width: 100%;
+    }
+    thead{
+        width: 100%;   
+    }
+    thead,tbody,tr,td,th{
+        display:block;
+    }
+    tbody{
+        td{
+            float:left;
+        }
     }
 }
+
+
+
+
+
+/*
+.fixed_header{
+    table-layout: fixed;
+    border-collapse: collapse;
+     tbody{
+        display:block;
+        overflow: auto;
+        height: 100px;
+    }
+    thead{
+        tr{
+           display: block;  
+        }
+    }
+}*/
+
+
 .border-class{
-   border: 1px solid rgb(221, 221, 221);
+    border: 1px solid rgb(221, 221, 221);
+}
+
+
+.filter-container{
+    background: linear-gradient(to right, rgb(107, 150, 138), rgb(76, 146, 113))
+}
+.small-box{
+    border:1px solid;
 }

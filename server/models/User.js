@@ -171,7 +171,7 @@ UsersModel = {
         }
         //'${req.todaydate}'
         var query = `match (user:User)-[]-(zip:Mastergeo)-[r]-(c:MasterCity) where (ID(c)=${req.locid} and r.type='${locflag}') or (ID(c)=${req.locid} and r.type="primaryLocation") optional match (zip)-[mr:IS_AT|:IS_EXPECTED_AT]-(mru:MRU)  where not mr.status='completed'  return mru.mru_id as mruid,mr.status, type(mr) as relation,mr.date as mrudate,ID(c), c.cityName as cityname,zip.locationName as locName,  zip.lat as latitude, zip.lang as longitude, zip.zip as zip, ID(c) as cityid, count(distinct user) as userCount order by userCount desc`;
-
+    console.log(query);
         driver.cypher({
             query: query
         }, function (err, results) {

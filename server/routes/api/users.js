@@ -229,20 +229,40 @@ module.exports = (apiRoutes) => {
 
 
     apiRoutes.get(`/${SERVICE_CONST.GET_CLUSTER_DETAIL}/:cityid/:locfilter/:distance/:nclus`, (req, res) => {
-
+       
         var param = req.params;
+            param.locid=param.cityid;
+         
+    
+          var nearbyData = new Promise(function (resolve, reject) {
+            request({url: `https://django-pwa.herokuapp.com//pwa/api/clustering/kmeans/getKMeansRandomCentroidClusters/?cityid=${param.cityid}&locfilter=${param.locfilter}&distance=${param.distance}&nclust=${param.nclus}`,
+                method: 'GET',
+                headers: {
+                    'Content-Type': ' application/json',
+                }
 
-        request({url: `https://django-pwa.herokuapp.com//pwa/api/clustering/kmeans/getKMeansRandomCentroidClusters/?cityid=${param.cityid}&locfilter=${param.locfilter}&distance=${param.distance}&nclust=${param.nclus}`,
-            method: 'GET',
-            headers: {
-                'Content-Type': ' application/json',
-            }
-
-        }, function (error, response, body) {
-            //  res.json({data: JSON.parse(json.data.body.data)});
-            res.json(response);
-
+            }, function (error, response, body) {
+                resolve(response);
+            });
         });
+
+        var userCount = new Promise(function (resolve, reject) {
+            UsersModel.registerUserAtThirdLevel(param, (count) => {
+                resolve(count);
+            });
+        });
+
+        Promise.all([nearbyData, userCount]).then(function (values) {
+
+            res.json({status: "success", mapdata: values[0], usercount: values[1][0].mruCount});
+        });
+
+
+
+
+
+
+
 
 
 

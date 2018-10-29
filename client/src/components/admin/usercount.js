@@ -13,6 +13,9 @@ class UserCount extends Component {
     }
     render() {
         var mruCount = this.state.count.userCount[this.state.count.level];
+        
+        console.log(mruCount);
+        
         return (
                 <div className="row zipcode-filter">
                     <div className="well panel-heading alignheading" style={{"textAlign": "center", "marginBottom": "10px"}}>
