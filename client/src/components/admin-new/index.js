@@ -466,7 +466,7 @@ class Adminpanel extends Component {
                 position: latLng,
                 draggable: true,
                 map: this.map,
-                title: `Cluster ${i + 1} ,Count :`
+                title: `Cluster ${i + 1}`
             };
             var centriodPlace = new google.maps.Marker(mapMarker);
             this.centriodmarker.push(centriodPlace);
@@ -618,13 +618,13 @@ class Adminpanel extends Component {
         return (
                 <div>
                 
-                    <div className="row">
+                    <div className="row breadcrum-container">
                         <div style={{"float": "left"}}>  
                             {(() => {
                                                 return (<ol className="breadcrumb">{this.bredcrumRender(this.state)}</ol>);
                             })()}
                         </div>
-                        <div  style={{"float": "right", "padding": "5px 46px"}}>  
+                        <div  style={{"float": "right", "padding": "5px 5px 0px 3px"}}>  
                             <label><Toggle
                                     defaultChecked={this.state.baconIsReady}
                                     onChange={(a) => {  
@@ -642,7 +642,7 @@ class Adminpanel extends Component {
                 
                 
                 
-                    <div id="content">
+                    <div   className="content-container">
                         <div className={
                                                                 `top-drawer filter-container  ${this.state.draweropen}`}>
                             <div className="row"> 

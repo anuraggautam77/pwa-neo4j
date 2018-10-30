@@ -42,14 +42,14 @@ class Mapview extends Component {
     render() {
 
         return (<div className="small-box border-class">
-           <div className="row text-center">
-                <div className="small-box-footer" style={{"margin": "10px"}}>Custom Changes  </div>
-                <div className="col-md-4 col-md-offset-1">
+            <div className="small-box-footer">Custom Changes  </div>
+            <div className="row text-center" style={{"paddingTop": "15px"}} >
+                <div className="col-md-4">
                     <div className="custom-container">
-                        <div className="inner">
+                        <div className="inner"  style={{"paddingLeft": "29px"}}>
                             <select className="form-control dropdown"  onChange={(e) => {
-                            this.changeView(this.state.type, this.state.value, e.currentTarget.value)
-                                                 }  }>
+                                this.changeView(this.state.type, this.state.value, e.currentTarget.value)
+                                                                         }  }>
         
                                 <option>Change Distance</option>
                                 <option value="40234">25 Miles</option>
@@ -62,26 +62,37 @@ class Mapview extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-5">
-                    <input type="button" className="btn btn-success btn-sm" onClick={() => {
-                                this.changeView("TRUF", this.state.value, this.state.distance, "recluster")
-                                                }} value="ReCluster" />    
-                    &nbsp;
-                    <input type="button" className="btn btn-success btn-sm" onClick={() => {
-                                    this.props.placemru()
-                 }} value="PlaceMRU" />  
+                <div className="col-md-8">
+                    <div className="col-md-4"> <p>Cluster Count</p></div>
+                    <div className="col-md-7">
+                        <InputRange   maxValue={6}  minValue={2} value={this.state.value}  onChange={value => this.changeView("TRUF", value, this.state.distance)} />
+                    </div> 
                 </div>
             </div>
-            <div className="row">
-                <div className="col-md-5 col-md-offset-3">
-                    <br/>
-                    <InputRange   maxValue={6}  minValue={2} value={this.state.value}  onChange={value => this.changeView("TRUF", value, this.state.distance)} />
-                    <br/> 
-                </div>       
+            <div className="row text-center" style={{"padding": "5px"}}>
+                <div className="col-md-12">
+        
+        
+                    <input type="button" className="btn btn-success btn-sm" onClick={() => {
+                                    this.changeView("TRUF", this.state.value, this.state.distance, "recluster")
+                                                                        }} value="ReCluster" />    
+                    &nbsp;
+                    <input type="button" className="btn btn-success btn-sm" onClick={() => {
+                                        this.props.placemru()
+                                         }} value="PlaceMRU" /> 
+        
+                </div>
+        
+        
+        
+        
             </div>
+        
+        
+        
         </div>
-                                );
+                                    );
+            }
         }
-    }
 
-    export default Mapview;
+        export default Mapview;

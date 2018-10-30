@@ -37,6 +37,9 @@ a {
     margin-left: 250px;
     padding: 0 15px 0 0; }
 
+#content {
+  padding: 0 30px 0; }
+
 #main {
   background: #e5e9ec;
   height: 100%;
@@ -50,9 +53,6 @@ a {
   transition: transform 0.5s, padding-top 0.5s, -webkit-transform 0.5s;
   z-index: 9;
   -webkit-overflow-scrolling: touch; }
-
-#content {
-  padding: 0 30px 0; }
 
 ul {
   padding: 0;
@@ -144,7 +144,7 @@ li {
 .small-box > .small-box-footer {
   position: relative;
   text-align: center;
-  padding: 3px 0;
+  padding: 7px 0;
   color: white;
   color: rgba(255, 255, 255, 0.8);
   display: block;
@@ -155,10 +155,10 @@ li {
 .small-box .icon {
   transition: all .3s linear;
   position: absolute;
-  top: 10px;
+  top: 36px;
   right: 10px;
   z-index: 0;
-  font-size: 28px;
+  font-size: 40px;
   color: white; }
 
 .box.box-primary {
@@ -214,8 +214,7 @@ li {
 .top-drawer {
   background: white;
   margin-bottom: 10px;
-  padding: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+  padding: 10px; }
   .top-drawer .custom-container .form-control {
     display: block;
     width: 100%;
@@ -236,8 +235,7 @@ li {
     text-align: center;
     font-size: 12px;
     border: none !important;
-    vertical-align: top !important;
-    padding: 9px !important; }
+    vertical-align: top !important; }
 
 .table-fixed {
   width: 100%; }
@@ -247,34 +245,31 @@ li {
     width: 100%; }
   .table-fixed thead {
     width: 100%; }
+    .table-fixed thead tr {
+      background: rgba(0, 0, 0, 0.1); }
   .table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
     display: block; }
   .table-fixed tbody td {
     float: left; }
 
-/*
-.fixed_header{
-    table-layout: fixed;
-    border-collapse: collapse;
-     tbody{
-        display:block;
-        overflow: auto;
-        height: 100px;
-    }
-    thead{
-        tr{
-           display: block;  
-        }
-    }
-}*/
 .border-class {
   border: 1px solid #dddddd; }
 
 .filter-container {
-  background: linear-gradient(to right, #825b5b, #a71515); }
+  background: linear-gradient(to right, #5ba5a0, #439d97); }
 
 .small-box {
   border: 1px solid; }
+
+.content-container {
+  margin: 0px 16px 16px 16px;
+  padding: 10px;
+  background: #fff; }
+
+.breadcrum-container {
+  padding: 0;
+  margin: 10px 17px 10px 16px;
+  background: #fff; }
 .adminpanel {
   /* Modal Content */ }
   .adminpanel .input-range__track {
@@ -358,7 +353,6 @@ li {
     border: 0;
     font-family: "Arial", sans-serif;
     font-size: 15px;
-    padding: 8px 45px 10px;
     margin: 0 !important; }
     .adminpanel .breadcrumb .active {
       color: #b6b8bb;
@@ -500,6 +494,8 @@ li {
       height: 250px; }
     .adminpanel .crntlo {
       width: 100%; } }
+  .adminpanel .cluster-range-label {
+    padding: 18px 0px 0px 0px; }
 .userpanel .landing-page {
   margin-top: 10px; }
 

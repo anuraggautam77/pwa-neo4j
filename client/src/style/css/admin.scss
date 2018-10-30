@@ -1,6 +1,9 @@
 .adminpanel{
-    
-    
+
+
+
+
+
     .input-range__track{
         height: 8px !important;
     }
@@ -28,11 +31,11 @@
         background:red;
     }
     .input-range__slider{
-         background:red;
-         border:red;
+        background:red;
+        border:red;
     }
-    
-    
+
+
     .input-range__slider{
 
         height: 14px !important;
@@ -95,7 +98,7 @@
             color:#fff;
             font-weight: bold;
         }
-        
+
         .list-group-item{
             padding: 5px 5px;
         }
@@ -129,7 +132,7 @@
         border: 0;
         font-family: "Arial", sans-serif;
         font-size: 15px;
-        padding: 8px 45px 10px;
+        //  padding: 8px 45px 10px;
         margin:0 !important;
         .active{
             color: rgb(182, 184, 187);
@@ -348,4 +351,19 @@
             width:100%
         }
     } 
+
+
+
+
+
+
+
+    .cluster-range-label{
+
+        padding: 18px 0px 0px 0px; 
+       
+
+    }
+
+
 }

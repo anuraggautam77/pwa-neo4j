@@ -45,6 +45,10 @@ a{
     }
 }
 
+#content {
+    padding: 0 30px 0;
+}
+
 
 
 
@@ -60,9 +64,6 @@ a{
     transition: transform 0.5s, padding-top 0.5s;
     z-index: 9;
     -webkit-overflow-scrolling: touch;
-}
-#content {
-    padding: 0 30px 0;
 }
 
 
@@ -186,7 +187,7 @@ li{
 .small-box>.small-box-footer {
     position: relative;
     text-align: center;
-    padding: 3px 0;
+    padding: 7px 0;
     color: rgb(255, 255, 255);
     color: rgba(255,255,255,0.8);
     display: block;
@@ -199,10 +200,10 @@ li{
 .small-box .icon {
     transition: all .3s linear;
     position: absolute;
-    top: 10px;
+    top: 36px;
     right: 10px;
     z-index: 0;
-    font-size: 28px;
+    font-size: 40px;
     color: rgb(255, 255, 255);
 }
 
@@ -285,7 +286,7 @@ li{
     background: rgb(255, 255, 255);
     margin-bottom: 10px;
     padding: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
     .custom-container{
 
@@ -317,10 +318,10 @@ li{
         font-size: 12px;
         border: none !important;
         vertical-align: top !important;
-        padding: 9px !important;
-      
+        // padding: 9px !important;
+
     } 
- 
+
 
 }
 
@@ -330,9 +331,13 @@ li{
         height: 66px;
         overflow-y:auto;
         width: 100%;
+
     }
     thead{
         width: 100%;   
+        tr{
+            background: rgba(0, 0, 0, 0.1);
+        }
     }
     thead,tbody,tr,td,th{
         display:block;
@@ -344,35 +349,32 @@ li{
     }
 }
 
-
-
-
-
-/*
-.fixed_header{
-    table-layout: fixed;
-    border-collapse: collapse;
-     tbody{
-        display:block;
-        overflow: auto;
-        height: 100px;
-    }
-    thead{
-        tr{
-           display: block;  
-        }
-    }
-}*/
-
-
 .border-class{
     border: 1px solid rgb(221, 221, 221);
 }
 
 
 .filter-container{
-    background: linear-gradient(to right, rgb(130, 91, 91), rgb(167, 21, 21));
+    background: linear-gradient(to right, rgb(91, 165, 160),  rgb(67, 157, 151));
 }
 .small-box{
     border:1px solid;
+}
+
+.content-container {
+    margin: 0px 16px 16px 16px;
+    // border: 2px solid rgb(255, 0, 0);
+    padding: 10px;
+    background: #fff;
+    // border: 2px solid rgb(0, 0, 0);
+}
+
+
+.breadcrum-container{
+    padding: 0;
+    margin: 10px 17px 10px 16px;
+    //  border: 2px solid; 
+    background:#fff;
+    // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
