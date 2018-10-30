@@ -287,10 +287,10 @@ li {
     font-family: "Helvetica Neue", san-serif;
     font-size: 19px; }
   .adminpanel .input-range__track--active {
-    background: red; }
+    background: #c94b4b; }
   .adminpanel .input-range__slider {
-    background: red;
-    border: red; }
+    background: #c94b4b;
+    border: #c94b4b; }
   .adminpanel .input-range__slider {
     height: 14px !important;
     margin-top: -11px !important;
