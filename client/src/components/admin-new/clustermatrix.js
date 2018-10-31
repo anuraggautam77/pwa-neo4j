@@ -34,7 +34,7 @@ class ClusterMatrix extends Component {
 
             return (
                     
-                        <table className="table table-bordered text-center table-fixed">
+                        <table className="table table-bordered text-center table-fixed box-color-four">
                             <thead>
                                 <tr>
                                     <th className="col-xs-2">Cluster</th>

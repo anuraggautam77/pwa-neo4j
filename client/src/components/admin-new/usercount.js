@@ -14,7 +14,7 @@ class UserCount extends Component {
     render() {
         var mruCount = this.state.count.userCount[this.state.count.level];
         return (   
-                    <div className="small-box" style={{"minHeight":"122px"}}>
+                    <div className="small-box box-color-four" style={{"minHeight":"122px"}}>
                      <div className="small-box-footer">  <h5>Registered Users</h5>  </div>
                             <div className="inner">
                                 <h3  style={{"fontWeight": "normal !important"}} >{mruCount}</h3>

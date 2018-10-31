@@ -161,8 +161,6 @@ li{
 
 }
 
-
-
 .colorfive {
     background: rgb(34, 186, 155);
 }
@@ -188,11 +186,9 @@ li{
     position: relative;
     text-align: center;
     padding: 7px 0;
-    color: rgb(255, 255, 255);
-    color: rgba(255,255,255,0.8);
     display: block;
+     background: rgba(0,0,0,.2);
     z-index: 10;
-    background: rgba(0,0,0,0.1);
     text-decoration: none;
 }
 
@@ -355,7 +351,7 @@ li{
 
 
 .filter-container{
-    background: linear-gradient(to right, rgb(91, 165, 160),  rgb(67, 157, 151));
+   // background: linear-gradient(to right, rgb(91, 165, 160),  rgb(67, 157, 151));
 }
 .small-box{
     border:1px solid;

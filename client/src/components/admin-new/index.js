@@ -9,7 +9,7 @@ import Mapview from "./markerview";
 import MarkerClusterer from "../../common/markerclusterer";
 import ClusterMatrix from "./clustermatrix";
 import Toggle from 'react-toggle';
- import moment from "moment";
+import moment from "moment";
 
 import  'react-toggle/style.css';
 
@@ -20,7 +20,7 @@ class Adminpanel extends Component {
             primaryCities: [],
             nearByLocations: [],
             level: 0,
-            userCount: {0: null, 1: null },
+            userCount: {0: null, 1: null},
             clusterData: [],
             trufCenter: [],
             matrix: [],
@@ -43,7 +43,8 @@ class Adminpanel extends Component {
             mruDetails: {
                 mruContainer: "dn",
                 criteriaValue: "popularLocation"
-            }
+            },
+            mapshow: false
         };
         this.directionsDisplay = null;
         this.newClusterMarkers = [];
@@ -103,6 +104,7 @@ class Adminpanel extends Component {
                         primaryCities: json.mapdata,
                         cities: true,
                         primaryCity: true,
+                        mapshow: true,
                         userCount: {
                             0: json.usercount
                         }
@@ -132,31 +134,29 @@ class Adminpanel extends Component {
         })
                 .then(res => res.json())
                 .then(json => {
-                  
+
                     var jsonParse = JSON.parse(json.mapdata.body);
                     this.props.updateLoader("dn");
                     this.setState({
                         ...this.state,
-                         clusterData: jsonParse.data,
+                        clusterData: jsonParse.data,
                         trufCenter: jsonParse.centriods,
                         matrix: jsonParse.cluster_matrix,
                         primaryCity: false,
+                        mapshow: true,
                         breadcrum: [
                             {val: "primary", label: "Primary Cities", active: 0},
                             {val: "zipcode", label: "Zipcode ", active: 1}
                         ],
                         level: 1,
                         userCount: {
-                             ...this.state.userCount,
+                            ...this.state.userCount,
                             1: json.usercount
                         },
                         clusterShow: true,
                         mruDetails: {
                             ...this.state.mruDetails,
-                             mruContainer: "dn"
-                            
-                            
-                            
+                            mruContainer: "dn"
                         }
                     });
                 });
@@ -183,6 +183,7 @@ class Adminpanel extends Component {
                         trufCenter: jsonParse.centriods,
                         matrix: jsonParse.cluster_matrix,
                         primaryCity: false,
+                        mapshow: true,
                         breadcrum: [
                             {val: "primary", label: "Primary Cities", active: 0},
                             {val: "zipcode", label: "Zipcode ", active: 1}
@@ -195,7 +196,7 @@ class Adminpanel extends Component {
                         clusterShow: true,
                         mruDetails: {
                             ...this.state.mruDetails,
-                             mruContainer: "dn"
+                            mruContainer: "dn"
                         }
                     });
                 });
@@ -229,7 +230,7 @@ class Adminpanel extends Component {
                         clusterShow: true,
                         mruDetails: {
                             ...this.state.mruDetails,
-                             mruContainer: "dn"
+                            mruContainer: "dn"
                         }
                     });
                 });
@@ -238,17 +239,18 @@ class Adminpanel extends Component {
         this.plotmap();
     }
     componentDidUpdate(props) {
-        if (this.state.clusterShow) {
-            if (this.state.viewtype === "DEFAULT") {
-                this.defaultMapView();
-            } else if (this.state.viewtype === "TRUF") {
-                this.displaytrufCluster();
-            }
-        } else {
-            if (this.state.cities) {
-                this.plotcites();
+        if (this.state.mapshow) {
+            if (this.state.clusterShow) {
+                if (this.state.viewtype === "TRUF") {
+                    this.displaytrufCluster();
+                }
+            } else {
+                if (this.state.cities) {
+                    this.plotcites();
+                }
             }
         }
+
     }
     plotmap() {
         this.directionsDisplay = new google.maps.DirectionsRenderer();
@@ -509,7 +511,7 @@ class Adminpanel extends Component {
                 }
 
                 self.setState({
-                            ... this.state,
+                    ... this.state,
                     mruDetails: {
                         ...self.state.mruDetails,
                         zipcode: this.value,
@@ -522,7 +524,7 @@ class Adminpanel extends Component {
                         preDate: this.prevdate,
                         currentloc: this.getPosition(),
                         icontype: this.icontype
-                    } 
+                    }
                 });
             });
             this.trufMarkers.push(zipmarker);
@@ -600,7 +602,7 @@ class Adminpanel extends Component {
         var self = this;
         mrumarker.addListener("click", function (e) {
             self.setState({
-                  ...this.state,
+                ...this.state,
                 mruDetails: {
                     ...self.state.mruDetails,
                     zipcode: "",
@@ -613,7 +615,7 @@ class Adminpanel extends Component {
                     preDate: "",
                     currentloc: this.getPosition(),
                     icontype: ""
-                } 
+                }
             });
         });
     }
@@ -630,11 +632,11 @@ class Adminpanel extends Component {
                         <div  style={{"float": "right", "padding": "5px 5px 0px 3px"}}>  
                             <label><Toggle
                                     defaultChecked={this.state.baconIsReady}
-                                    onChange={(a) => {  
-                                                if (a.target.checked) {
-                                                    this.setState({...this.state, draweropen: "db", baconIsReady: true});
+                                    onChange={(a) => {
+                                            if (a.target.checked) {
+                                                this.setState({...this.state,mapshow:false , draweropen: "db", baconIsReady: true});
                                     }else{
-                                                            this.setState({...this.state, draweropen: "dn", baconIsReady: false});
+                                                                            this.setState({...this.state,mapshow:false, draweropen: "dn", baconIsReady: false});
                                     }
                 
                                     }} />
@@ -647,41 +649,41 @@ class Adminpanel extends Component {
                 
                     <div   className="content-container">
                         <div className={
-                                                                `top-drawer filter-container  ${this.state.draweropen}`}>
+                                                            `top-drawer filter-container  ${this.state.draweropen}`}>
                             <div className="row"> 
                                 <div className="col-md-2 col-sm-12">
                                     <UserCount usercount={this.state} />
                                 </div>
                                 {(() => {
-                                                                    if (this.state.primaryCity) {
-                                                                        return (<div className="col-md-3 col-sm-12"><PrimaryFilters allRecord={this.state.primaryCities} primaryfilterRecord={ob => this.primaryfilterRecord(ob)}  /> </div>);
+                                                                                if (this.state.primaryCity) {
+                                                                                    return (<div className="col-md-3 col-sm-12"><PrimaryFilters allRecord={this.state.primaryCities} primaryfilterRecord={ob => this.primaryfilterRecord(ob)}  /> </div>);
                                 }
                                 })()}
                 
                 
                 
                                 {
-                                                                                        (() => {
-                                                                            if (this.state.clusterShow) {
-                                                                                                    if (this.state.clusterData.length >= 1) {
-                                                                                    return (<div  className="col-md-6 col-sm-12"> 
-                                                                                <Mapview placemru={() => {
-                                                                                                                                                                        this.placeMru();
-                                                                                         }}   
-                                                                                         selectedmap={this.state.viewtype}   
-                                                                                         viewtype={(flag, count, distance, recluster) => this.viewchange(flag, count, distance, recluster)
-                                                                                         } />
-                                                                            </div>
-                                                                                                );
+                                                                                    (() => {
+                                                                                        if (this.state.clusterShow) {
+                                                                                            if (this.state.clusterData.length >= 1) {
+                                                                                                return (<div  className="col-md-6 col-sm-12"> 
+                                                                                                    <Mapview placemru={() => {
+                                                                                                                                                                                this.placeMru();
+                                                                                                             }}   
+                                                                                                             selectedmap={this.state.viewtype}   
+                                                                                                             viewtype={(flag, count, distance, recluster) => this.viewchange(flag, count, distance, recluster)
+                                                                                                             } />
+                                                                                                </div>
+                                                                                                            );
                                 }
                                 }
                                 })() }
                 
                                 {
-                                                                                                        (() => {
-                                                                                            if (this.state.clusterShow) {
-                                                                                                if (this.state.clusterData.length >= 1) {
-                                                                                                    return (<div className="col-md-4 col-sm-12"><ClusterMatrix matrix={this.state.matrix}/>  </div>)
+                                                                                                    (() => {
+                                                                                                        if (this.state.clusterShow) {
+                                                                                                            if (this.state.clusterData.length >= 1) {
+                                                                                                                return (<div className="col-md-4 col-sm-12"><ClusterMatrix matrix={this.state.matrix}/>  </div>)
                                 } 
                                 }
                                 })()}
@@ -698,7 +700,7 @@ class Adminpanel extends Component {
                             <div className="col-md-12 col-sm-12 ">
                                 <MruPlaceConatiner 
                                     allRecord={
-                                                                                                    this.state.nearByLocations}
+                                                                                                this.state.nearByLocations}
                                     filteredRecord={ob => this.filteredRecord(ob)}
                                     mruDetails={this.state.mruDetails}
                                     />
@@ -711,7 +713,7 @@ class Adminpanel extends Component {
                         </div>
                     </div>
                 </div>
-                                                                                                    );
+                                                                                                );
                                 }
                             }
                             export default Adminpanel;

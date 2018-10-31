@@ -41,7 +41,7 @@ class Mapview extends Component {
     }
     render() {
 
-        return (<div className="small-box border-class">
+        return (<div className="small-box border-class box-color-three">
             <div className="small-box-footer">Custom Changes  </div>
             <div className="row text-center" style={{"paddingTop": "15px"}} >
                 <div className="col-md-4">

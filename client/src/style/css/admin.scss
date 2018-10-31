@@ -353,17 +353,28 @@
     } 
 
 
-
-
-
-
-
     .cluster-range-label{
-
         padding: 18px 0px 0px 0px; 
-       
-
     }
 
 
-}
+    .box-color-one{
+        background-color:rgb(65, 74, 82)!important;
+        color: #fff;
+    }
+
+    .box-color-two{
+        background-color:rgb(11, 180, 180)!important;
+    }
+    .box-color-three{
+        background-color: rgb(91, 165, 160)!important;
+    }
+
+    .box-color-four{
+        background: rgb(0, 167, 142)!important;
+    }
+
+    .box-color-five{
+        background: rgb(249, 97, 49)
+    }
+}   

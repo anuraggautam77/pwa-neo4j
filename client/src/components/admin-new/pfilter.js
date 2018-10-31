@@ -47,7 +47,7 @@ class PrimaryFilters extends Component {
     }
     render() {
         return (
-                    <div className="small-box" style={{"minHeight":"122px"}}>
+                    <div className="small-box box-color-three" style={{"minHeight":"122px"}}>
                       <div className="small-box-footer">  <h5>Filters</h5>  </div>
                         <div className="inner">
                             <button onClick={() => this.props.primaryfilterRecord(this.changeFilter("TOP"))} className="btn  btn-sm" style={{"backgroundColor": "#9722d7"}}>Top Primary Cities</button>
