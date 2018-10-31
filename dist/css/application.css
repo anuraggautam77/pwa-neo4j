@@ -211,7 +211,8 @@ li {
 .top-drawer {
   background: white;
   margin-bottom: 10px;
-  padding: 10px; }
+  padding-left: 14px;
+  padding-right: 14px; }
   .top-drawer .custom-container .form-control {
     display: block;
     width: 100%;
@@ -264,6 +265,10 @@ li {
   padding: 0;
   margin: 10px 17px 10px 16px;
   background: #fff; }
+
+.no-gutter > [class*='col-'] {
+  padding-right: 6px;
+  padding-left: 6px; }
 .adminpanel {
   /* Modal Content */ }
   .adminpanel .input-range__track {

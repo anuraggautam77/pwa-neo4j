@@ -648,9 +648,8 @@ class Adminpanel extends Component {
                 
                 
                     <div   className="content-container">
-                        <div className={
-                                                            `top-drawer filter-container  ${this.state.draweropen}`}>
-                            <div className="row"> 
+                        <div className={`top-drawer filter-container  ${this.state.draweropen}`}>
+                            <div className="row no-gutter"> 
                                 <div className="col-md-2 col-sm-12">
                                     <UserCount usercount={this.state} />
                                 </div>
