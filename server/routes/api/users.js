@@ -1,10 +1,23 @@
 const UsersModel = require('../../models/User');
 
 const request = require('request');
-//const clusterMaker = require('clusters');
 const path = require('path');
-//const promoimgages = path.resolve("dist/img/promoimages");
 const fs = require('fs');
+ 
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcrypt-nodejs');
+
+const Cryptr = require('cryptr');
+let cryptr = new Cryptr('user_id_incrption_decription');
+
+var settings = require('../../config/settings');
+
+
+
+
+
+
+
 
 const SERVICE_CONST = {
     REGISTER_USER: 'registeruser',
@@ -16,11 +29,79 @@ const SERVICE_CONST = {
     GET_SECOND_LEVEL_CITIES: 'getsecondlevelcities',
     PLACE_MRU_DETAILS: "placemru",
     GET_CLUSTER_DETAIL: "getcluster",
-    RE_CLUSTER: "recluster"
+    RE_CLUSTER: "recluster",
+    ADMIN_LOGIN: 'adminlogin',
+    ADMIN_REGISTER:'register'
 
 };
 
 module.exports = (apiRoutes) => {
+    
+    
+    function tokenVerify(req, res) {
+
+        let token = req.headers['x-access-token'], userid = req.headers['id'];
+        obj = {};
+        if (token) {
+            jwt.verify(token, settings.secret, function (err, decoded) {
+                if (decoded === undefined) {
+                    obj.status = 403;
+                    obj.message = 'No token provided>>';
+                } else if (decoded) {//=== cryptr.decrypt(userid)) {
+                    // console.log(decoded);
+                    if (bcrypt.compareSync(decoded.username, userid)) {
+                        //   console.log("valid");
+                        obj.status = 200;
+                        obj.message = 'valid token>>>>>';
+                    }
+
+                } else {
+                    obj.status = 403;
+                    obj.message = 'Invalid token>>>>>';
+                }
+
+            });
+        } else {
+            obj.status = 403;
+            obj.message = 'Invalid token';
+        }
+
+        return obj;
+    }
+    
+    apiRoutes.post(`/${SERVICE_CONST.ADMIN_REGISTER}`, function (req, res) {
+        
+        
+        if (!req.body.username || !req.body.password) {
+            res.json({success: false, msg: 'Please pass username and password.'});
+        } else {
+
+            bcrypt.genSalt(10, function (err, salt) {
+                if (err) {
+                    return (err);
+                }
+                bcrypt.hash(req.body.password, salt, null, function (err, hash) {
+                    req.body.password = hash;
+                    //  console.log(hash)
+                    UsersModel.adminRegis(req.body, function (result) {
+                        res.json({data: result});
+                    });
+                });
+            });
+
+        }
+    });
+    
+    
+    
+    apiRoutes.post('/authvalidate', function (req, res) {
+        let objCheck = tokenVerify(req, res);
+        res.status(objCheck.status).json({status: objCheck.status, message: objCheck.message});
+
+    });
+
+    
+    
 
     apiRoutes.post(`/${SERVICE_CONST.REGISTER_USER}`, (req, res) => {
         UsersModel.regsiterUser(req.body, (result) => {
@@ -291,7 +372,39 @@ module.exports = (apiRoutes) => {
     })
 
 
+apiRoutes.post(`/${SERVICE_CONST.ADMIN_LOGIN}`, function (req, res) {
 
+        UsersModel.adminLogin(req.body, function (result) {
+            if (result.length > 0) {
+                bcrypt.compare(req.body.password, result[0].password, function (err, isMatch) {
+                    if (err) {
+                        res.status(401).send({success: false, msg: err});
+                    }
+                    if (isMatch) {
+
+                        var token = jwt.sign({username: result[0].username}, settings.secret);
+
+                        bcrypt.genSalt(10, function (err, salt) {
+                            if (err) {
+                                return (err);
+                            }
+                            bcrypt.hash(result[0].username, salt, null, function (err, hash) {
+                                res.json({success: true, token: token, userid: hash});
+                            });
+                        });
+
+                    } else {
+
+                        res.status(401).send({success: false, msg: 'Incorrect Password.'});
+                    }
+                });
+
+            } else {
+
+                res.status(401).send({success: false, msg: 'Authentication failed.'});
+            }
+        });
+    });
 
 
 

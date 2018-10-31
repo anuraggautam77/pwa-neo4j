@@ -14,6 +14,26 @@ UsersModel = {
     createDeviceLocRelation: function () {
         // console.log(driver);
     },
+    
+     adminRegis: function (objdata, callback) {
+        var query = `MERGE (n:user {username: "${objdata.username}", password: "${objdata.password}"})`;
+          driver.cypher({'query': query}, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });  
+    },
+    
+    adminLogin: function (objdata, callback) {
+        var query = `match (n:user { username: "${objdata.username}" }) return n.password as password, n.username as username`;
+        driver.cypher({'query': query}, function (err, results) {
+            if (err)
+                throw err;
+            callback(results);
+        });
+
+    },
+    
     regsiterUser: function (objdata, callback) {
         obj = objdata.data;
         if (obj.type === 'withZip') {

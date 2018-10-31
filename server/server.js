@@ -9,6 +9,11 @@ const historyApiFallback = require('connect-history-api-fallback');
 const path = require('path');
 const cors = require('cors');
 
+var passport = require('passport');
+
+var settings = require('./config/settings');
+require('./config/passport')(passport);
+ 
 /*
  * connect middleware - please note not all the following are needed for the specifics of this example but are generally used.
  */
