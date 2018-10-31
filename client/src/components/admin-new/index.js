@@ -132,13 +132,14 @@ class Adminpanel extends Component {
         })
                 .then(res => res.json())
                 .then(json => {
-                    var json = JSON.parse(json.body);
+                  
+                    var jsonParse = JSON.parse(json.mapdata.body);
                     this.props.updateLoader("dn");
                     this.setState({
                         ...this.state,
-                        clusterData: json.data,
-                        trufCenter: json.centriods,
-                        matrix: json.cluster_matrix,
+                         clusterData: jsonParse.data,
+                        trufCenter: jsonParse.centriods,
+                        matrix: jsonParse.cluster_matrix,
                         primaryCity: false,
                         breadcrum: [
                             {val: "primary", label: "Primary Cities", active: 0},
@@ -146,12 +147,16 @@ class Adminpanel extends Component {
                         ],
                         level: 1,
                         userCount: {
-                            ...this.state.userCount,
+                             ...this.state.userCount,
                             1: json.usercount
                         },
                         clusterShow: true,
                         mruDetails: {
-                            ...this.state.mruDetails
+                            ...this.state.mruDetails,
+                             mruContainer: "dn"
+                            
+                            
+                            
                         }
                     });
                 });
@@ -171,7 +176,6 @@ class Adminpanel extends Component {
                 .then(json => {
 
                     var jsonParse = JSON.parse(json.mapdata.body);
-                  
                     this.props.updateLoader("dn");
                     this.setState({
                         ...this.state,
@@ -190,7 +194,8 @@ class Adminpanel extends Component {
                         },
                         clusterShow: true,
                         mruDetails: {
-                            ...this.state.mruDetails
+                            ...this.state.mruDetails,
+                             mruContainer: "dn"
                         }
                     });
                 });
@@ -209,7 +214,6 @@ class Adminpanel extends Component {
         })
                 .then(res => res.json())
                 .then(json => {
-
                     this.setState({
                         nearByLocations: json.mapdata,
                         primaryCity: false,
@@ -225,6 +229,7 @@ class Adminpanel extends Component {
                         clusterShow: true,
                         mruDetails: {
                             ...this.state.mruDetails,
+                             mruContainer: "dn"
                         }
                     });
                 });
@@ -504,6 +509,7 @@ class Adminpanel extends Component {
                 }
 
                 self.setState({
+                            ... this.state,
                     mruDetails: {
                         ...self.state.mruDetails,
                         zipcode: this.value,
@@ -516,9 +522,7 @@ class Adminpanel extends Component {
                         preDate: this.prevdate,
                         currentloc: this.getPosition(),
                         icontype: this.icontype
-                    },
-                    clusterShow: false,
-                    cities: false
+                    } 
                 });
             });
             this.trufMarkers.push(zipmarker);
@@ -596,6 +600,7 @@ class Adminpanel extends Component {
         var self = this;
         mrumarker.addListener("click", function (e) {
             self.setState({
+                  ...this.state,
                 mruDetails: {
                     ...self.state.mruDetails,
                     zipcode: "",
@@ -608,9 +613,7 @@ class Adminpanel extends Component {
                     preDate: "",
                     currentloc: this.getPosition(),
                     icontype: ""
-                },
-                clusterShow: false,
-                cities: false
+                } 
             });
         });
     }

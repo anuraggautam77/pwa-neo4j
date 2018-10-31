@@ -16,7 +16,7 @@ class ClusterMatrix extends Component {
         var template = this.state.matrix.map((obj, i) => {
             return (
                     
-                        <tr>
+                        <tr key={i}>
                                     <td className="col-xs-2">{i+1}.</td>
                                     <td className="col-xs-4">{obj.userCount_sum} ({obj.total_users_count_percentages})</td>
                                     <td className="col-xs-2">{(obj.distance_miles_mean)}</td>

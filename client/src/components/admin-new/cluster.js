@@ -5,10 +5,10 @@ class Cluster extends Component {
  
     constructor(props) {
         super(props);
-        this.markerClusterer = null
+        this.markerClusterer = null;
         this.map = null;
         this.infoWindow = null;
-        this.state = {}
+        this.state = {};
     }
 
     componentDidMount() {

@@ -229,12 +229,11 @@ module.exports = (apiRoutes) => {
 
 
     apiRoutes.get(`/${SERVICE_CONST.GET_CLUSTER_DETAIL}/:cityid/:locfilter/:distance/:nclus`, (req, res) => {
-       
+
         var param = req.params;
-            param.locid=param.cityid;
-         
-    
-          var nearbyData = new Promise(function (resolve, reject) {
+        param.locid = param.cityid;
+
+        var nearbyData = new Promise(function (resolve, reject) {
             request({url: `https://django-pwa.herokuapp.com//pwa/api/clustering/kmeans/getKMeansRandomCentroidClusters/?cityid=${param.cityid}&locfilter=${param.locfilter}&distance=${param.distance}&nclust=${param.nclus}`,
                 method: 'GET',
                 headers: {
@@ -256,32 +255,47 @@ module.exports = (apiRoutes) => {
 
             res.json({status: "success", mapdata: values[0], usercount: values[1][0].mruCount});
         });
-
-
-
-
-
-
-
-
-
-
-
     })
+
 
 
 
     apiRoutes.post(`/${SERVICE_CONST.RE_CLUSTER}`, (req, res) => {
-        request({url: `https://django-pwa.herokuapp.com/pwa/api/clustering/kmeans/getKMeansCustomCentroidClusters/`,
-            method: 'POST',
-            headers: {
-                'Content-Type': ' application/json'
-            },
-            body: JSON.stringify(req.body)
 
-        }, function (error, response, body) {
-            res.json(response);
+        var param = req.body 
+            param.locid = param.cityid
+
+        var nearbyData = new Promise(function (resolve, reject) {
+            request({url: `https://django-pwa.herokuapp.com/pwa/api/clustering/kmeans/getKMeansCustomCentroidClusters/`,
+                method: 'POST',
+                headers: {
+                    'Content-Type': ' application/json'
+                },
+                body: JSON.stringify(req.body)
+
+            }, function (error, response, body) {
+                resolve(response);
+            });
+        });
+
+        var userCount = new Promise(function (resolve, reject) {
+            UsersModel.registerUserAtThirdLevel(param, (count) => {
+                resolve(count);
+            });
+        });
+
+        Promise.all([nearbyData, userCount]).then(function (values) {
+
+            res.json({status: "success", mapdata: values[0], usercount: values[1][0].mruCount});
         });
     })
+
+
+
+
+
+
+
+ 
 
 };
