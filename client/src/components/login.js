@@ -31,7 +31,7 @@ class Login extends Component {
             if (json.success) {
                 localStorage.setItem('jwtToken', json.token);
                 localStorage.setItem('userid', json.userid);
-                this.props.history.push("/heatmap");
+                this.props.history.push("/graphadmin");
             }else{
                 this.setState({error:json.msg});
             }
