@@ -655,7 +655,7 @@ class Adminpanel extends Component {
                                 </div>
                                 {(() => {
                                                                                 if (this.state.primaryCity) {
-                                                                                    return (<div className="col-md-3 col-sm-12"><PrimaryFilters allRecord={this.state.primaryCities} primaryfilterRecord={ob => this.primaryfilterRecord(ob)}  /> </div>);
+                                                                                    return (<div className="col-md-4 col-sm-12"><PrimaryFilters allRecord={this.state.primaryCities} primaryfilterRecord={ob => this.primaryfilterRecord(ob)}  /> </div>);
                                 }
                                 })()}
                 

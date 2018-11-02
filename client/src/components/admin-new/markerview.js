@@ -41,7 +41,7 @@ class Mapview extends Component {
     }
     render() {
 
-        return (<div className="small-box border-class box-color-three">
+        return (<div className="small-box border-class  box-color-three">
             <div className="small-box-footer">Custom Changes  </div>
             <div className="row text-center" style={{"paddingTop": "15px"}} >
                 <div className="col-md-4">
@@ -73,11 +73,11 @@ class Mapview extends Component {
                 <div className="col-md-12">
         
         
-                    <input type="button" className="btn btn-success btn-sm" onClick={() => {
+                    <input type="button" style={{'background':"#369a69"}} className="btn btn-success btn-sm" onClick={() => {
                                     this.changeView("TRUF", this.state.value, this.state.distance, "recluster")
                                                                         }} value="ReCluster" />    
                     &nbsp;
-                    <input type="button" className="btn btn-success btn-sm" onClick={() => {
+                    <input type="button" className="btn btn-success btn-sm  dn" style={{'background':"#369a69"}} onClick={() => {
                                         this.props.placemru()
                                          }} value="PlaceMRU" /> 
         

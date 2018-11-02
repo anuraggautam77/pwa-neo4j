@@ -40,7 +40,7 @@ a {
   padding: 0 30px 0; }
 
 #main {
-  background: #e5e9ec;
+  background: #f5f8fb;
   height: 100%;
   left: 0;
   overflow: auto;
@@ -131,11 +131,10 @@ li {
   background: #e17695; }
 
 .small-box {
-  border-radius: 3px;
   position: relative;
   display: block;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  color: #fff; }
+  border: 1px solid #dee1e7;
+  color: #313d4a; }
 
 .small-box > .inner {
   padding: 10px; }
@@ -145,7 +144,6 @@ li {
   text-align: center;
   padding: 7px 0;
   display: block;
-  background: rgba(0, 0, 0, 0.2);
   z-index: 10;
   text-decoration: none; }
 
@@ -209,10 +207,7 @@ li {
           padding: 0; }
 
 .top-drawer {
-  background: white;
-  margin-bottom: 10px;
-  padding-left: 14px;
-  padding-right: 14px; }
+  margin-bottom: 10px; }
   .top-drawer .custom-container .form-control {
     display: block;
     width: 100%;
@@ -253,26 +248,22 @@ li {
 .border-class {
   border: 1px solid #dddddd; }
 
-.small-box {
-  border: 1px solid; }
-
 .content-container {
-  margin: 0px 16px 16px 16px;
-  padding: 10px;
-  background: #fff; }
+  margin: 0px 16px 16px 16px; }
 
 .breadcrum-container {
   padding: 0;
   margin: 10px 17px 10px 16px;
-  background: #fff; }
+  background: #fff;
+  border: 1px solid #dee1e7; }
 
-.no-gutter > [class*='col-'] {
-  padding-right: 6px;
-  padding-left: 6px; }
+.react-toggle-track {
+  background-color: #53bf8a !important; }
 .adminpanel {
   /* Modal Content */ }
   .adminpanel .input-range__track {
-    height: 8px !important; }
+    height: 8px !important;
+    background: #f5d4bc !important; }
   .adminpanel .input-range__label--min {
     left: -17px !important;
     top: -6px; }
@@ -280,27 +271,31 @@ li {
     right: -17px !important;
     top: -6px; }
   .adminpanel .input-range__label--value {
-    top: -33px !important; }
+    top: -33px !important;
+    font-weight: normal !important; }
   .adminpanel .input-range__label {
-    color: #fff;
+    color: #2f455a;
     font-family: "Helvetica Neue", san-serif;
-    font-size: 19px; }
+    font-size: 19px;
+    font-weight: bold; }
   .adminpanel .input-range__track--active {
-    background: #c94b4b; }
+    background: #f46800 !important; }
   .adminpanel .input-range__slider {
-    background: #c94b4b;
-    border: #c94b4b; }
+    background: #cc5c08;
+    border: #cc5c08; }
   .adminpanel .input-range__slider {
     height: 14px !important;
     margin-top: -11px !important;
     top: 29% !important;
     width: 14px !important; }
   .adminpanel a {
-    color: #3071a9;
+    color: #2f455a;
     text-decoration: none; }
   .adminpanel .chart-wrapper {
     background-color: #fff;
-    padding: 5px; }
+    padding: 5px;
+    border: 1px solid #dee1e7;
+    color: #313d4a; }
   .adminpanel #header {
     left: 0;
     right: 0;
@@ -499,9 +494,9 @@ li {
     background-color: #414a52 !important;
     color: #fff; }
   .adminpanel .box-color-two {
-    background-color: #0bb4b4 !important; }
+    background-color: #fff !important; }
   .adminpanel .box-color-three {
-    background-color: #5ba5a0 !important; }
+    background-color: #fff !important; }
   .adminpanel .box-color-four {
     background: #00a78e !important; }
   .adminpanel .box-color-five {

@@ -52,7 +52,7 @@ a{
 
 
 #main {
-    background: rgb(229, 233, 236);
+    background: #f5f8fb;
     height: 100%;
     left: 0;
     overflow: auto;
@@ -170,11 +170,12 @@ li{
 
 
 .small-box {
-    border-radius: 3px;
     position: relative;
     display: block;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-    color:#fff;
+    border: 1px solid #dee1e7; 
+    color: #313d4a;
+
+
 }
 
 .small-box>.inner {
@@ -186,7 +187,6 @@ li{
     text-align: center;
     padding: 7px 0;
     display: block;
-     background: rgba(0,0,0,.2);
     z-index: 10;
     text-decoration: none;
 }
@@ -278,13 +278,7 @@ li{
 }
 
 .top-drawer{
-    background: rgb(255, 255, 255);
     margin-bottom: 10px;
-    padding-left: 14px;
-    padding-right: 14px;
-    
-    // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
     .custom-container{
 
         .form-control{
@@ -352,31 +346,22 @@ li{
 
 
 .filter-container{
-   // background: linear-gradient(to right, rgb(91, 165, 160),  rgb(67, 157, 151));
+    // background: linear-gradient(to right, rgb(91, 165, 160),  rgb(67, 157, 151));
 }
-.small-box{
-    border:1px solid;
-}
-
 .content-container {
     margin: 0px 16px 16px 16px;
-    // border: 2px solid rgb(255, 0, 0);
-    padding: 10px;
-    background: #fff;
-    // border: 2px solid rgb(0, 0, 0);
 }
 
 
 .breadcrum-container{
     padding: 0;
     margin: 10px 17px 10px 16px;
-    //  border: 2px solid; 
     background:#fff;
+    border: 1px solid #dee1e7;
     // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
 
-.no-gutter > [class*='col-'] {
-    padding-right:6px;
-    padding-left:6px;
+.react-toggle-track{
+        background-color: rgb(83, 191, 138) !important;
 }

@@ -8,7 +8,6 @@ const fs = require('fs');
 const historyApiFallback = require('connect-history-api-fallback');
 const path = require('path');
 const cors = require('cors');
-
 var passport = require('passport');
 
 var settings = require('./config/settings');

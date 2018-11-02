@@ -1,11 +1,8 @@
 .adminpanel{
 
-
-
-
-
     .input-range__track{
         height: 8px !important;
+        background: #f5d4bc !important;
     }
 
     .input-range__label--min,{
@@ -19,20 +16,22 @@
     }
     .input-range__label--value{
         top:-33px !important;
+        font-weight: normal !important;
     }
     .input-range__label{
-        color: #fff;
+        color: rgb(47, 69, 90);
         font-family: "Helvetica Neue", san-serif;
         font-size: 19px;
+        font-weight: bold;
 
     }
 
     .input-range__track--active{
-        background:rgb(201, 75, 75);
+        background:#f46800 !important;
     }
     .input-range__slider{
-        background:rgb(201, 75, 75);
-        border:rgb(201, 75, 75);
+        background:#cc5c08;
+        border:#cc5c08;
     }
 
 
@@ -45,13 +44,18 @@
 
     }
     a {
-        color: rgb(48, 113, 169);
+        color:rgb(47, 69, 90);
         text-decoration: none;
     } 
 
     .chart-wrapper{
         background-color: #fff;
         padding: 5px;
+
+        border: 1px solid #dee1e7; 
+        color: #313d4a; 
+
+
     }
 
     #header {
@@ -135,7 +139,7 @@
         //  padding: 8px 45px 10px;
         margin:0 !important;
         .active{
-            color: rgb(182, 184, 187);
+            color: #b6b8bb; 
             font-weight: bold;
 
 
@@ -364,10 +368,10 @@
     }
 
     .box-color-two{
-        background-color:rgb(11, 180, 180)!important;
+        background-color:#fff !important;
     }
     .box-color-three{
-        background-color: rgb(91, 165, 160)!important;
+        background-color: #fff !important;
     }
 
     .box-color-four{
