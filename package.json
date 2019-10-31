@@ -24,7 +24,7 @@
     "forEachAsync": "^3.0.0",
     "fs": "0.0.1-security",
     "bcrypt-nodejs": "0.0.3",
-    "cryptr": "^3.0.0",
+    "cryptr": "^6.0.0",
     "jsonwebtoken": "^8.3.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
