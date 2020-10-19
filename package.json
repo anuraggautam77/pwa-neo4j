@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "autoprefixer": "^9.1.5",
-    "chart.js": "^2.7.2",
+    "chart.js": "^2.9.4",
     "connect-history-api-fallback": "^1.5.0",
     "cors": "^2.8.4",
     "css-loader": "^0.28.5",
