@@ -69,7 +69,7 @@
     "esformatter-jsx": "^8.0.1",
     "extract-text-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^2.30.1",
-    "node-sass": "^4.9.3",
+    "node-sass": "^7.0.0",
     "nodemon": "^1.18.3",
     "postcss-loader": "^2.0.6",
     "sass-loader": "^6.0.6",
