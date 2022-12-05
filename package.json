@@ -20,7 +20,7 @@
     "cors": "^2.8.4",
     "css-loader": "^0.28.5",
     "es6-promise": "^4.2.4",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "forEachAsync": "^3.0.0",
     "fs": "0.0.1-security",
     "bcrypt-nodejs": "0.0.3",
