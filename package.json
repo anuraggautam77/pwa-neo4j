@@ -25,7 +25,7 @@
     "fs": "0.0.1-security",
     "bcrypt-nodejs": "0.0.3",
     "cryptr": "^6.0.0",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "lodash": "^4.17.5",
